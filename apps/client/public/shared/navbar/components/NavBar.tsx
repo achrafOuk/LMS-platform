@@ -3,6 +3,7 @@ import { useState } from "react";
 import type { NavBarRoute } from "../types/NavBarTypes";
 import { MobileNavBarRoutes } from "./MobileNavBarRoutes";
 import { NavBarAuthLinks } from "./NavBarAuthLinks";
+import { Link } from "@tanstack/react-router";
 
 export default function NavBar()
 {
@@ -34,10 +35,12 @@ export default function NavBar()
     ];
     
     return (
-        <nav className="bg-background border-b p-4 flex flex-col">
+        <nav className="bg-background border-b p-1 flex flex-col">
             <section className="p-4 flex justify-between items-center">
                     <section>
-                        <h1 className="text-2xl font-bold">LMS platform</h1>
+                        <Link to="/" className="text-2xl font-bold">
+                            LMS platform
+                        </Link>
                     </section>
                     <NavBarRoutes routes={routes} />
                     <NavBarAuthLinks
