@@ -1,0 +1,5 @@
+export const heroPrimaryLinkClassName =
+  'inline-flex items-center justify-center rounded-full bg-primary px-7 py-3.5 text-sm font-semibold text-primary-foreground shadow-md transition-[background-color,box-shadow,transform] duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:hover:bg-primary/90 motion-safe:hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation active:translate-y-0'
+
+export const heroSecondaryLinkClassName =
+  'inline-flex items-center justify-center rounded-full border border-border bg-background px-7 py-3.5 text-sm font-semibold text-foreground transition-[background-color,transform,border-color] duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:hover:border-primary/40 motion-safe:hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation active:translate-y-0'

@@ -5,7 +5,7 @@ import { MobileNavBarRoutes } from "./MobileNavBarRoutes";
 import { NavBarAuthLinks } from "./NavBarAuthLinks";
 import { Link } from "@tanstack/react-router";
 
-export default function NavBar()
+export function NavBar()
 {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const routes: NavBarRoute[] = [

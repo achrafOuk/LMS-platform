@@ -11,8 +11,8 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
-import NavBar from '../../public/shared/navbar/components/NavBar'
 import Footer from '../../public/shared/footer/components/Footer'
+import { NavBar } from '../../public/shared/navbar/components/NavBar'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -49,8 +49,16 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="min-h-dvh flex flex-col">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+        >
+          Skip to main content
+        </a>
         <NavBar />
-        <main className="flex-1">{children}</main>
+        <main id="main-content" className="flex-1 scroll-mt-4">
+          {children}
+        </main>
         <Footer />
         <TanStackDevtools
           config={{
