@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  esbuild: true
+  msw: true
+
+catalog:
+  dotenv: ^17.2.2
+  typescript: 6.0.3
