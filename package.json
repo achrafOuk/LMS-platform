@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@orpc/client": "^1.14.5",
-    "@orpc/server": "^1.14.5"
+    "@orpc/server": "^1.14.5",
+    "dotenv": "catalog:"
   }
 }

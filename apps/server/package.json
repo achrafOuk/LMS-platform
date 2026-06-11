@@ -18,10 +18,14 @@
   "dependencies": {
     "@hono/node-server": "^2.0.4",
     "@orpc/server": "^1.14.5",
-    "hono": "^4.12.25"
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.25",
+    "pg": "^8.21.0"
   },
   "devDependencies": {
     "@tanstack-start-hono/tsconfig": "workspace:*",
+    "@types/pg": "^8.20.0",
+    "drizzle-kit": "^0.31.10",
     "tsx": "^4.22.4",
     "typescript": "catalog:"
   }
