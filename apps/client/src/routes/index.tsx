@@ -1,4 +1,6 @@
 import { HeroSection } from '#/features/landingpage/HeroSection/HeroSection'
+import { Counters } from '#/features/landingpage/KPI/components/counters'
+import { counters } from '#/features/landingpage/KPI/constansts/couters'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -9,6 +11,7 @@ function Home() {
   return (
     <>
       <HeroSection />
+      <Counters counters={counters} />
     </>
   )
 }
