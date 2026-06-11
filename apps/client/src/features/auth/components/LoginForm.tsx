@@ -10,6 +10,7 @@ import {
 } from '../constants/authStyles'
 import { AuthFormField } from './AuthFormField'
 import { AuthFormShell } from './AuthFormShell'
+import { orpc } from '#/utils/orpc'
 
 type FieldErrors = {
   email?: string
@@ -38,7 +39,7 @@ export function LoginForm() {
   const [isPending, startTransition] = useTransition()
   const formRef = useRef<HTMLFormElement>(null)
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setFormError(null)
 
@@ -58,10 +59,11 @@ export function LoginForm() {
 
     setFieldErrors({})
 
-    startTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 600))
-      setFormError('Sign in is not connected yet. Connect Better Auth to enable login.')
-    })
+    const response = await orpc.auth.login({ email, password});
+
+    console.log(response);
+
+    
   }
 
   const passwordErrorId = fieldErrors.password ? 'login-password-error' : undefined

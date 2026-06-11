@@ -1,10 +1,10 @@
 import { os } from "@orpc/server";
+import { loginRoute } from "./auth.routes";
 
 export const router = {
-    "hello": os
-    .handler(async () => {
-        return `Hello, world!`;
-    }),
+    auth:{
+        login: loginRoute,
+    }
 } 
 
-export type Router = typeof router;
+export type AppRouter = typeof router;

@@ -157,6 +157,12 @@ importers:
       '@orpc/server':
         specifier: ^1.14.5
         version: 1.14.5(crossws@0.4.6(srvx@0.11.16))(ws@8.21.0)
+      dotenv:
+        specifier: 'catalog:'
+        version: 17.4.2
+      dotenv-expand:
+        specifier: ^12.0.2
+        version: 12.0.3
       drizzle-orm:
         specifier: ^0.45.2
         version: 0.45.2(@types/pg@8.20.0)(pg@8.21.0)
@@ -170,6 +176,9 @@ importers:
       '@tanstack-start-hono/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
+      '@tanstack-start-hono/validators':
+        specifier: workspace:*
+        version: link:../../packages/validators
       '@types/pg':
         specifier: ^8.20.0
         version: 8.20.0
@@ -1942,6 +1951,14 @@ packages:
 
   dom-accessibility-api@0.5.16:
     resolution: {integrity: sha512-X7BJ2yElsnOJ30pZF4uIIDfBEVgF4XEBxL9Bxhy6dnrm5hkzqmsWHGTiHqRiITNhMyFLyAiWndIJP7Z1NTteDg==}
+
+  dotenv-expand@12.0.3:
+    resolution: {integrity: sha512-uc47g4b+4k/M/SeaW1y4OApx+mtLWl92l5LMPP0GNXctZqELk+YGgOPIIC5elYmUH4OuoK3JLhuRUYegeySiFA==}
+    engines: {node: '>=12'}
+
+  dotenv@16.6.1:
+    resolution: {integrity: sha512-uBq4egWHTcTt33a72vpSG0z3HnPuIl6NqYcTrKEg2azoEyl2hpW0zqlxysq2pK9HlDIHyHyakeYaYnSAwd8bow==}
+    engines: {node: '>=12'}
 
   dotenv@17.4.2:
     resolution: {integrity: sha512-nI4U3TottKAcAD9LLud4Cb7b2QztQMUEfHbvhTH09bqXTxnSie8WnjPALV/WMCrJZ6UV/qHJ6L03OqO3LcdYZw==}
@@ -4366,6 +4383,12 @@ snapshots:
   diff@8.0.4: {}
 
   dom-accessibility-api@0.5.16: {}
+
+  dotenv-expand@12.0.3:
+    dependencies:
+      dotenv: 16.6.1
+
+  dotenv@16.6.1: {}
 
   dotenv@17.4.2: {}
 

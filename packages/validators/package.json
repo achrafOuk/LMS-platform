@@ -5,7 +5,7 @@
   "type": "module",
   "exports": {
     "./*": {
-      "default": "./src/*.ts"
+      "default": "./src/*.validator.ts"
     }
   },
   "scripts": {

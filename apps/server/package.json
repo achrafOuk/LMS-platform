@@ -2,11 +2,9 @@
   "name": "@tanstack-start-hono/server",
   "type": "module",
   "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "default": "./src/*.ts"
+    "./routes/orpc.route": {
+      "types": "./src/routes/orpc.routes.ts",
+      "default": "./src/routes/orpc.routes.ts"
     }
   },
   "scripts": {
@@ -30,6 +28,7 @@
   },
   "devDependencies": {
     "@tanstack-start-hono/tsconfig": "workspace:*",
+    "@tanstack-start-hono/validators": "workspace:*",
     "@types/pg": "^8.20.0",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.22.4",

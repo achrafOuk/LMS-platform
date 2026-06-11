@@ -1,5 +1,8 @@
 import { os } from "@orpc/server";
+import { LoginValidator } from "@tanstack-start-hono/validators/auth"
 
 export const loginRoute = os
-.handler(async (input) => {
+.input(LoginValidator)
+.handler(async ({ input }) => {
+    return `Hello, ${input.email}!`;
 });
