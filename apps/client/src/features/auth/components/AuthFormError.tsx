@@ -1,3 +1,5 @@
+import { ORPCError } from '@orpc/client'
+
 type AuthFormErrorProps = {
   message: string
 }
@@ -10,8 +12,12 @@ export function AuthFormError({ message }: AuthFormErrorProps) {
   )
 }
 
-export function getMutationErrorMessage(error: unknown): string {
-  if (error instanceof Error) {
+export function getRpcErrorMessage(error: unknown): string {
+  if (error instanceof ORPCError) {
+    return error.message
+  }
+
+  if (error instanceof Error && error.message) {
     return error.message
   }
 

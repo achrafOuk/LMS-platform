@@ -3,6 +3,7 @@ import { useForm } from '@tanstack/react-form'
 import { RegisterValidator } from '@tanstack-start-hono/validators/auth'
 
 import { orpc } from '#/utils/orpc'
+import { getRpcErrorMessage } from '../components/AuthFormError'
 
 export function useRegisterForm() {
   const registerMutation = useMutation({
@@ -19,9 +20,14 @@ export function useRegisterForm() {
       onSubmit: RegisterValidator,
     },
     onSubmit: async ({ value }) => {
+      registerMutation.reset()
       await registerMutation.mutateAsync(value)
     },
   })
 
-  return { form, registerMutation }
+  const errorMessage = registerMutation.isError
+    ? getRpcErrorMessage(registerMutation.error)
+    : null
+
+  return { form, registerMutation, errorMessage }
 }

@@ -1,14 +1,14 @@
 import { loginContent } from '../constants/authContent'
 import { AuthEmailField } from './AuthEmailField'
 import { AuthForm } from './AuthForm'
-import { AuthFormError, getMutationErrorMessage } from './AuthFormError'
+import { AuthFormError } from './AuthFormError'
 import { AuthFormShell } from './AuthFormShell'
 import { AuthPasswordField } from './AuthPasswordField'
 import { AuthSubmitButton } from './AuthSubmitButton'
 import { useLoginForm } from '../hooks/useLoginForm'
 
 export function LoginForm() {
-  const { form, loginMutation } = useLoginForm()
+  const { form, loginMutation, errorMessage } = useLoginForm()
 
   return (
     <AuthFormShell content={loginContent}>
@@ -16,9 +16,7 @@ export function LoginForm() {
         <AuthEmailField form={form} />
         <AuthPasswordField form={form} />
 
-        {loginMutation.isError ? (
-          <AuthFormError message={getMutationErrorMessage(loginMutation.error)} />
-        ) : null}
+        {errorMessage ? <AuthFormError message={errorMessage} /> : null}
 
         <AuthSubmitButton
           isPending={loginMutation.isPending}

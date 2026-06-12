@@ -1,14 +1,14 @@
 import { registerContent } from '../constants/authContent'
 import { AuthEmailField } from './AuthEmailField'
 import { AuthForm } from './AuthForm'
-import { AuthFormError, getMutationErrorMessage } from './AuthFormError'
+import { AuthFormError } from './AuthFormError'
 import { AuthFormShell } from './AuthFormShell'
 import { AuthPasswordField } from './AuthPasswordField'
 import { AuthSubmitButton } from './AuthSubmitButton'
 import { useRegisterForm } from '../hooks/useRegisterForm'
 
 export function RegisterForm() {
-  const { form, registerMutation } = useRegisterForm()
+  const { form, registerMutation, errorMessage } = useRegisterForm()
 
   return (
     <AuthFormShell content={registerContent}>
@@ -20,11 +20,7 @@ export function RegisterForm() {
           placeholder="At least 8 characters…"
         />
 
-        {registerMutation.isError ? (
-          <AuthFormError
-            message={getMutationErrorMessage(registerMutation.error)}
-          />
-        ) : null}
+        {errorMessage ? <AuthFormError message={errorMessage} /> : null}
 
         <AuthSubmitButton
           isPending={registerMutation.isPending}

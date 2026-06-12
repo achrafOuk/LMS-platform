@@ -3,6 +3,7 @@ import { useForm } from '@tanstack/react-form'
 import { LoginValidator } from '@tanstack-start-hono/validators/auth'
 
 import { orpc } from '#/utils/orpc'
+import { getRpcErrorMessage } from '../components/AuthFormError'
 
 export function useLoginForm() {
   const loginMutation = useMutation({
@@ -19,9 +20,16 @@ export function useLoginForm() {
       onSubmit: LoginValidator,
     },
     onSubmit: async ({ value }) => {
-      await loginMutation.mutateAsync(value)
+      loginMutation.reset()
+      const result = await loginMutation.mutateAsync(value)
+      console.log(result)
+      
     },
   })
 
-  return { form, loginMutation }
+  const errorMessage = loginMutation.isError
+    ? getRpcErrorMessage(loginMutation.error)
+    : null
+
+  return { form, loginMutation, errorMessage }
 }
