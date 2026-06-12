@@ -10,6 +10,12 @@ import { nitro } from 'nitro/vite'
 
 const config = defineConfig({
   resolve: { tsconfigPaths: true },
+  optimizeDeps: {
+    exclude: ['@tanstack-start-hono/validators'],
+  },
+  ssr: {
+    noExternal: ['@tanstack-start-hono/validators'],
+  },
   plugins: [
     devtools(),
     nitro({ rollupConfig: { external: [/^@sentry\//] } }),

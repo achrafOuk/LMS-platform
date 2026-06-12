@@ -20,6 +20,8 @@
   "dependencies": {
     "@orpc/client": "^1.14.5",
     "@orpc/server": "^1.14.5",
+    "@tanstack/zod-form-adapter": "^0.42.1",
+    "client": "^0.0.1",
     "dotenv": "catalog:"
   }
 }

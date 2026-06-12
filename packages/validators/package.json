@@ -4,7 +4,14 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./auth": {
+      "types": "./src/auth.validator.ts",
+      "import": "./src/auth.validator.ts",
+      "default": "./src/auth.validator.ts"
+    },
     "./*": {
+      "types": "./src/*.validator.ts",
+      "import": "./src/*.validator.ts",
       "default": "./src/*.validator.ts"
     }
   },
