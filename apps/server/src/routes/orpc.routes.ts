@@ -1,4 +1,4 @@
-import { loginRoute, registerRoute } from "./auth.routes";
+import { loginRoute, registerRoute } from "./auth/auth.routes";
 
 
 
