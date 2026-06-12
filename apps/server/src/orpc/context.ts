@@ -1,0 +1,19 @@
+import { os } from "@orpc/server";
+import type {
+  RequestHeadersPluginContext,
+  ResponseHeadersPluginContext,
+} from "@orpc/server/plugins";
+
+export interface AuthUser {
+  uid: string;
+  email: string;
+  role: string;
+}
+
+export interface ORPCContext
+  extends RequestHeadersPluginContext,
+    ResponseHeadersPluginContext {
+  user?: AuthUser;
+}
+
+export const base = os.$context<ORPCContext>();

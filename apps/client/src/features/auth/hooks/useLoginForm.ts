@@ -1,11 +1,14 @@
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from '@tanstack/react-form'
+import { useNavigate } from '@tanstack/react-router'
 import { LoginValidator } from '@tanstack-start-hono/validators/auth'
 
 import { orpc } from '#/utils/orpc'
 import { getRpcErrorMessage } from '../components/AuthFormError'
 
 export function useLoginForm() {
+  const navigate = useNavigate()
+
   const loginMutation = useMutation({
     mutationFn: (values: { email: string; password: string }) =>
       orpc.auth.login(values),
@@ -21,9 +24,8 @@ export function useLoginForm() {
     },
     onSubmit: async ({ value }) => {
       loginMutation.reset()
-      const result = await loginMutation.mutateAsync(value)
-      console.log(result)
-      
+      await loginMutation.mutateAsync(value)
+      await navigate({ to: '/dashboard' });
     },
   })
 

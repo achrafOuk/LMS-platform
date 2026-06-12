@@ -4,6 +4,10 @@ import { serve } from "@hono/node-server";
 import { cors } from "hono/cors";
 import { RPCHandler } from "@orpc/server/fetch";
 import { onError } from "@orpc/server";
+import {
+  RequestHeadersPlugin,
+  ResponseHeadersPlugin,
+} from "@orpc/server/plugins";
 import { router } from "./routes/orpc.routes";
 
 const app = new Hono();
@@ -24,6 +28,7 @@ app.get("/", (c) => {
 });
 
 const handler = new RPCHandler(router, {
+  plugins: [new RequestHeadersPlugin(), new ResponseHeadersPlugin()],
   interceptors: [
     onError((error) => {
       if (error instanceof Error && error.cause && typeof error.cause === 'object' && 'issues' in error.cause) {
@@ -38,7 +43,7 @@ const handler = new RPCHandler(router, {
 app.use('/rpc/*', async (c, next) => {
   const { matched, response } = await handler.handle(c.req.raw, {
     prefix: '/rpc',
-    context: { headers: c.req.raw.headers },
+    context: {},
   })
 
   if (matched) {

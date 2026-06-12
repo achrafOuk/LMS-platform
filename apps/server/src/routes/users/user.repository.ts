@@ -5,8 +5,10 @@ import { eq } from "drizzle-orm";
 
 export async function findUserByEmail(email: string) {
         const user = await db.select({
+            uid: users.uid,
+            email: users.email,
+            role: users.role,
             passwordHash: users.passwordHash,
-            username: users.username,
         }).from(users).where(eq(users.email, email)).limit(1);
         if (!user || user.length === 0 || !user[0]) {
             return null;
