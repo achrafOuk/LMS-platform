@@ -6,7 +6,7 @@ export function NavBarRoutes({routes}: {routes: NavBarRoute[]})
     return (
             <section className="md:flex hidden gap-4">
                 {routes.map((route) => (
-                    <Link key={route.link} to={route.link} >
+                    <Link key={route.label} to={route.link} >
                         {route.label}
                     </Link>
                 ))}

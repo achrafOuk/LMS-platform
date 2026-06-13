@@ -1,19 +1,35 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
-
-import { orpc } from '#/utils/orpc'
-import { useQuery } from '@tanstack/react-query'
-import { useMe } from '#/features/auth/hooks/useMe';
+import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
+import { orpc } from '#/utils/orpc';
 
 export const Route = createFileRoute('/_protected')({
   beforeLoad: async () => {
     try {
-      const { data:user, isLoading, isError } = useMe();       
-      if (!isLoading && isError) {
+      const user = await orpc.auth.me();
+      if (!user) {
         throw redirect({ to: '/login' })
       }
+      console.log(user);
       return { user };
-    } catch {
+    } catch(error) {
+      console.log(error);
       throw redirect({ to: '/login' })
     }
   },
+  // loader: async () => {
+    
+  //   const user = await orpc.auth.me();
+  //   if (!user) {
+  //     throw redirect({ to: '/login' })
+  //   }
+  //   return { user };
+  // },
+  component: ProtectedLayout,
 })
+
+function ProtectedLayout() {
+  return (
+    <>
+      <Outlet />
+    </>
+  )
+}

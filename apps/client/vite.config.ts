@@ -16,6 +16,14 @@ const config = defineConfig({
   ssr: {
     noExternal: ['@tanstack-start-hono/validators'],
   },
+  server: {
+    proxy: {
+      '/rpc': {
+        target: 'http://localhost:3002',
+        changeOrigin: true,
+      },
+    },
+  },
   plugins: [
     devtools(),
     nitro({ rollupConfig: { external: [/^@sentry\//] } }),
