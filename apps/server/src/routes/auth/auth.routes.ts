@@ -99,7 +99,7 @@ export const registerRoute = publicProcedure
     return { message: "User registered successfully", };
 });
 
-export const logoutRoute = publicProcedure.handler(async ({ context }) => {
+export const logoutRoute = protectedProcedure.handler(async ({ context }) => {
   deleteCookie(context.resHeaders, AUTH_COOKIE_NAME, { path: "/" });
 
   return {
@@ -111,9 +111,8 @@ export const logoutRoute = publicProcedure.handler(async ({ context }) => {
 
 
 export const meRoute = protectedProcedure.handler(async ({ context }) => {
-  console.log(context.user);
   return {
-    user: context.user!,
+    user: context.user,
   };
 
 });

@@ -15,14 +15,6 @@ export const Route = createFileRoute('/_protected')({
       throw redirect({ to: '/login' })
     }
   },
-  // loader: async () => {
-    
-  //   const user = await orpc.auth.me();
-  //   if (!user) {
-  //     throw redirect({ to: '/login' })
-  //   }
-  //   return { user };
-  // },
   component: ProtectedLayout,
 })
 

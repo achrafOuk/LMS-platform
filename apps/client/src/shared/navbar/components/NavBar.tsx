@@ -1,28 +1,13 @@
 import { NavBarRoutes } from "./NavBarRoutes";
 import { useState } from "react";
-import type { NavBarRoute } from "../types/NavBarTypes";
 import { MobileNavBarRoutes } from "./MobileNavBarRoutes";
 import { NavBarAuthLinks } from "./NavBarAuthLinks";
 import { Link } from "@tanstack/react-router";
+import { routes } from "../constants/Routes.constant";
 
 export function NavBar()
 {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const routes: NavBarRoute[] = [
-        {
-            link: '/',
-            label: 'Home',
-        },
-        {
-            link: '/',
-            label: 'About',
-        },
-        {
-            link: '/',
-            label: 'Courses',
-        }
-    ];
-
     return (
         <nav className="bg-background border-b p-1 flex flex-col">
             <section className="p-4 flex justify-between items-center">

@@ -1,7 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useForm } from '@tanstack/react-form'
 import { useNavigate } from '@tanstack/react-router'
-import { LoginValidator } from '@tanstack-start-hono/validators/auth'
+import { LoginValidator, type LoginValidatorType } from '@tanstack-start-hono/validators/auth'
 
 import { orpc } from '#/utils/orpc'
 import { getRpcErrorMessage } from '../components/AuthFormError'
@@ -10,7 +10,7 @@ export function useLoginForm() {
   const navigate = useNavigate()
 
   const loginMutation = useMutation({
-    mutationFn: (values: { email: string; password: string }) =>
+    mutationFn: (values: LoginValidatorType) =>
       orpc.auth.login(values),
   })
 

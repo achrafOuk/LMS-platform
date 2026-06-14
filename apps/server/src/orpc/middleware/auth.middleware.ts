@@ -6,7 +6,18 @@ import {
   verifyAccessToken,
 } from "../../routes/auth/auth.service";
 
-export const requireAuth = base.middleware(async ({ context, next }) => {
+const publicMiddleware =  base.middleware(async ({ context, next }) => {
+  const token = getCookie(context.reqHeaders, AUTH_COOKIE_NAME);
+  if (token)
+  {
+    throw new ORPCError("UNAUTHORIZED", { message: "invalid" });
+  }
+  return next();
+
+});
+
+
+export const authMiddleware = base.middleware(async ({ context, next }) => {
   const token = getCookie(context.reqHeaders, AUTH_COOKIE_NAME);
 
   if (!token) {
@@ -29,5 +40,6 @@ export const requireAuth = base.middleware(async ({ context, next }) => {
   }
 });
 
-export const publicProcedure = base;
-export const protectedProcedure = base.use(requireAuth);
+
+export const publicProcedure = base.use(publicMiddleware);
+export const protectedProcedure = base.use(authMiddleware);
