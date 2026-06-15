@@ -5,7 +5,7 @@ import { counters } from '#/features/landingpage/KPI/constansts/couters'
 import { ReviewsSection } from '#/features/reviews/components/ReviewsSection'
 import { createFileRoute } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/_public/')({
   component: Home,
 })
 

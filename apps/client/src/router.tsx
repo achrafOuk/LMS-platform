@@ -8,8 +8,10 @@ import TanstackQueryProvider, {
   getContext,
 } from './integrations/tanstack-query/root-provider'
 
+export const context = getContext();
+
 export function getRouter() {
-  const context = getContext()
+
 
   const router = createTanStackRouter({
     routeTree,

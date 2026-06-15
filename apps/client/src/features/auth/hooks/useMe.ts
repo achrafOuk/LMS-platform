@@ -1,13 +1,20 @@
-import { orpc } from "#/utils/orpc";
+import { queryOptions, type QueryClient } from '@tanstack/react-query'
 
-export function useMe()
-{
-    return { 
-        queryKey: ['auth', 'me'],
-        queryFn: () => orpc.auth.me(), 
-        retry: false,
-        staleTime: Infinity,
-        refetchOnWindowFocus: false,
-        refetchOnReconnect: false,
-    };
+import { orpc } from '#/utils/orpc'
+
+export const meQueryOptions = queryOptions({
+  queryKey: ['auth', 'me'],
+  queryFn: () => orpc.auth.me(),
+  retry: false,
+  staleTime: Infinity,
+  refetchOnWindowFocus: false,
+  refetchOnReconnect: false,
+})
+
+export function clearMeQuery(queryClient: QueryClient) {
+  queryClient.removeQueries({ queryKey: meQueryOptions.queryKey })
+}
+
+export function useMe() {
+  return meQueryOptions
 }

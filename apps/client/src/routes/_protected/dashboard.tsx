@@ -1,9 +1,6 @@
 import { useMe } from '#/features/auth/hooks/useMe';
-import { orpc } from '#/utils/orpc';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
-import { createIsomorphicFn } from '@tanstack/react-start';
-import { getRequestHeaders } from "@tanstack/react-start/server";
 
 export const Route = createFileRoute('/_protected/dashboard')({
   component: DashboardPage,

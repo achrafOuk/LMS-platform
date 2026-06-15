@@ -11,7 +11,6 @@ import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
 import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
-import { NavBar } from '#/shared/navbar/components/NavBar'
 import Footer from '#/shared/footer/components/Footer'
 
 interface MyRouterContext {
@@ -56,8 +55,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           Skip to main content
         </a>
         <main id="main-content" className="flex flex-col">
-          <NavBar />
-            {children}
+          {children}
           <Footer />
         </main>
         <TanStackDevtools
