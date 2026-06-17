@@ -9,9 +9,11 @@ export const Route = createFileRoute('/_protected')({
 
 function ProtectedLayout() {
   return (
-    <>
+    <section className="min-h-[calc(100dvh)] ">
       <NavBarUser />
-      <Outlet />
-    </>
+      <main className="flex-1 flex flex-col items-center justify-center">
+        <Outlet />
+      </main>
+    </section>
   )
 }
