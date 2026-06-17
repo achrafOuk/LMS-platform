@@ -1,13 +1,11 @@
 import { Link } from '@tanstack/react-router'
 import type { CourseType } from '../types/Course'
-import { formatCoursePrice } from '../constants/formatCoursePrice'
 import {
   courseCardClassName,
-  courseEnrollLinkClassName,
   courseTitleLinkClassName,
 } from '../constants/courseStyles'
 
-export function CourseCard({ course }: { course: CourseType }) {
+export function CourseCard({ course, children }: { course: CourseType, children: React.ReactNode }) {
   return (
     <article className={courseCardClassName}>
       <div className="aspect-[16/10] overflow-hidden bg-muted">
@@ -33,15 +31,7 @@ export function CourseCard({ course }: { course: CourseType }) {
         <p className="line-clamp-2 flex-1 text-sm leading-relaxed text-muted-foreground">
           {course.description}
         </p>
-
-        <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-base font-semibold tabular-nums text-foreground">
-            {formatCoursePrice(course.price)}
-          </p>
-          <Link to="/register" className={courseEnrollLinkClassName}>
-            Enroll now
-          </Link>
-        </div>
+        {children}
       </div>
     </article>
   )
