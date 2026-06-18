@@ -1,8 +1,8 @@
-import { Link } from 'lucide-react'
 import { formatCoursePrice } from '../constants/formatCoursePrice'
 import type { CourseType } from '../types/Course'
 import { CourseCard } from './CourseCard'
 import { courseEnrollLinkClassName } from '../constants/courseStyles'
+import { Link } from '@tanstack/react-router'
 
 export function CourseGrid({ courses }: { courses: CourseType[] }) {
   return (

@@ -1,5 +1,4 @@
 import { useMe } from '#/features/auth/hooks/useMe';
-import { CourseCard } from '#/features/courses/components/CourseCard';
 import { featuredCourses } from '#/features/courses/constants/featuredCourses';
 import { CourseProgress } from '#/features/courses/dashboard/components/CoursePorgress';
 import { useSuspenseQuery } from '@tanstack/react-query';
@@ -14,8 +13,6 @@ export const Route = createFileRoute('/_protected/dashboard')({
 
 function DashboardPage() {
   const { data:user } = useSuspenseQuery(useMe());
-  // course-card bg-white rounded-[2.5rem] overflow-hidden border border-cloud-100 flex flex-col group h-full
-
   return (
     <div className="mx-auto w-full p-4 w-[90%] mx-auto w-[90%] mx-auto space-y-4 ">
 

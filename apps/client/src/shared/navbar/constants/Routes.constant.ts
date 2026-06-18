@@ -27,5 +27,9 @@ export const authRoutes: NavBarRoute[] = [
         {
             link: '/courses',
             label: 'Courses',
+        },
+        {
+            link: '/admin/dashboard',
+            label: 'Admin',
         }
 ];

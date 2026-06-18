@@ -10,7 +10,6 @@ export async function requireAuth() {
     }
     return { user: me.user }
   } catch (error) {
-    if (isRedirect(error)) throw error
     throw redirect({ to: '/login' })
   }
 }
