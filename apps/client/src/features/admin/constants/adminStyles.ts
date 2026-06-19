@@ -6,7 +6,7 @@ export const adminPageHeaderClassName =
 export const adminPageTitleClassName = 'text-2xl font-semibold text-foreground'
 
 export const adminPrimaryActionClassName =
-  'inline-flex min-h-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-[background-color,box-shadow,transform] duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:hover:bg-primary/90 motion-safe:hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation active:translate-y-0'
+  'inline-flex min-h-10 shrink-0 items-center justify-center gap-2  bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md transition-[background-color,box-shadow,transform] duration-200 motion-safe:hover:-translate-y-0.5 motion-safe:hover:bg-primary/90 motion-safe:hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background touch-manipulation active:translate-y-0'
 
 export const adminSecondaryLinkClassName =
   'inline-flex min-h-9 items-center justify-center gap-1.5 rounded-md border border-border bg-background px-3 py-1.5 text-sm font-medium text-foreground transition-colors duration-200 hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'

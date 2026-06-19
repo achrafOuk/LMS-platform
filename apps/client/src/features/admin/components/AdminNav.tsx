@@ -1,7 +1,9 @@
 import {
+  adminNavLinkActiveClassName,
   adminNavLinkClassName,
 } from '../constants/adminStyles'
 import { Link } from '@tanstack/react-router'
+import { cn } from '#/utils/cn'
 
 const navItems = [
   { to: '/admin/dashboard', label: 'Overview' },
@@ -17,6 +19,9 @@ export function AdminNav() {
             <Link
               to={item.to}
               className={adminNavLinkClassName}
+              activeProps={{
+                className: cn(adminNavLinkClassName, adminNavLinkActiveClassName),
+              }}
             >
               {item.label}
             </Link>
