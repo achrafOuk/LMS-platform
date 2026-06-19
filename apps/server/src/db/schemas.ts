@@ -48,7 +48,7 @@ export const tags = pgTable("tag", {
 export const courses = pgTable("course", {
   cid: varchar("cid", { length: 26 }).primaryKey(),
   slug: varchar("slug", { length: 255 }).notNull(),
-  courseName: varchar("course_name", { length: 255 }).notNull().unique(),
+  courseName: varchar("course_name", { length: 255 }).notNull(),
   coverUrl: text("cover_url"),
   description: text("description"),
   price: real("price").notNull(),
@@ -58,13 +58,16 @@ export const courses = pgTable("course", {
   enrolled: integer("enrolled").notNull().default(0),
   createdAt: date("create_at").notNull(),
   updatedAt: date("updated_at").notNull(),
-});
+  
+}, (table) => [
+  unique("course_course_name_unique").on(table.courseName, table.slug),
+]);
 
 export const modules = pgTable(
   "module",
   {
     mhid: varchar("mhid", { length: 26 }).primaryKey(),
-    order: varchar("order", { length: 26 }).notNull(),
+    order: integer("order" ).notNull(),
     cid: varchar("cid", { length: 26 })
       .notNull()
       .references(() => courses.cid, { onDelete: "cascade" }),
