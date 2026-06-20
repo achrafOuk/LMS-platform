@@ -1,5 +1,5 @@
 import { loginRoute, logoutRoute, meRoute, registerRoute } from "./auth/auth.routes";
-import { createCourseRoute, getCourseRoute } from "./courses/course.route";
+import { createCourseRoute, getCourseRoute, getCoursesRoute } from "./courses/course.route";
 
 
 export const router = {
@@ -17,7 +17,8 @@ export const router = {
 
   courses: {
     createCourse: createCourseRoute,
-    getFeaturedCourses: getCourseRoute,
+    getFeaturedCourses: getCoursesRoute,
+    getCourse: getCourseRoute,
   },
 
 };

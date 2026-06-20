@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { ulid } from "ulid";
-import type { DbTransaction } from "../../db/drizzle.client";
+import type { Db, DbTransaction } from "../../db/drizzle.client";
 import { courses, lessons, modules, tags } from "../../db/schemas";
 import type { CourseValidatorType, LessonValidatorType, ModuleValidatorType } from "@tanstack-start-hono/validators/course";
 
@@ -68,4 +68,59 @@ export async function createNewLesson(input: LessonValidatorType,db: DbTransacti
         updatedAt: now.toISOString(),
     }).returning();
     return createdLesson;
+}
+
+export async function getFeaturedCourses(db: Db)
+{
+    return  await db.select({
+        cid: courses.cid,
+        courseName: courses.courseName,
+        slug: courses.slug,
+        coverUrl: courses.coverUrl,
+        price: courses.price,
+        category: tags.tagName,
+    })
+    .from(courses) 
+    .innerJoin(tags, eq(courses.tagId, tags.tid))
+
+}
+
+export async function getCourse(slug: string, db: Db)
+{
+    return await db.query.courses.findFirst({
+        where: eq(courses.slug, slug),
+        columns: {
+            cid: true,
+            courseName: true,
+            slug: true,
+            coverUrl: true,
+            price: true,
+            description: true,
+        },
+        with: {
+            modules: {
+                orderBy: (modules, { asc }: any) => [asc(modules.order)],
+                columns: {
+                    mhid: true,
+                    title: true,
+                    order: true,
+                },
+                with: {
+                    lessons: {
+                        columns: {
+                            leid: true,
+                            title: true,
+                            orderIndex: true,
+                            videoUrl: true,
+                        },
+                        orderBy: (lessons, { asc }: any) => [asc(lessons.orderIndex)],
+
+                    },
+                    
+                },
+            },
+        },
+    });
+
+
 }

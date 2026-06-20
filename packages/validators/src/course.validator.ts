@@ -87,7 +87,13 @@ export const courseValidator = z
         },
       );
     });
-  });
+});
+
+export const courseSlugValidator = z.object({
+  slug: z.string().min(1),
+});
+
+
 
 export type CourseValidatorType = z.infer<typeof courseValidator>;
 export type ModuleValidatorType = z.infer<typeof moduleValidator>;
