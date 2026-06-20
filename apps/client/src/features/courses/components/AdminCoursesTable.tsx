@@ -62,13 +62,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
             <p className="text-muted-foreground">
               No courses yet. Create your first course to get started.
             </p>
-            <Link
-              to="/admin/dashboard/courses/new"
-              className={adminPrimaryActionClassName}
-            >
-              <Plus className="size-4" aria-hidden />
-              Add Course
-            </Link>
+            
           </div>
         ) : (
           <div className={`overflow-x-auto ${adminFrameClassName}`}>
@@ -99,7 +93,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
                     <td className="px-4 py-3">
                       <div className="size-14 shrink-0 overflow-hidden bg-muted">
                         <img
-                          src={course.image}
+                          src={course.coverUrl || ''}
                           alt=""
                           width={56}
                           height={56}
@@ -109,7 +103,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
                     </td>
                     <td className="max-w-xs px-4 py-3">
                       <span className="block truncate font-medium text-foreground">
-                        {course.title}
+                        {course.courseName}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-muted-foreground">
@@ -157,7 +151,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
         </h2>
         <p className="mt-2 text-sm text-muted-foreground">
           {courseToDelete
-            ? `"${courseToDelete.title}" will be removed. This action cannot be undone.`
+            ? `"${courseToDelete.courseName}" will be removed. This action cannot be undone.`
             : 'This action cannot be undone.'}
         </p>
         <div className="mt-6 flex flex-wrap justify-end gap-2">

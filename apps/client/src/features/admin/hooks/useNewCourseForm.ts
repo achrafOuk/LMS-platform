@@ -6,6 +6,7 @@ import {
 } from '@tanstack-start-hono/validators/course'
 
 import { getRpcErrorMessage } from '#/features/auth/components/AuthFormError'
+import { orpc } from '#/utils/orpc'
 
 const defaultValues: CourseValidatorType = {
   title: '',
@@ -30,7 +31,7 @@ export function useNewCourseForm() {
     },
     onSubmit: async ({ value }) => {
       createCourseMutation.reset();
-      // await createCourseMutation.mutateAsync(value);
+      await orpc.courses.createCourse(value);
     },
     
   })

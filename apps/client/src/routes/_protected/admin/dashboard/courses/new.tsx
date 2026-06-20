@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 
 import { AuthFormError } from '#/features/auth/components/AuthFormError'
 import { ModuleForm } from '#/features/admin/components/course/ModuleForm'
@@ -21,11 +21,20 @@ const inputClassName =
 const labelClassName = 'text-sm font-medium text-foreground'
 
 function RouteComponent() {
-  const { form, createCourseMutation, apiErrorMessage } = useNewCourseForm()
+  const { form, createCourseMutation } = useNewCourseForm()
+  const navigate = useNavigate();
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault()
-    void form.handleSubmit();
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    try
+    {
+      await form.handleSubmit();
+      await navigate({ to: '/admin/dashboard/courses' })
+    }
+    catch (error)
+    {
+      console.error(error);
+    }
   }
 
   return (
@@ -237,11 +246,8 @@ function RouteComponent() {
             Cancel
           </button>
 
-          <button type="button" onClick={() => console.log(form.state.values)}>Validate</button>
         </div>
       </form>
-
-      
     </section>
   )
 }
