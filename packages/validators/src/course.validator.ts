@@ -9,7 +9,7 @@ const lessonValidator = z.object({
 const moduleValidator = z.object({
   title: z.string().min(1, "Module title is required"),
   order: z.number().min(1),
-  lessions: z.array(lessonValidator).min(1, "Add at least one lesson").max(1, "Maximum 1 lessons"),
+  lessions: z.array(lessonValidator).min(1, "Add at least one lesson").max(3, "Maximum 3 lessons"),
 });
 
 function validateSequentialOrder(
@@ -47,54 +47,61 @@ function validateSequentialOrder(
   }
 }
 
-export const courseValidator = z
-  .object({
-    title: z.string().min(1),
-    description: z.string().min(1),
-    price: z.number().min(0),
-    image: z.string().min(1).optional(),
-    category: z.string().min(1),
-    modules: z.array(moduleValidator).min(1, "Add at least one module").max(30, "Maximum 30 module"),
-  })
-  .superRefine((data, ctx) => {
-    
+const courseBodySchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  price: z.number().min(0),
+  image: z.string().min(1),
+  category: z.string().min(1),
+  modules: z.array(moduleValidator).min(1, "Add at least one module").max(10, "Maximum 10 module"),
+});
+
+function refineCourseFields(data: z.infer<typeof courseBodySchema>, ctx: z.RefinementCtx) {
+  validateSequentialOrder(
+    data.modules.map((module) => module.order),
+    ctx,
+    {
+      notValidMessage: "Modules order is not valid",
+      indexNotValidMessage: "Modules order index is not valid",
+      path: ["modules"],
+    },
+  );
+
+  data.modules.forEach((module, moduleIndex) => {
+    if (module.lessions.length === 0) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Add at least one lesson",
+        path: ["modules", moduleIndex, "lessions"],
+      });
+    }
+
     validateSequentialOrder(
-      data.modules.map((module) => module.order),
+      module.lessions.map((lesson) => lesson.order),
       ctx,
       {
-        notValidMessage: "Modules order is not valid",
-        indexNotValidMessage: "Modules order index is not valid",
-        path: ["modules"],
+        notValidMessage: "Lessons order is not valid",
+        indexNotValidMessage: "Lessons order index is not valid",
+        path: ["modules", moduleIndex, "lessions"],
       },
     );
+  });
+}
 
-    data.modules.forEach((module, moduleIndex) => {
-      if (module.lessions.length === 0) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: "Add at least one lesson",
-          path: ["modules", moduleIndex, "lessions"],
-        });
-      }
-
-      validateSequentialOrder(
-        module.lessions.map((lesson) => lesson.order),
-        ctx,
-        {
-          notValidMessage: "Lessons order is not valid",
-          indexNotValidMessage: "Lessons order index is not valid",
-          path: ["modules", moduleIndex, "lessions"],
-        },
-      );
-    });
-});
+export const courseValidator = courseBodySchema.superRefine(refineCourseFields);
 
 export const courseSlugValidator = z.object({
   slug: z.string().min(1),
 });
 
+export const updateCourseValidator = courseBodySchema
+  // .merge(courseSlugValidator)
+  .extend({
+    cid: z.string().length(26, "Course ID must be 26 characters long"),
+  })
+  .superRefine(refineCourseFields);
 
-
+export type UpdateCourseValidatorType = z.infer<typeof updateCourseValidator>;
 export type CourseValidatorType = z.infer<typeof courseValidator>;
 export type ModuleValidatorType = z.infer<typeof moduleValidator>;
 export type LessonValidatorType = z.infer<typeof lessonValidator>;

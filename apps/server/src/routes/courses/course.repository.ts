@@ -1,8 +1,8 @@
 import { eq } from "drizzle-orm";
 import { ulid } from "ulid";
 import type { Db, DbTransaction } from "../../db/drizzle.client";
-import { courses, lessons, modules, tags } from "../../db/schemas";
-import type { CourseValidatorType, LessonValidatorType, ModuleValidatorType } from "@tanstack-start-hono/validators/course";
+import { courses, modules, tags } from "../../db/schemas";
+import type { CourseValidatorType, ModuleValidatorType, UpdateCourseValidatorType } from "@tanstack-start-hono/validators/course";
 
 export async function findOrCreateCategory(categoryName: string, db: DbTransaction) {
     const [existingTag] = await db
@@ -56,19 +56,7 @@ export async function createNewModule(input: ModuleValidatorType,db: DbTransacti
     return createdModule;
 }
 
-export async function createNewLesson(input: LessonValidatorType,db: DbTransaction, now: Date, chid: string)
-{
-    const [createdLesson] = await db.insert(lessons).values({
-        leid: ulid(),
-        chid: chid,
-        title: input.title,
-        order: input.order,
-        orderIndex: input.order,
-        createdAt: now.toISOString(),
-        updatedAt: now.toISOString(),
-    }).returning();
-    return createdLesson;
-}
+
 
 export async function getFeaturedCourses(db: Db)
 {
@@ -98,6 +86,11 @@ export async function getCourse(slug: string, db: Db)
             description: true,
         },
         with: {
+            tag: {
+                columns: {
+                    tagName: true,
+                },
+            },
             modules: {
                 orderBy: (modules, { asc }: any) => [asc(modules.order)],
                 columns: {
@@ -123,4 +116,15 @@ export async function getCourse(slug: string, db: Db)
     });
 
 
+}
+
+export async function updateCourseFields(input: UpdateCourseValidatorType, tx: DbTransaction, now: Date, tagId: string) {
+    await tx.update(courses).set({
+        courseName: input.title,
+        coverUrl: input.image,
+        description: input.description,
+        price: input.price,
+        tagId: tagId,
+        updatedAt: now.toISOString(),
+    }).where(eq(courses.cid, input.cid!));
 }

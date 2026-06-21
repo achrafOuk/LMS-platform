@@ -12,7 +12,7 @@ const defaultValues: CourseValidatorType = {
   title: '',
   description: '',
   price: 0,
-  image: undefined,
+  image: '',
   category: '',
   modules: [],
 }

@@ -19,7 +19,6 @@ interface AdminCoursesTableProps {
 }
 
 export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
-  const [courses, setCourses] = useState(initialCourses)
   const [courseToDelete, setCourseToDelete] = useState<CourseType | null>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -36,9 +35,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
   function confirmDelete() {
     if (!courseToDelete) return
 
-    setCourses((current) =>
-      current.filter((course) => course.slug !== courseToDelete.slug),
-    )
+    // delete course will be here
     closeDeleteDialog()
   }
 
@@ -55,7 +52,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
           </Link>
         </AdminPageHeader>
 
-        {courses.length === 0 ? (
+        {initialCourses.length === 0 ? (
           <div
             className={`${adminFrameClassName} flex flex-col items-center gap-4 px-6 py-12 text-center`}
           >
@@ -88,7 +85,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
                 </tr>
               </thead>
               <tbody>
-                {courses.map((course) => (
+                {initialCourses.map((course) => (
                   <tr key={course.slug} className={adminTableRowClassName}>
                     <td className="px-4 py-3">
                       <div className="size-14 shrink-0 overflow-hidden bg-muted">

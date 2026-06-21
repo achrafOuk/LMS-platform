@@ -1,4 +1,4 @@
-import type { NewCourseForm } from '#/features/admin/hooks/useNewCourseForm'
+import type { CourseFormApi } from '#/features/admin/types/courseForm'
 
 import { cn } from '#/utils/cn'
 
@@ -14,7 +14,7 @@ const inputClassName =
 const labelClassName = 'text-sm font-medium text-foreground'
 
 type LessonFormProps = {
-  form: NewCourseForm
+  form: CourseFormApi
   moduleIndex: number
   lessonIndex: number
   onRemove: () => void
@@ -91,7 +91,7 @@ export function LessonForm({
 }
 
 type ModuleFormProps = {
-  form: NewCourseForm
+  form: CourseFormApi
   moduleIndex: number
   onRemove: () => void
 }
