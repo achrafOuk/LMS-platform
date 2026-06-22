@@ -1,9 +1,11 @@
 import { db } from "../../db/drizzle.client";
 import { protectedProcedure } from "../../orpc/middleware/auth.middleware";
 import { courseSlugValidator, courseValidator, updateCourseValidator} from "@tanstack-start-hono/validators/course";
-import { createCourse,  getCourse, getFeaturedCourses, updateCourse } from "./course.repository";
+import {   getCourse, getFeaturedCourses} from "./course.repository";
 import { ORPCError } from "@orpc/server";
 import { checkViolation } from "../../db/db.utils";
+import { createCourse, updateCourse } from "./course.service";
+
 
 export const createCourseRoute = protectedProcedure
 .input(courseValidator)
@@ -49,9 +51,7 @@ export const updateCourseRoute = protectedProcedure
 .handler(async ({ input }) =>{
     try
     {
-        await db.transaction(async (tx) => {
-            await updateCourse(input, tx);
-        });
+        await db.transaction(async (tx) => { await updateCourse(input, tx); });
 
         return { message: "Course updated successfully" };
     }
