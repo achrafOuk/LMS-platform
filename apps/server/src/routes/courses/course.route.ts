@@ -1,9 +1,7 @@
 import { db } from "../../db/drizzle.client";
 import { protectedProcedure } from "../../orpc/middleware/auth.middleware";
 import { courseSlugValidator, courseValidator, updateCourseValidator} from "@tanstack-start-hono/validators/course";
-import { createNewCourse, createNewModule, findOrCreateCategory, getCourse, getFeaturedCourses, updateCourseFields } from "./course.repository";
-import { deleteLesson, createNewLesson, upsertLesson } from "../lessons/lessons.repository";
-import { deleteModule, upsertModule } from "../modules/module.repository";
+import { createCourse,  getCourse, getFeaturedCourses, updateCourse } from "./course.repository";
 import { ORPCError } from "@orpc/server";
 import { checkViolation } from "../../db/db.utils";
 
@@ -12,19 +10,7 @@ export const createCourseRoute = protectedProcedure
 .handler(async ({ input }) => {
     try
     {
-        await db.transaction(async (tx) => {
-            const now = new Date();
-            const tagId = await findOrCreateCategory(input.category, tx);
-            const createdCourse = await createNewCourse(input, tx, now, tagId);
-            for (const module of input.modules)
-            {
-                const createdModule = await createNewModule(module, tx, now, createdCourse!.cid);
-                for (const lesson of module.lessions)
-                {
-                    await createNewLesson(lesson, tx, now, createdModule!.mhid);
-                }
-            }
-        });
+        await db.transaction(async (tx) => { await createCourse(input, tx); });
         return { message: "Course created successfully" };
     }
     catch (error: unknown) 
@@ -61,28 +47,10 @@ export const getCourseRoute = protectedProcedure.route({
 export const updateCourseRoute = protectedProcedure
 .input(updateCourseValidator)
 .handler(async ({ input }) =>{
-    console.log("input:", input);
     try
     {
         await db.transaction(async (tx) => {
-            const now = new Date();
-            const tagId = await findOrCreateCategory(input.category, tx);
-            await updateCourseFields(input, tx, now, tagId);
-
-            const inputModuleTitles = input.modules.map((module) => module.title);
-
-            for (const module of input.modules) {
-                const upsertedModule = await upsertModule(module, input.cid, tx, now);
-                const inputLessonTitles = module.lessions.map((lesson) => lesson.title);
-
-                for (const lesson of module.lessions) {
-                    await upsertLesson(lesson, upsertedModule!.mhid, tx, now);
-                }
-
-                await deleteLesson(upsertedModule!.mhid, inputLessonTitles, tx);
-            }
-
-            await deleteModule(input.cid, inputModuleTitles, tx);
+            await updateCourse(input, tx);
         });
 
         return { message: "Course updated successfully" };
