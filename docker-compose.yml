@@ -40,8 +40,26 @@ services:
       - ft_transcendence
     depends_on:
       - db
+  rustfs:
+    image: rustfs/rustfs:latest
+    container_name: communix-rustfs-dev
+    restart: unless-stopped
+    volumes:
+      - lms_platform_rustfs_data:/data
+    ports:
+      - "9000:9000" # RustFS API
+      - "9001:9001" # RustFS Console
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY}
+      RUSTFS_VOLUMES: /data
+      RUSTFS_ADDRESS: 0.0.0.0:9000
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_CONSOLE_ADDRESS: 0.0.0.0:9001
+    command: ["--address", "0.0.0.0:9000", "/data"]
 
 
 volumes:
   lms_platform_pgdata:
   lms_platform_pgadmin_data:
+  lms_platform_rustfs_data:
