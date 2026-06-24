@@ -3,8 +3,6 @@ import { ulid } from "ulid";
 import type { Db, DbTransaction } from "../../db/drizzle.client";
 import { courses, modules, tags } from "../../db/schemas";
 import type { CourseValidatorType, ModuleValidatorType, UpdateCourseValidatorType } from "@tanstack-start-hono/validators/course";
-import { createNewLesson, deleteLesson, upsertLesson } from "../lessons/lessons.repository";
-import { deleteModule, upsertModule } from "../modules/module.repository";
 
 export async function findOrCreateCategory(categoryName: string, db: DbTransaction) {
     const [existingTag] = await db
@@ -57,8 +55,6 @@ export async function createNewModule(input: ModuleValidatorType,db: DbTransacti
     }).returning();
     return createdModule;
 }
-
-
 
 export async function getFeaturedCourses(db: Db)
 {

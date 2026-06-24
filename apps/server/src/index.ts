@@ -9,6 +9,7 @@ import {
   ResponseHeadersPlugin,
 } from "@orpc/server/plugins";
 import { router } from "./routes/orpc.routes";
+import { createBucket } from "./media/s3.js";
 
 const app = new Hono();
 
@@ -63,4 +64,8 @@ serve(
   },
 );
 
+await createBucket();
+
 export default app;
+
+

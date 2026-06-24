@@ -2,6 +2,7 @@ import { ModuleForm } from '#/features/admin/components/course/ModuleForm'
 import type { CourseFormApi } from '#/features/admin/types/courseForm'
 import { adminActionButtonClassName } from '#/features/admin/constants/adminStyles'
 import { cn } from '#/utils/cn'
+import { UploadImage } from '../../upload/components/UploadImage'
 
 const inputClassName =
   'w-full rounded-xl border border-border bg-background p-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
@@ -191,6 +192,8 @@ export function CourseFormFields({ form }: CourseFormFieldsProps) {
           </div>
         )}
       </form.Field>
+
+      <UploadImage />
     </>
   )
 }

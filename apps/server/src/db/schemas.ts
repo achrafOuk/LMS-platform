@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   date,
   integer,
@@ -10,12 +10,22 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
+
+export const Media =  pgTable("media", {
+  uid: varchar("uid", { length: 26 }).primaryKey(),
+  path: text("path").notNull(),
+  mimeType: text("mime_type").notNull(),
+  status: varchar("status", { length: 14 }).notNull().default("PENDING"), // PENDING, SAVED
+  createdAt: date("create_at").notNull().default(sql`now()`),
+  updatedAt: date("updated_at").notNull().default(sql`now()`),
+})
+
 export const users = pgTable("user", {
   uid: varchar("uid", { length: 26 }).primaryKey(),
   username: varchar("username", { length: 255 }).notNull().unique(),
   passwordHash: varchar("password_hash", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  role: varchar("role", { length: 50 }).notNull(),
+  role: varchar("role", { length: 50 }).notNull().default("USER"), // USER, ADMIN
   createdAt: date("create_at").notNull(),
   updatedAt: date("updated_at").notNull(),
 });
@@ -196,3 +206,4 @@ export const watchedLessonsRelations = relations(watchedLessons, ({ one }) => ({
     references: [lessons.leid],
   }),
 }));
+
