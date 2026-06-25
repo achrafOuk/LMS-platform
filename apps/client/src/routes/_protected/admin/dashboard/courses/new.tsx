@@ -14,14 +14,13 @@ export const Route = createFileRoute('/_protected/admin/dashboard/courses/new')(
 })
 
 function RouteComponent() {
-  const { form, createCourseMutation } = useNewCourseForm()
-  const navigate = useNavigate()
+  const { form, createCourseMutation, apiErrorMessage} = useNewCourseForm()
+  console.log(apiErrorMessage)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     try {
       await form.handleSubmit()
-      await navigate({ to: '/admin/dashboard/courses' })
     } catch (error) {
       console.error(error)
     }
@@ -37,6 +36,15 @@ function RouteComponent() {
         noValidate
       >
         <FormErrorsSummary form={form} />
+        {apiErrorMessage ? (
+          <p
+            role="alert"
+            aria-live="polite"
+            className="rounded-xl border border-destructive/40 bg-destructive/5 p-4 text-sm text-destructive"
+          >
+            {apiErrorMessage}
+          </p>
+        ) : null}
         <CourseFormFields form={form} />
 
         <div className="flex flex-row justify-end gap-2">

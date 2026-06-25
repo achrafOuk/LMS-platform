@@ -1,5 +1,8 @@
 import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import type { NotifyMediaUploadedValidatorType } from "@tanstack-start-hono/validators/upload";
+import type { Db } from "../../db/drizzle.client";
+import { Media } from "../../db/schemas";
 import {  s3 } from "../../media/s3";
 
 export function formatFilename(mimeType: string, filename: string)
@@ -55,4 +58,34 @@ export async function getMediaUrl(bucket: string, filename: string)
         }
         return {error: 'Internal server error'};
     }
+}
+
+function getMediaUid(filename: string) {
+    const file = filename.split("/").pop() ?? filename;
+    return file.split(".")[0] ?? file;
+}
+
+export async function notifyMediaUploaded(db: Db, input: NotifyMediaUploadedValidatorType) {
+    const uid = getMediaUid(input.filename);
+
+    const [media] = await db
+        .insert(Media)
+        .values({
+            uid,
+            path: input.filename,
+            mimeType: input.mimeType,
+            status: "PENDING",
+        })
+        .onConflictDoUpdate({
+            target: Media.uid,
+            set: {
+                path: input.filename,
+                mimeType: input.mimeType,
+                status: "PENDING",
+                updatedAt: new Date().toISOString(),
+            },
+        })
+        .returning();
+
+    return media;
 }

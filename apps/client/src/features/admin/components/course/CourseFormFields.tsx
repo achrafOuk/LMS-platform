@@ -109,26 +109,11 @@ export function CourseFormFields({ form }: CourseFormFieldsProps) {
           const hasError = field.state.meta.errors.length > 0
 
           return (
-            <div className="flex flex-col gap-2">
-              <label htmlFor={field.name} className={labelClassName}>
-                Image URL
-              </label>
-              <input
-                id={field.name}
-                name={field.name}
-                type="url"
-                value={field.state.value}
-                onChange={(event) => field.handleChange(event.target.value)}
-                placeholder="https://…"
-                autoComplete="off"
-                spellCheck={false}
-                aria-invalid={hasError ? true : undefined}
-                className={cn(
-                  inputClassName,
-                  hasError && 'border-destructive focus-visible:ring-destructive',
-                )}
-              />
-            </div>
+            <UploadImage
+              value={field.state.value}
+              onChange={field.handleChange}
+              hasError={hasError}
+            />
           )
         }}
       </form.Field>
@@ -193,7 +178,6 @@ export function CourseFormFields({ form }: CourseFormFieldsProps) {
         )}
       </form.Field>
 
-      <UploadImage />
     </>
   )
 }

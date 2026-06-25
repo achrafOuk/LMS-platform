@@ -3,7 +3,7 @@ import { protectedProcedure } from "../../orpc/middleware/auth.middleware";
 import { courseSlugValidator, courseValidator, updateCourseValidator} from "@tanstack-start-hono/validators/course";
 import {   getCourse, getFeaturedCourses} from "./course.repository";
 import { ORPCError } from "@orpc/server";
-import { checkViolation } from "../../db/db.utils";
+import { checkViolation, formatViolationErrorMessage } from "../../db/db.utils";
 import { createCourse, updateCourse } from "./course.service";
 
 
@@ -18,7 +18,7 @@ export const createCourseRoute = protectedProcedure
     catch (error: unknown) 
     {
         const errorMessage = checkViolation(error);
-        if (errorMessage) throw new ORPCError("CONFLICT", { message: errorMessage });
+        if (errorMessage) throw new ORPCError("CONFLICT", { message: formatViolationErrorMessage(errorMessage as string) });
         throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to create course" });
     }
 });

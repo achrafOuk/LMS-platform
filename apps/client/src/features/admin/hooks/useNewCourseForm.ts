@@ -7,6 +7,7 @@ import {
 
 import { getRpcErrorMessage } from '#/features/auth/components/AuthFormError'
 import { orpc } from '#/utils/orpc'
+import { useNavigate } from '@tanstack/react-router'
 
 const defaultValues: CourseValidatorType = {
   title: '',
@@ -18,10 +19,14 @@ const defaultValues: CourseValidatorType = {
 }
 
 export function useNewCourseForm() {
+  const navigate = useNavigate()
   const createCourseMutation = useMutation({
-    mutationFn: async (_values: CourseValidatorType) => {
-      throw new Error('Course API not connected yet')
+    mutationFn: async (value: CourseValidatorType) => {
+      await orpc.courses.createCourse(value);
     },
+    onSuccess: async () => {
+      await navigate({ to: '/admin/dashboard/courses' })
+    }
   })
 
   const form = useForm({
@@ -31,9 +36,10 @@ export function useNewCourseForm() {
     },
     onSubmit: async ({ value }) => {
       createCourseMutation.reset();
-      await orpc.courses.createCourse(value);
-    },
-    
+      await createCourseMutation.mutateAsync(value);
+      // await orpc.courses.createCourse(value);
+    }
+        
   })
 
   const apiErrorMessage = createCourseMutation.isError

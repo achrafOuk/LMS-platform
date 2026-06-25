@@ -1,4 +1,4 @@
-import { isRedirect, redirect } from '@tanstack/react-router'
+import {  isRedirect, redirect } from '@tanstack/react-router'
 
 import { orpc } from '#/utils/orpc'
 
@@ -10,6 +10,9 @@ export async function requireAuth() {
     }
     return { user: me.user }
   } catch (error) {
+    if (isRedirect(error)) throw error
     throw redirect({ to: '/login' })
+    // throw redirect({ to: '/login' })
   }
 }
+

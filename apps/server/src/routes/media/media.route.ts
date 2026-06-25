@@ -1,11 +1,9 @@
 import { ulid } from "ulid";
 import { protectedProcedure } from "../../orpc/middleware/auth.middleware";
-import { getMediaUrlValidator, uploadMediaValidator } from "@tanstack-start-hono/validators/upload";
-import { formatFilename, generatePresignedUrl, getMediaUrl } from "./media.service";
+import { getMediaUrlValidator, notifyMediaUploadedValidator, uploadMediaValidator } from "@tanstack-start-hono/validators/upload";
+import { db } from "../../db/drizzle.client";
+import { formatFilename, generatePresignedUrl, getMediaUrl, notifyMediaUploaded } from "./media.service";
 import { ORPCError } from "@orpc/server";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { GetObjectCommand } from "@aws-sdk/client-s3";
-import { s3 } from "../../media/s3";
 
 export const getPresignedUrlRoute = protectedProcedure
 .input(uploadMediaValidator)
@@ -32,4 +30,19 @@ export const getMediaUrlRoute = protectedProcedure
         throw new ORPCError("INTERNAL_SERVER_ERROR", { message: response.error });
     }
     return { url: response };
+});
+
+export const notifyMediaUploadedRoute = protectedProcedure
+.input(notifyMediaUploadedValidator)
+.handler(async ({ input }) => {
+    try
+    {
+        const media = await notifyMediaUploaded(db, input);
+        return { media };
+    }
+    catch (error)
+    {
+        console.error('error in notifyMediaUploadedRoute:',error);
+        throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to save uploaded media" });
+    }
 });

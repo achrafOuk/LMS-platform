@@ -1,83 +1,170 @@
-import { orpc } from "#/utils/orpc";
-import { useMutation } from "@tanstack/react-query";
-import { useRef, useState } from "react"
+import { adminActionButtonClassName, adminDestructiveButtonClassName } from '#/features/admin/constants/adminStyles'
+import { cn } from '#/utils/cn'
+import { orpc } from '#/utils/orpc'
+import type { UploadValidatorType } from '@tanstack-start-hono/validators/upload'
+import { useMutation } from '@tanstack/react-query'
+import type { ChangeEvent } from 'react'
+import { useRef, useState } from 'react'
 
-export function UploadImage()
-{
-    const imageLoader = useRef<HTMLInputElement>(null);
-    const [isDownloading, setIsDownloading] = useState<boolean>(false);
-    const [downloadUrl, setDownloadUrl] = useState<string | null>(null);
+type ImageMimeType = Extract<UploadValidatorType['mimeType'], `image/${string}`>
 
-    const uploadImage = useMutation({
-        mutationFn: async ({ url, file }: { url: string, file: File }) => {
-            setIsDownloading(true);
-            await fetch(url, { method: 'PUT', body: file , headers: { 'Content-Type': file.type } });
-        },
-        onSuccess: (data) => {
-            console.log(data);
-            setIsDownloading(false);
-        },
-        onError: (error) => {
-            console.error(error);
-            setIsDownloading(false);
-        },
-    });
+const acceptedImageMimeTypes = [
+  'image/jpeg',
+  'image/png',
+  'image/gif',
+  'image/webp',
+] satisfies ImageMimeType[]
 
-    // get the presigned url from the backend
-    const mutation = useMutation({
-        mutationFn: async (type: 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp' | 'video/mp4') => {
-            const response = await orpc.media.getPresignedUrl({
-                mimeType: type as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp' | 'video/mp4',
-            });
-            return response;
-        },
-        onSuccess: (data) => {
-            console.log(data);
-        },
-        onError: (error) => {
-            console.error(error);
-        },
-    });
+type UploadImageProps = {
+  value: string
+  onChange: (value: string) => void
+  hasError?: boolean
+}
 
-    const openImageLoader = () => {
-        if (!imageLoader.current) return;
-        imageLoader.current?.click();
+function isAcceptedImageMimeType(type: string): type is ImageMimeType {
+  return acceptedImageMimeTypes.includes(type as ImageMimeType)
+}
+
+export function UploadImage({ value, onChange, hasError }: UploadImageProps) {
+  const imageLoader = useRef<HTMLInputElement>(null)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+
+  const uploadImage = useMutation({
+    mutationFn: async (file: File) => {
+      if (!isAcceptedImageMimeType(file.type)) {
+        throw new Error('Choose a JPG, PNG, GIF, or WebP image.')
+      }
+
+      const presigned = await orpc.media.getPresignedUrl({
+        mimeType: file.type,
+      })
+
+      const uploadResponse = await fetch(presigned.url, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type },
+      })
+
+      if (!uploadResponse.ok) {
+        throw new Error('Image upload failed. Try another image or upload again.')
+      }
+
+      await orpc.media.notifyMediaUploaded({
+        filename: presigned.filename,
+        mimeType: file.type,
+      })
+
+      const imageUrl = await orpc.media.getMediaUrl({ filename: presigned.filename })
+      return imageUrl.url
+    },
+    onSuccess: (imageUrl) => {
+      setUploadError(null)
+      onChange(imageUrl)
+    },
+    onError: (error) => {
+      setUploadError(error instanceof Error ? error.message : 'Image upload failed. Try again.')
+    },
+  })
+
+  const openImageLoader = () => {
+    imageLoader.current?.click()
+  }
+
+  const removeImage = () => {
+    setUploadError(null)
+    onChange('')
+
+    if (imageLoader.current) {
+      imageLoader.current.value = ''
     }
+  }
 
-    const handleImageLoad = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!event.target.files) return;
-        const data = await mutation.mutateAsync(event.target.files?.[0].type as 'image/jpeg' | 'image/png' | 'image/gif' | 'image/webp' | 'video/mp4');
-        await uploadImage.mutateAsync({ url: data.url, file: event.target.files?.[0] });
-        const imageUrl = await orpc.media.getMediaUrl({ filename: data.filename });
-        setDownloadUrl(imageUrl.url);
-        console.log(data);
-    }
+  const handleImageLoad = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
 
+    if (!file) return
 
-    return (
-        <>
-            {
-                !isDownloading && (
-                <>
-                    <input 
-                    type="file" ref={imageLoader} 
-                    onChange={handleImageLoad}
-                    className="hidden" 
-                    accept="image/png, image/jpeg, image/gif, image/webp"/>
-                    <label>Course Thumbnail</label>
-                    <section 
-                    className="w-full h-64 bg-[url('https://storage.googleapis.com/uxpilot-auth.appspot.com/gen_527a5ea6d4_87b2980ed616f779.png')] bg-cover bg-center rounded-lg flex justify-center items-center cursor-pointer" 
-                    onClick={openImageLoader}>
-                        upload image
-                    </section>
-                </>
-            )}
-            {
-                downloadUrl && (
-                    <img src={downloadUrl} alt="downloaded image" className="w-full h-64 object-cover rounded-lg" />
-                )
-            }
-        </>
-    )
+    uploadImage.mutate(file)
+    event.target.value = ''
+  }
 
+  const isUploading = uploadImage.isPending
+
+  return (
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-muted/30 p-4">
+      <input
+        ref={imageLoader}
+        type="file"
+        name="course-thumbnail-upload"
+        onChange={handleImageLoad}
+        className="hidden"
+        accept={acceptedImageMimeTypes.join(',')}
+      />
+
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
+        <div className="min-w-0">
+          <p className="text-sm font-medium text-foreground">Course Thumbnail</p>
+          <p className="text-sm text-muted-foreground">
+            Upload a JPG, PNG, GIF, or WebP image for the course card.
+          </p>
+        </div>
+
+        {value ? (
+          <button
+            type="button"
+            onClick={removeImage}
+            className={cn(adminDestructiveButtonClassName, 'mt-2 sm:mt-0')}
+          >
+            Remove Image
+          </button>
+        ) : null}
+      </div>
+
+      {value ? (
+        <div className="overflow-hidden rounded-xl border border-border bg-background">
+          <img
+            src={value}
+            alt="Course thumbnail preview"
+            width={960}
+            height={360}
+            className="h-64 w-full"
+            loading="lazy"
+          />
+          <div className="flex flex-col gap-2 border-t border-border p-3 sm:flex-row sm:items-center sm:justify-between">
+            {/* <p className="min-w-0 truncate text-sm text-muted-foreground">{value}</p> */}
+            <button
+              type="button"
+              onClick={openImageLoader}
+              disabled={isUploading}
+              className={adminActionButtonClassName}
+            >
+              {isUploading ? 'Uploading…' : 'Replace Image'}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={openImageLoader}
+          disabled={isUploading}
+          aria-invalid={hasError ? true : undefined}
+          className={cn(
+            'flex min-h-64 w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-background px-6 text-center transition-[background-color,border-color,box-shadow] duration-200 hover:border-primary/60 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70 touch-manipulation',
+            hasError && 'border-destructive focus-visible:ring-destructive',
+          )}
+        >
+          <span className="rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
+            {isUploading ? 'Uploading…' : 'Upload Image'}
+          </span>
+          <span className="max-w-md text-sm text-muted-foreground">
+            Select a course thumbnail. The uploaded image URL will be saved with the course form.
+          </span>
+        </button>
+      )}
+
+      <div aria-live="polite" className="min-h-5 text-sm text-destructive">
+        {uploadError}
+      </div>
+    </div>
+  )
 }
