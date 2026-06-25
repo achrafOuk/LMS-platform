@@ -37,7 +37,6 @@ export function useNewCourseForm() {
     onSubmit: async ({ value }) => {
       createCourseMutation.reset();
       await createCourseMutation.mutateAsync(value);
-      // await orpc.courses.createCourse(value);
     }
         
   })

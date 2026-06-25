@@ -101,6 +101,8 @@ export const updateCourseValidator = courseBodySchema
   })
   .superRefine(refineCourseFields);
 
+
+
 export type UpdateCourseValidatorType = z.infer<typeof updateCourseValidator>;
 export type CourseValidatorType = z.infer<typeof courseValidator>;
 export type ModuleValidatorType = z.infer<typeof moduleValidator>;

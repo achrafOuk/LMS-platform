@@ -1,8 +1,8 @@
 import { ulid } from "ulid";
 import { protectedProcedure } from "../../orpc/middleware/auth.middleware";
-import { getMediaUrlValidator, notifyMediaUploadedValidator, uploadMediaValidator } from "@tanstack-start-hono/validators/upload";
+import { getMediaUrlValidator, notifyMediaUploadedValidator, removeMediaValidator, uploadMediaValidator } from "@tanstack-start-hono/validators/upload";
 import { db } from "../../db/drizzle.client";
-import { formatFilename, generatePresignedUrl, getMediaUrl, notifyMediaUploaded } from "./media.service";
+import { formatFilename, generatePresignedUrl, getMediaUrl, notifyMediaUploaded, removeMedia } from "./media.service";
 import { ORPCError } from "@orpc/server";
 
 export const getPresignedUrlRoute = protectedProcedure
@@ -45,4 +45,16 @@ export const notifyMediaUploadedRoute = protectedProcedure
         console.error('error in notifyMediaUploadedRoute:',error);
         throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to save uploaded media" });
     }
+});
+
+export const removeMediaRoute = protectedProcedure
+.input(removeMediaValidator)
+.handler(async ({ input }) => {
+    
+    const media = await removeMedia(db, input);
+    if (media instanceof Object && 'error' in media)
+    {
+        throw new ORPCError("NOT_FOUND", { message: media.error });
+    }
+    return { success: true };
 });

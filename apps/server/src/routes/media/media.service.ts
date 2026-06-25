@@ -1,9 +1,10 @@
-import { GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import type { NotifyMediaUploadedValidatorType } from "@tanstack-start-hono/validators/upload";
+import type { NotifyMediaUploadedValidatorType, RemoveMediaValidatorType } from "@tanstack-start-hono/validators/upload";
 import type { Db } from "../../db/drizzle.client";
 import { Media } from "../../db/schemas";
 import {  s3 } from "../../media/s3";
+import { eq } from "drizzle-orm";
 
 export function formatFilename(mimeType: string, filename: string)
 {
@@ -44,11 +45,8 @@ export async function getMediaUrl(bucket: string, filename: string)
             Bucket: bucket,
             Key: filename,
         });
-        // const response = await s3.send(command);
-        // return response;
-        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        const url = await getSignedUrl(s3, command);
         return url;
-
     }
     catch(error: any)
     {
@@ -74,18 +72,36 @@ export async function notifyMediaUploaded(db: Db, input: NotifyMediaUploadedVali
             uid,
             path: input.filename,
             mimeType: input.mimeType,
-            status: "PENDING",
+            status: "SAVED",
         })
         .onConflictDoUpdate({
             target: Media.uid,
             set: {
                 path: input.filename,
                 mimeType: input.mimeType,
-                status: "PENDING",
+                status: "SAVED",
                 updatedAt: new Date().toISOString(),
             },
         })
         .returning();
 
     return media;
+}
+
+async function removeMediaFromS3(filename: string) {
+    const command = new DeleteObjectCommand({
+        Bucket: process.env.RUSTFS_BUCKET_NAME!,
+        Key: filename,
+    });
+    await s3.send(command);
+}
+
+
+
+export async function removeMedia(db: Db, input: RemoveMediaValidatorType) {
+    const deleted = await db.delete(Media).where(eq(Media.uid, input.filename)).returning();
+    if (deleted.length === 0) {
+        return { error: "Media not found", status: "NOT_FOUND" };
+    }
+    await removeMediaFromS3(input.filename);
 }

@@ -1,19 +1,20 @@
 import { adminActionButtonClassName, adminDestructiveButtonClassName } from '#/features/admin/constants/adminStyles'
 import { cn } from '#/utils/cn'
+import { getMediaUrl } from '#/utils/getMedia'
 import { orpc } from '#/utils/orpc'
-import type { UploadValidatorType } from '@tanstack-start-hono/validators/upload'
+import { imageMimeTypes, uploadImageValidator, type UploadValidatorType } from '@tanstack-start-hono/validators/upload'
 import { useMutation } from '@tanstack/react-query'
 import type { ChangeEvent } from 'react'
 import { useRef, useState } from 'react'
 
-type ImageMimeType = Extract<UploadValidatorType['mimeType'], `image/${string}`>
+// type ImageMimeType = Extract<UploadValidatorType['mimeType'], `image/${string}`>
 
-const acceptedImageMimeTypes = [
-  'image/jpeg',
-  'image/png',
-  'image/gif',
-  'image/webp',
-] satisfies ImageMimeType[]
+// const acceptedImageMimeTypes = [
+//   'image/jpeg',
+//   'image/png',
+//   'image/gif',
+//   'image/webp',
+// ] satisfies ImageMimeType[]
 
 type UploadImageProps = {
   value: string
@@ -21,22 +22,17 @@ type UploadImageProps = {
   hasError?: boolean
 }
 
-function isAcceptedImageMimeType(type: string): type is ImageMimeType {
-  return acceptedImageMimeTypes.includes(type as ImageMimeType)
-}
 
 export function UploadImage({ value, onChange, hasError }: UploadImageProps) {
   const imageLoader = useRef<HTMLInputElement>(null)
   const [uploadError, setUploadError] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | null>(null)
 
   const uploadImage = useMutation({
     mutationFn: async (file: File) => {
-      if (!isAcceptedImageMimeType(file.type)) {
-        throw new Error('Choose a JPG, PNG, GIF, or WebP image.')
-      }
-
+      const validatedFile = uploadImageValidator.parse({ mimeType: file.type });
       const presigned = await orpc.media.getPresignedUrl({
-        mimeType: file.type,
+        mimeType: validatedFile.mimeType,
       })
 
       const uploadResponse = await fetch(presigned.url, {
@@ -51,15 +47,16 @@ export function UploadImage({ value, onChange, hasError }: UploadImageProps) {
 
       await orpc.media.notifyMediaUploaded({
         filename: presigned.filename,
-        mimeType: file.type,
+        mimeType: validatedFile.mimeType,
       })
 
-      const imageUrl = await orpc.media.getMediaUrl({ filename: presigned.filename })
-      return imageUrl.url
+      return presigned.filename;
     },
-    onSuccess: (imageUrl) => {
+    onSuccess: async(imageUrl) => {
       setUploadError(null)
       onChange(imageUrl)
+      console.log('imageUrl', imageUrl);
+      setImageUrl(await getMediaUrl(imageUrl));
     },
     onError: (error) => {
       setUploadError(error instanceof Error ? error.message : 'Image upload failed. Try again.')
@@ -70,9 +67,10 @@ export function UploadImage({ value, onChange, hasError }: UploadImageProps) {
     imageLoader.current?.click()
   }
 
-  const removeImage = () => {
+  const removeImage = async () => {
     setUploadError(null)
     onChange('')
+    await orpc.media.removeMedia({ filename: value as string });
 
     if (imageLoader.current) {
       imageLoader.current.value = ''
@@ -98,7 +96,7 @@ export function UploadImage({ value, onChange, hasError }: UploadImageProps) {
         name="course-thumbnail-upload"
         onChange={handleImageLoad}
         className="hidden"
-        accept={acceptedImageMimeTypes.join(',')}
+        accept={imageMimeTypes.join(',')}
       />
 
       <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
@@ -123,7 +121,7 @@ export function UploadImage({ value, onChange, hasError }: UploadImageProps) {
       {value ? (
         <div className="overflow-hidden rounded-xl border border-border bg-background">
           <img
-            src={value}
+            src={imageUrl as string}
             alt="Course thumbnail preview"
             width={960}
             height={360}

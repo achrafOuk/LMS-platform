@@ -1,5 +1,4 @@
 import { AdminCoursesTable } from '#/features/courses/components/AdminCoursesTable'
-import { featuredCourses } from '#/features/courses/constants/featuredCourses'
 import { useGetFeaturedCourses } from '#/features/courses/hooks/useFeaturedCourses';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'

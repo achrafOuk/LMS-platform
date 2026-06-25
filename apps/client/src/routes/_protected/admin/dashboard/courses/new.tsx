@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute } from '@tanstack/react-router'
 
 import { CourseFormFields } from '#/features/admin/components/course/CourseFormFields'
 import { FormErrorsSummary } from '#/features/admin/components/course/FormFieldErrors'

@@ -8,11 +8,49 @@ import {
   adminTableHeadClassName,
   adminTableRowClassName,
 } from '#/features/admin/constants/adminStyles'
+import { getMediaUrl } from '#/utils/getMedia'
 import { formatCoursePrice } from '../constants/formatCoursePrice'
 import type { CourseType } from '../types/Course'
 import { Link } from '@tanstack/react-router'
 import { Pencil, Plus, Trash2 } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+function CourseThumbnail({ coverKey }: { coverKey: string }) {
+  const [src, setSrc] = useState<string>()
+
+  useEffect(() => {
+    if (!coverKey) {
+      setSrc(undefined)
+      return
+    }
+
+    let cancelled = false
+
+    void getMediaUrl(coverKey).then((url) => {
+      if (!cancelled && url) {
+        setSrc(url)
+      }
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [coverKey])
+
+  return (
+    <div className="size-14 shrink-0 overflow-hidden bg-muted">
+      {src ? (
+        <img
+          src={src}
+          alt=""
+          width={56}
+          height={56}
+          className="size-full object-cover"
+        />
+      ) : null}
+    </div>
+  )
+}
 
 interface AdminCoursesTableProps {
   initialCourses: CourseType[]
@@ -88,15 +126,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
                 {initialCourses.map((course) => (
                   <tr key={course.slug} className={adminTableRowClassName}>
                     <td className="px-4 py-3">
-                      <div className="size-14 shrink-0 overflow-hidden bg-muted">
-                        <img
-                          src={course.coverUrl || ''}
-                          alt=""
-                          width={56}
-                          height={56}
-                          className="size-full object-cover"
-                        />
-                      </div>
+                      <CourseThumbnail coverKey={course.coverUrl ?? ''} />
                     </td>
                     <td className="max-w-xs px-4 py-3">
                       <span className="block truncate font-medium text-foreground">
