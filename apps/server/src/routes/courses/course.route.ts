@@ -1,9 +1,10 @@
 import { db } from "../../db/drizzle.client";
 import { protectedProcedure } from "../../orpc/middleware/auth.middleware";
 import { courseSlugValidator, courseValidator, updateCourseValidator} from "@tanstack-start-hono/validators/course";
+import { paginationQueryValidator } from "@tanstack-start-hono/validators/pagination";
 import {   getCourse, getFeaturedCourses} from "./course.repository";
 import { ORPCError } from "@orpc/server";
-import { checkViolation, formatViolationErrorMessage } from "../../db/db.utils";
+import { checkViolation, formatViolationErrorMessage } from "../../db/utils/db.errors.utils";
 import { createCourse, updateCourse } from "./course.service";
 
 
@@ -24,11 +25,9 @@ export const createCourseRoute = protectedProcedure
 });
 
 export const getCoursesRoute = protectedProcedure
-.handler(async () =>{
-
-    const featuredCourses = await getFeaturedCourses(db);
-    return featuredCourses;
-
+.input(paginationQueryValidator)
+.handler(async ({ input }) => {
+    return getFeaturedCourses(db, input.page);
 });
 
 export const getCourseRoute = protectedProcedure.route({

@@ -1,5 +1,5 @@
 import { useSuspenseQuery } from '@tanstack/react-query'
-import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 
 import { AdminPageHeader } from '#/features/admin/components/AdminPageHeader'
@@ -42,6 +42,7 @@ function RouteComponent() {
     <section className="flex flex-col gap-6">
       <Link
         to="/admin/dashboard/courses"
+        search={{ page: 1 }}
         className={adminSecondaryLinkClassName}
       >
         <ArrowLeft className="size-4" aria-hidden />

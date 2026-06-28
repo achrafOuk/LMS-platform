@@ -1,8 +1,4 @@
-
-
 // todo: move to global utils
-
-
 function hasProperty<T extends object>(some:T, key:PropertyKey): key is keyof T
 {
   return  some != null && some instanceof Object && key in some;
@@ -22,10 +18,8 @@ export function checkViolation(error: unknown)
             return err.constraint;
         }
     }
-
     return null;
 }
-
 
 export function formatViolationErrorMessage(error: string)
 {

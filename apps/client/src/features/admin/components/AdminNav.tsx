@@ -6,9 +6,9 @@ import { Link } from '@tanstack/react-router'
 import { cn } from '#/utils/cn'
 
 const navItems = [
-  { to: '/admin/dashboard', label: 'Overview' },
-  { to: '/admin/dashboard/courses', label: 'Courses' },
-] as const
+  { to: '/admin/dashboard' as const, label: 'Overview' },
+  { to: '/admin/dashboard/courses' as const, label: 'Courses', search: { page: 1 } },
+]
 
 export function AdminNav() {
   return (
@@ -18,6 +18,7 @@ export function AdminNav() {
           <li key={item.to}>
             <Link
               to={item.to}
+              {...('search' in item ? { search: item.search } : {})}
               className={adminNavLinkClassName}
               activeProps={{
                 className: cn(adminNavLinkClassName, adminNavLinkActiveClassName),

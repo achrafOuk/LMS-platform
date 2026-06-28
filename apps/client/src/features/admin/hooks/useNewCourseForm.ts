@@ -25,7 +25,7 @@ export function useNewCourseForm() {
       await orpc.courses.createCourse(value);
     },
     onSuccess: async () => {
-      await navigate({ to: '/admin/dashboard/courses' })
+      await navigate({ to: '/admin/dashboard/courses', search: { page: 1 } })
     }
   })
 

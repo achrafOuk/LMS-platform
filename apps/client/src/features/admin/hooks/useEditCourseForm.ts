@@ -25,7 +25,7 @@ export function useEditCourseForm(course: CourseFromApi) {
         queryClient.invalidateQueries({ queryKey: ['course', course.slug] }),
         queryClient.invalidateQueries({ queryKey: ['featured-courses'] }),
       ]);
-      await navigate({ to: '/admin/dashboard/courses' })
+      await navigate({ to: '/admin/dashboard/courses', search: { page: 1 } })
 
     },
   })

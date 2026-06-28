@@ -1,8 +1,11 @@
-import { eq } from "drizzle-orm";
+import { count, eq } from "drizzle-orm";
+import { PaginateRequest } from "../../db/utils/db.pagination.utils";
+import { COURSES_PAGE_SIZE } from "@tanstack-start-hono/validators/pagination";
 import { ulid } from "ulid";
 import type { Db, DbTransaction } from "../../db/drizzle.client";
 import { courses, modules, tags } from "../../db/schemas";
 import type { CourseValidatorType, ModuleValidatorType, UpdateCourseValidatorType } from "@tanstack-start-hono/validators/course";
+import { desc } from "drizzle-orm";
 
 export async function findOrCreateCategory(categoryName: string, db: DbTransaction) {
     const [existingTag] = await db
@@ -56,19 +59,45 @@ export async function createNewModule(input: ModuleValidatorType,db: DbTransacti
     return createdModule;
 }
 
-export async function getFeaturedCourses(db: Db)
+function getFeaturedCoursesQuery(db: Db, currentPage: number, pageSize = COURSES_PAGE_SIZE) 
 {
-    return  await db.select({
-        cid: courses.cid,
-        courseName: courses.courseName,
-        slug: courses.slug,
-        coverUrl: courses.coverUrl,
-        price: courses.price,
-        category: tags.tagName,
-    })
-    .from(courses) 
-    .innerJoin(tags, eq(courses.tagId, tags.tid))
+    const offset = (currentPage - 1) * pageSize;
+    const query = db
+            .select({
+                cid: courses.cid,
+                courseName: courses.courseName,
+                slug: courses.slug,
+                coverUrl: courses.coverUrl,
+                price: courses.price,
+                category: tags.tagName,
+            })
+            .from(courses)
+            .orderBy(desc(courses.createdAt))
+            .innerJoin(tags, eq(courses.tagId, tags.tid))
+            .limit(pageSize)
+            .offset(offset)
+    return query;
+}
 
+function getFeaturedCoursesCountQuery(db: Db) {
+    const query =  db
+        .select({ total: count() })
+        .from(courses)
+        .innerJoin(tags, eq(courses.tagId, tags.tid));
+    return query;
+}
+
+export async function getFeaturedCourses(db: Db, currentPage: number, pageSize = COURSES_PAGE_SIZE) {
+
+    const [data, countResult] = await Promise.all([
+            getFeaturedCoursesQuery(db, currentPage, pageSize),
+            getFeaturedCoursesCountQuery(db),
+    ]);
+
+    const total = countResult[0]?.total ?? 0;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+    return PaginateRequest(data, pageSize, currentPage, totalPages);
 }
 
 export async function getCourse(slug: string, db: Db)

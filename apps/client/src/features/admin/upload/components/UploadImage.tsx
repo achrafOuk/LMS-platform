@@ -2,19 +2,11 @@ import { adminActionButtonClassName, adminDestructiveButtonClassName } from '#/f
 import { cn } from '#/utils/cn'
 import { getMediaUrl } from '#/utils/getMedia'
 import { orpc } from '#/utils/orpc'
-import { imageMimeTypes, uploadImageValidator, type UploadValidatorType } from '@tanstack-start-hono/validators/upload'
+import { imageMimeTypes, uploadImageValidator } from '@tanstack-start-hono/validators/upload'
 import { useMutation } from '@tanstack/react-query'
 import type { ChangeEvent } from 'react'
 import { useRef, useState } from 'react'
 
-// type ImageMimeType = Extract<UploadValidatorType['mimeType'], `image/${string}`>
-
-// const acceptedImageMimeTypes = [
-//   'image/jpeg',
-//   'image/png',
-//   'image/gif',
-//   'image/webp',
-// ] satisfies ImageMimeType[]
 
 type UploadImageProps = {
   value: string

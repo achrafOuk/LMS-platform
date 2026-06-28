@@ -53,10 +53,10 @@ function CourseThumbnail({ coverKey }: { coverKey: string }) {
 }
 
 interface AdminCoursesTableProps {
-  initialCourses: CourseType[]
+  courses: CourseType[]
 }
 
-export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
+export function AdminCoursesTable({ courses }: AdminCoursesTableProps) {
   const [courseToDelete, setCourseToDelete] = useState<CourseType | null>(null)
   const dialogRef = useRef<HTMLDialogElement>(null)
 
@@ -90,7 +90,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
           </Link>
         </AdminPageHeader>
 
-        {initialCourses.length === 0 ? (
+        {courses.length === 0 ? (
           <div
             className={`${adminFrameClassName} flex flex-col items-center gap-4 px-6 py-12 text-center`}
           >
@@ -123,7 +123,7 @@ export function AdminCoursesTable({ initialCourses }: AdminCoursesTableProps) {
                 </tr>
               </thead>
               <tbody>
-                {initialCourses.map((course) => (
+                {courses.map((course) => (
                   <tr key={course.slug} className={adminTableRowClassName}>
                     <td className="px-4 py-3">
                       <CourseThumbnail coverKey={course.coverUrl ?? ''} />
