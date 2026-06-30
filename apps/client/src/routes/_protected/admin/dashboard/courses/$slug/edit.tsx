@@ -14,6 +14,7 @@ import {
 import { useEditCourseForm } from '#/features/admin/hooks/useEditCourseForm'
 import type { CourseFormApi } from '#/features/admin/types/courseForm'
 import { useCourseOptions } from '#/features/courses/hooks/useCourse'
+import { cn } from '#/utils/cn'
 
 export const Route = createFileRoute(
   '/_protected/admin/dashboard/courses/$slug/edit',
@@ -63,14 +64,15 @@ function RouteComponent() {
           <button
             type="submit"
             disabled={updateCourseMutation.isPending}
-            className={adminPrimaryActionClassName}
+            className={cn(adminPrimaryActionClassName, "cursor-pointer")}
           >
             {updateCourseMutation.isPending ? 'Saving…' : 'Save Changes'}
           </button>
           <button
             type="button"
             onClick={() => form.reset()}
-            className={adminActionButtonClassName}
+            className={cn(adminActionButtonClassName, "cursor-pointer")}
+
           >
             Cancel
           </button>

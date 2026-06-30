@@ -1,32 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { GraduationCap } from "lucide-react";
 import { cn } from "#/utils/cn";
-
-interface UserSidebarLinks {
-    link: string;
-    label: string;
-    // roles to see the link
-    permissions?: string[]
-}
-
-interface UserSidebarProps {
-    onNavigate?: () => void;
-}
+import type {  UserSidebarProps } from "../types/SideBarTypes";
+import { urls } from "../constants/sidebarLinks";
+import { SidebarLinks } from "./SidebarLinks";
 
 export function UserSidebar({ onNavigate }: UserSidebarProps) {
     // /admin/dashboard/
-    const urls: UserSidebarLinks[] = [
-        {
-            link: '/admin/dashboard/',
-            label: 'Dashboard',
-            permissions: ['dashboard:view'],
-        },
-        {
-            link: '/admin/dashboard/courses/',
-            label: 'Courses',
-            permissions: ['courses:manage:view'],
-        },
-    ];
 
     return (
         <aside className={cn("bg-primary text-white h-full flex flex-col gap-4 p-4 overflow-y-auto")}>
@@ -38,7 +18,8 @@ export function UserSidebar({ onNavigate }: UserSidebarProps) {
                 <GraduationCap />
                 LMS platform
             </Link>
-            {
+            <SidebarLinks urls={urls} onNavigate={onNavigate} />
+            {/* {
                 urls.map((url) => (
                     <Link
                         key={url.link}
@@ -49,7 +30,7 @@ export function UserSidebar({ onNavigate }: UserSidebarProps) {
                         {url.label}
                     </Link>
                 ))
-            }
+            } */}
         </aside>
     )
 }

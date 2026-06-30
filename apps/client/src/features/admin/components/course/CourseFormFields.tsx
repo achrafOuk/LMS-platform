@@ -3,6 +3,8 @@ import type { CourseFormApi } from '#/features/admin/types/courseForm'
 import { adminActionButtonClassName } from '#/features/admin/constants/adminStyles'
 import { cn } from '#/utils/cn'
 import { UploadImage } from '../../upload/components/UploadImage'
+import { getMediaUrl } from '#/utils/getMedia'
+import { useEffect, useState } from 'react'
 
 const inputClassName =
   'w-full rounded-xl border border-border bg-background p-2 text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background'
@@ -12,6 +14,7 @@ const labelClassName = 'text-sm font-medium text-foreground'
 type CourseFormFieldsProps = {
   form: CourseFormApi
 }
+
 
 export function CourseFormFields({ form }: CourseFormFieldsProps) {
   return (

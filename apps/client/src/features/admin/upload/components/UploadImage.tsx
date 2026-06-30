@@ -1,11 +1,11 @@
 import { adminActionButtonClassName, adminDestructiveButtonClassName } from '#/features/admin/constants/adminStyles'
+import { useUploadImage } from '#/features/admin/upload/hooks/uploadImage'
 import { cn } from '#/utils/cn'
 import { getMediaUrl } from '#/utils/getMedia'
 import { orpc } from '#/utils/orpc'
-import { imageMimeTypes, uploadImageValidator } from '@tanstack-start-hono/validators/upload'
-import { useMutation } from '@tanstack/react-query'
+import { imageMimeTypes } from '@tanstack-start-hono/validators/upload'
 import type { ChangeEvent } from 'react'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 
 type UploadImageProps = {
@@ -20,41 +20,17 @@ export function UploadImage({ value, onChange, hasError }: UploadImageProps) {
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
-  const uploadImage = useMutation({
-    mutationFn: async (file: File) => {
-      const validatedFile = uploadImageValidator.parse({ mimeType: file.type });
-      const presigned = await orpc.media.getPresignedUrl({
-        mimeType: validatedFile.mimeType,
-      })
+  const uploadImage = useUploadImage({ setImageUrl, onChange, setUploadError })
 
-      const uploadResponse = await fetch(presigned.url, {
-        method: 'PUT',
-        body: file,
-        headers: { 'Content-Type': file.type },
-      })
+  useEffect(() => {
+    (async () =>{
+      const url = await getMediaUrl(value);
+      setImageUrl(url ?? '');
+      console.log('url:', value);
+    })();
+  },[]);
 
-      if (!uploadResponse.ok) {
-        throw new Error('Image upload failed. Try another image or upload again.')
-      }
-
-      await orpc.media.notifyMediaUploaded({
-        filename: presigned.filename,
-        mimeType: validatedFile.mimeType,
-      })
-
-      return presigned.filename;
-    },
-    onSuccess: async(imageUrl) => {
-      setUploadError(null)
-      onChange(imageUrl)
-      console.log('imageUrl', imageUrl);
-      setImageUrl(await getMediaUrl(imageUrl));
-    },
-    onError: (error) => {
-      setUploadError(error instanceof Error ? error.message : 'Image upload failed. Try again.')
-    },
-  })
-
+  
   const openImageLoader = () => {
     imageLoader.current?.click()
   }

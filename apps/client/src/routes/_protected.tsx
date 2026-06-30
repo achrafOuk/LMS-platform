@@ -1,5 +1,5 @@
 import { requireAuth } from '#/features/auth/utils/requireAuth'
-import { UserSidebar } from '#/shared/navbar/components/Sidebar'
+import { UserSidebar } from '#/shared/sidebar/components/Sidebar'
 import { useNavbarState } from '#/shared/navbar/state/navbar.state'
 import { cn } from '#/utils/cn'
 import { createFileRoute, Outlet } from '@tanstack/react-router'
