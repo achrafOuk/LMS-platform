@@ -3,37 +3,25 @@ import {
   adminFrameClassName,
   adminStatCardClassName,
 } from '#/features/admin/constants/adminStyles'
+import { usePlatformGetStatistics } from '#/features/admin/hooks/usePlatformGetStatistics';
+import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/admin/dashboard/')({
   component: RouteComponent,
+  loader: async ({context}) => {
+    await context.queryClient.prefetchQuery(usePlatformGetStatistics());
+  },
 })
 
 function RouteComponent() {
-  const statistics = [
-    {
-      name: 'Courses',
-      value: 100,
-    },
-    {
-      name: 'Users',
-      value: 100,
-    },
-    {
-      name: 'Enrollments',
-      value: 100,
-    },
-    {
-      name: 'Revenue',
-      value: 100,
-    },
-  ]
+  const { data: statistics } = useSuspenseQuery(usePlatformGetStatistics());
 
   return (
     <section className="flex flex-col gap-6">
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {statistics.map((stat) => (
+        {statistics?.map((stat) => (
           <div key={stat.name} className={adminStatCardClassName}>
             <h2 className="text-sm font-medium text-muted-foreground">
               {stat.name}

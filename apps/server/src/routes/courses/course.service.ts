@@ -1,8 +1,9 @@
 import type { CourseValidatorType, UpdateCourseValidatorType } from "@tanstack-start-hono/validators/course";
-import type { DbTransaction } from "../../db/drizzle.client";
+import type { Db, DbTransaction } from "../../db/drizzle.client";
 import { createNewCourse, createNewModule, findOrCreateCategory, updateCourseFields } from "./course.repository";
 import { createNewLesson, deleteLesson, upsertLesson } from "../lessons/lessons.repository";
 import { deleteModule, upsertModule } from "../modules/module.repository";
+
 
 export async function createCourse(input: CourseValidatorType, tx: DbTransaction)
 {
@@ -39,3 +40,4 @@ export async function updateCourse(input: UpdateCourseValidatorType, tx: DbTrans
     }
     await deleteModule(input.cid, inputModuleTitles, tx);
 }
+

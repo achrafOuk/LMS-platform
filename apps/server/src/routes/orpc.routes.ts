@@ -1,6 +1,7 @@
 import { loginRoute, logoutRoute, meRoute, registerRoute } from "./auth/auth.routes";
 import { createCourseRoute, getCourseRoute, getCoursesRoute, updateCourseRoute } from "./courses/course.route";
 import { getMediaUrlRoute, getPresignedUrlRoute, notifyMediaUploadedRoute, removeMediaRoute } from "./media/media.route";
+import { courseStaticRoute } from "./statistics/statistics.route";
 
 
 export const router = {
@@ -28,6 +29,10 @@ export const router = {
     getMediaUrl: getMediaUrlRoute,
     notifyMediaUploaded: notifyMediaUploadedRoute,
     removeMedia: removeMediaRoute,
+  },
+
+  statistics: {
+    getCourseStatic: courseStaticRoute,
   },
 
 };
