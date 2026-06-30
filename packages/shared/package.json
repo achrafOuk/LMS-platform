@@ -1,0 +1,21 @@
+{
+  "name": "@tanstack-start-hono/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./rbac": {
+      "types": "./src/rbac.ts",
+      "import": "./src/rbac.ts",
+      "default": "./src/rbac.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "check-types": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@tanstack-start-hono/tsconfig": "workspace:*",
+    "typescript": "catalog:"
+  }
+}

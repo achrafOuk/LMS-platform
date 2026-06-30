@@ -39,6 +39,9 @@ importers:
       '@biomejs/biome':
         specifier: ^2.4.16
         version: 2.4.16
+      '@tanstack-start-hono/tsconfig':
+        specifier: workspace:*
+        version: link:packages/tsconfig
       '@types/node':
         specifier: ^25.9.2
         version: 25.9.2
@@ -184,6 +187,9 @@ importers:
       '@orpc/server':
         specifier: ^1.14.5
         version: 1.14.5(crossws@0.4.6(srvx@0.11.16))(ws@8.21.0)
+      '@tanstack-start-hono/shared':
+        specifier: workspace:*
+        version: link:../../packages/shared
       bcrypt:
         specifier: ^6.0.0
         version: 6.0.0
