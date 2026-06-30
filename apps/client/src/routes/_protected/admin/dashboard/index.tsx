@@ -31,7 +31,6 @@ function RouteComponent() {
 
   return (
     <section className="flex flex-col gap-6">
-      <AdminPageHeader title="Overview" />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {statistics.map((stat) => (
