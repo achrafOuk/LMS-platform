@@ -6,9 +6,10 @@ import {   getCourse, getFeaturedCourses} from "./course.repository";
 import { ORPCError } from "@orpc/server";
 import { checkViolation, formatViolationErrorMessage } from "../../db/utils/db.errors.utils";
 import { createCourse, updateCourse } from "./course.service";
-
+import {  hasPermission } from "../../orpc/middleware/auth.middleware";
 
 export const createCourseRoute = protectedProcedure
+.use(hasPermission("course:create"))
 .input(courseValidator)
 .handler(async ({ input }) => {
     try
@@ -24,7 +25,9 @@ export const createCourseRoute = protectedProcedure
     }
 });
 
-export const getCoursesRoute = protectedProcedure
+export const getCoursesRoute = 
+protectedProcedure
+.use(hasPermission("course:view"))
 .input(paginationQueryValidator)
 .handler(async ({ input }) => {
     return getFeaturedCourses(db, input.page);
@@ -46,6 +49,7 @@ export const getCourseRoute = protectedProcedure.route({
 });
 
 export const updateCourseRoute = protectedProcedure
+.use(hasPermission("course:update"))
 .input(updateCourseValidator)
 .handler(async ({ input }) =>{
     try

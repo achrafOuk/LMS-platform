@@ -15,7 +15,6 @@ export const Route = createFileRoute('/_protected/admin/dashboard/courses/new')(
 
 function RouteComponent() {
   const { form, createCourseMutation, apiErrorMessage} = useNewCourseForm()
-  console.log(apiErrorMessage)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()

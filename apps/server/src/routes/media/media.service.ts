@@ -99,8 +99,8 @@ async function removeMediaFromS3(filename: string) {
 
 
 export async function removeMedia(db: Db, input: RemoveMediaValidatorType) {
-    const deleted = await db.delete(Media).where(eq(Media.uid, input.filename)).returning();
-    if (deleted.length === 0) {
+    const deleted = await db.delete(Media).where(eq(Media.path, input.filename)).returning();
+    if (deleted.length === 0 || !deleted?.[0]?.path) {
         return { error: "Media not found", status: "NOT_FOUND" };
     }
     await removeMediaFromS3(input.filename);

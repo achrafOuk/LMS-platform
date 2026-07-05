@@ -13,7 +13,7 @@ interface UploadImageProps {
     setUploadError: (error: string | null) => void;
 }
 
-function parseUseUploadImageProps(file: File)
+export function parseUseUploadImageProps(file: File)
 {
 
     const validatedFile = uploadImageValidator.parse({ mimeType: file.type });

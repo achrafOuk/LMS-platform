@@ -1,136 +1,146 @@
-import { adminActionButtonClassName, adminDestructiveButtonClassName } from '#/features/admin/constants/adminStyles'
-import { useUploadImage } from '#/features/admin/upload/hooks/uploadImage'
-import { cn } from '#/utils/cn'
+import { parseUseUploadImageProps } from '#/features/admin/upload/hooks/uploadImage'
 import { getMediaUrl } from '#/utils/getMedia'
 import { orpc } from '#/utils/orpc'
 import { imageMimeTypes } from '@tanstack-start-hono/validators/upload'
 import type { ChangeEvent } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 
-
-type UploadImageProps = {
-  value: string
-  onChange: (value: string) => void
-  hasError?: boolean
+function ImagePreview({
+  url,
+  onReplace,
+  onRemove,
+}: {
+  url: string
+  onReplace: () => void
+  onRemove: () => void
+}) {
+  return (
+    <section className='relative h-[350px] w-full overflow-hidden rounded-xl border border-border bg-muted/20'>
+      <img
+        src={url}
+        alt='Uploaded image preview'
+        loading='lazy'
+        width={1200}
+        height={700}
+        className='h-full w-full object-cover'
+      />
+      <div className='absolute right-3 top-3 flex items-center gap-2'>
+        <button
+          type='button'
+          onClick={onReplace}
+          className='inline-flex items-center rounded-md border border-border bg-background/95 px-3 py-1.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2'
+          aria-label='Replace uploaded image'
+        >
+          Change
+        </button>
+        <button
+          type='button'
+          onClick={onRemove}
+          className='inline-flex items-center rounded-md border border-red-500/60 bg-background/95 px-3 py-1.5 text-sm font-medium text-red-600 shadow-sm transition-colors hover:bg-red-600 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2'
+          aria-label='Remove uploaded image'
+        >
+          Remove
+        </button>
+      </div>
+    </section>
+  )
 }
 
+interface UploadImageProps {
+  value: string | null
+  onChange: (url: string) => void
+  hasError: (error: string) => void
+}
+
+function UploadPlaceholder({ acceptedFormats }: { acceptedFormats: string }) {
+  return (
+    <span className='flex flex-col items-center justify-center gap-3 text-center'>
+      <span
+        aria-hidden='true'
+        className='inline-flex h-12 w-12 items-center justify-center rounded-full border border-dashed border-primary/50 text-primary'
+      >
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          strokeWidth='1.8'
+          className='h-6 w-6'
+        >
+          <path d='M12 16V8' />
+          <path d='m8.5 11.5 3.5-3.5 3.5 3.5' />
+          <rect x='3.5' y='4.5' width='17' height='15' rx='2.5' />
+        </svg>
+      </span>
+      <span className='text-base font-semibold text-foreground'>Upload Course Image</span>
+      <span className='max-w-[340px] text-sm text-muted-foreground'>
+        Click to select an image. Supported formats: {acceptedFormats}.
+      </span>
+    </span>
+  )
+}
 
 export function UploadImage({ value, onChange, hasError }: UploadImageProps) {
-  const imageLoader = useRef<HTMLInputElement>(null)
-  const [uploadError, setUploadError] = useState<string | null>(null)
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const acceptedFormats = imageMimeTypes
+    .map((mimeType) => mimeType.replace('image/', '').toUpperCase())
+    .join(', ')
 
-  const uploadImage = useUploadImage({ setImageUrl, onChange, setUploadError })
-
-  useEffect(() => {
-    (async () =>{
-      const url = await getMediaUrl(value);
-      setImageUrl(url ?? '');
-      console.log('url:', value);
-    })();
-  },[]);
-
-  
   const openImageLoader = () => {
-    imageLoader.current?.click()
+    inputRef.current?.click()
   }
 
-  const removeImage = async () => {
-    setUploadError(null)
-    onChange('')
-    await orpc.media.removeMedia({ filename: value as string });
-
-    if (imageLoader.current) {
-      imageLoader.current.value = ''
+  const handleImageChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const validatedFile = parseUseUploadImageProps(file);
+    const presignedUrl = await orpc.media.getPresignedUrl({ mimeType: validatedFile.mimeType });
+    const uploadResponse = await fetch(presignedUrl.url, {
+      method: "PUT",
+      headers: {
+        "Content-Type": file.type,
+      },
+      body: file,
+    });
+    const mediaUrl = await getMediaUrl(presignedUrl.filename);
+    if (uploadResponse.ok && mediaUrl) 
+    {
+      onChange(mediaUrl);
+    }
+    else
+    {
+      hasError("Failed to upload image. Please try again.");
     }
   }
 
-  const handleImageLoad = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-
-    if (!file) return
-
-    uploadImage.mutate(file)
-    event.target.value = ''
+  const handleRemoveImage = () => {
+    onChange('')
   }
 
-  const isUploading = uploadImage.isPending
-
   return (
-    <div className="flex flex-col gap-3 rounded-xl border border-border bg-muted/30 p-4">
+    <section className='w-full'>
       <input
-        ref={imageLoader}
-        type="file"
-        name="course-thumbnail-upload"
-        onChange={handleImageLoad}
-        className="hidden"
+        type='file'
+        hidden
         accept={imageMimeTypes.join(',')}
+        ref={inputRef}
+        onChange={handleImageChange}
+        aria-label='Upload course image'
+        name='course-image'
       />
 
-      <div className="flex flex-col gap-1 sm:flex-row sm:items-start sm:justify-between">
-        <div className="min-w-0">
-          <p className="text-sm font-medium text-foreground">Course Thumbnail</p>
-          <p className="text-sm text-muted-foreground">
-            Upload a JPG, PNG, GIF, or WebP image for the course card.
-          </p>
-        </div>
-
-        {value ? (
-          <button
-            type="button"
-            onClick={removeImage}
-            className={cn(adminDestructiveButtonClassName, 'mt-2 sm:mt-0')}
-          >
-            Remove Image
-          </button>
-        ) : null}
-      </div>
-
       {value ? (
-        <div className="overflow-hidden rounded-xl border border-border bg-background">
-          <img
-            src={imageUrl as string}
-            alt="Course thumbnail preview"
-            width={960}
-            height={360}
-            className="h-64 w-full"
-            loading="lazy"
-          />
-          <div className="flex flex-col gap-2 border-t border-border p-3 sm:flex-row sm:items-center sm:justify-between">
-            {/* <p className="min-w-0 truncate text-sm text-muted-foreground">{value}</p> */}
-            <button
-              type="button"
-              onClick={openImageLoader}
-              disabled={isUploading}
-              className={adminActionButtonClassName}
-            >
-              {isUploading ? 'Uploading…' : 'Replace Image'}
-            </button>
-          </div>
-        </div>
+        <ImagePreview url={value} onReplace={openImageLoader} onRemove={handleRemoveImage} />
       ) : (
         <button
-          type="button"
+          type='button'
           onClick={openImageLoader}
-          disabled={isUploading}
-          aria-invalid={hasError ? true : undefined}
-          className={cn(
-            'flex min-h-64 w-full flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-background px-6 text-center transition-[background-color,border-color,box-shadow] duration-200 hover:border-primary/60 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70 touch-manipulation',
-            hasError && 'border-destructive focus-visible:ring-destructive',
-          )}
+          className='flex h-[350px] w-full cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-border bg-muted/20 px-6 transition-colors hover:border-primary hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 [touch-action:manipulation]'
+          aria-label='Open image uploader'
         >
-          <span className="rounded-full bg-primary/10 px-4 py-2 text-sm font-semibold text-primary">
-            {isUploading ? 'Uploading…' : 'Upload Image'}
-          </span>
-          <span className="max-w-md text-sm text-muted-foreground">
-            Select a course thumbnail. The uploaded image URL will be saved with the course form.
-          </span>
+          <UploadPlaceholder acceptedFormats={acceptedFormats} />
         </button>
       )}
-
-      <div aria-live="polite" className="min-h-5 text-sm text-destructive">
-        {uploadError}
-      </div>
-    </div>
+    </section>
   )
 }

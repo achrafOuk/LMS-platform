@@ -8,6 +8,7 @@ export interface AuthUser {
   uid: string;
   email: string;
   role: string;
+  userPermissions?: { permission: string }[];
 }
 
 export interface ORPCContext
