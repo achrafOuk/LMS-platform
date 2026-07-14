@@ -1,4 +1,4 @@
-import { ORPCError, os } from "@orpc/server";
+import { ORPCError } from "@orpc/server";
 import { getCookie } from "@orpc/server/helpers";
 import { base, type AuthUser } from "../context";
 import {
@@ -21,6 +21,39 @@ const publicMiddleware =  base.middleware(async ({ context, next }) => {
 });
 
 
+async function resolveUserFromToken(token: string): Promise<AuthUser> {
+  const payload = await verifyAccessToken(token);
+  const user: AuthUser = {
+    uid: payload.sub,
+    email: payload.email,
+    role: payload.role,
+  };
+  const userPermissions = await db
+    .select({
+      permission: permissions.permission,
+    })
+    .from(usersPermissions)
+    .innerJoin(permissions, eq(usersPermissions.pid, permissions.pid))
+    .where(eq(usersPermissions.userId, user.uid));
+
+  return { ...user, userPermissions };
+}
+
+export const optionalAuthMiddleware = base.middleware(async ({ context, next }) => {
+  const token = getCookie(context.reqHeaders, AUTH_COOKIE_NAME);
+
+  if (!token) {
+    return next({ context: { user: null } });
+  }
+
+  try {
+    const user = await resolveUserFromToken(token);
+    return next({ context: { user } });
+  } catch {
+    return next({ context: { user: null } });
+  }
+});
+
 export const authMiddleware = base.middleware(async ({ context, next }) => {
   const token = getCookie(context.reqHeaders, AUTH_COOKIE_NAME);
 
@@ -29,23 +62,8 @@ export const authMiddleware = base.middleware(async ({ context, next }) => {
   }
 
   try {
-    const payload = await verifyAccessToken(token);
-    const user: AuthUser = {
-      uid: payload.sub,
-      email: payload.email,
-      role: payload.role,
-    };
-    let userPermissions= await db
-    .select({
-      permission: permissions.permission,
-    })
-    .from(usersPermissions)
-    .innerJoin(permissions, eq(usersPermissions.pid, permissions.pid))
-    .where(eq(usersPermissions.userId, user.uid));
-
-    const userWithPermissions = { ...user, userPermissions };
-
-    return next({ context: { user: userWithPermissions } });
+    const user = await resolveUserFromToken(token);
+    return next({ context: { user } });
   } catch {
     throw new ORPCError("UNAUTHORIZED", {
       message: "Invalid or expired session",
@@ -71,4 +89,5 @@ export function hasPermission(permission: PermissionTypes) {
 
 
 export const publicProcedure = base.use(publicMiddleware);
+export const optionalAuthProcedure = base.use(optionalAuthMiddleware);
 export const protectedProcedure = base.use(authMiddleware);

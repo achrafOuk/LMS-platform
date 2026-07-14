@@ -1,13 +1,12 @@
-import { context } from "#/router";
 import { cn } from "#/utils/cn";
 import { orpc } from "#/utils/orpc";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 
 export function NavBarUserLinks({ className }: { className?: string }) {
     const navigation = useNavigate();
     const logout = useMutation({ mutationFn: () => orpc.auth.logout() });
-    const { queryClient } = context;
+    const queryClient = useQueryClient();
 
     const handleLogout = async () => {
         await logout.mutateAsync();

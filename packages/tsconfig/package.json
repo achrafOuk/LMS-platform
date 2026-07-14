@@ -1,8 +1,5 @@
 {
   "name": "@tanstack-start-hono/tsconfig",
   "version": "0.0.0",
-  "private": true,
-  "files": [
-    "tsconfig.base.json"
-  ]
+  "private": true
 }

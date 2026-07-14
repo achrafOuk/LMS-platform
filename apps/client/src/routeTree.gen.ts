@@ -18,6 +18,7 @@ import { Route as ProtectedCoursesRouteImport } from './routes/_protected/course
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as ProtectedAdminRouteRouteImport } from './routes/_protected/admin/route'
+import { Route as PublicCoursesIdRouteImport } from './routes/_public/courses/$id'
 import { Route as ProtectedAdminDashboardIndexRouteImport } from './routes/_protected/admin/dashboard/index'
 import { Route as ProtectedAdminDashboardCoursesIndexRouteImport } from './routes/_protected/admin/dashboard/courses/index'
 import { Route as ProtectedAdminDashboardCoursesNewRouteImport } from './routes/_protected/admin/dashboard/courses/new'
@@ -65,6 +66,11 @@ const ProtectedAdminRouteRoute = ProtectedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const PublicCoursesIdRoute = PublicCoursesIdRouteImport.update({
+  id: '/courses/$id',
+  path: '/courses/$id',
+  getParentRoute: () => PublicRoute,
+} as any)
 const ProtectedAdminDashboardIndexRoute =
   ProtectedAdminDashboardIndexRouteImport.update({
     id: '/dashboard/',
@@ -97,6 +103,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof AuthRegisterRoute
   '/courses': typeof ProtectedCoursesRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/courses/$id': typeof PublicCoursesIdRoute
   '/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
   '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
   '/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
@@ -109,6 +116,7 @@ export interface FileRoutesByTo {
   '/register': typeof AuthRegisterRoute
   '/courses': typeof ProtectedCoursesRoute
   '/dashboard': typeof ProtectedDashboardRoute
+  '/courses/$id': typeof PublicCoursesIdRoute
   '/admin/dashboard': typeof ProtectedAdminDashboardIndexRoute
   '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
   '/admin/dashboard/courses': typeof ProtectedAdminDashboardCoursesIndexRoute
@@ -125,6 +133,7 @@ export interface FileRoutesById {
   '/_protected/courses': typeof ProtectedCoursesRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_public/': typeof PublicIndexRoute
+  '/_public/courses/$id': typeof PublicCoursesIdRoute
   '/_protected/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
   '/_protected/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
   '/_protected/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/courses'
     | '/dashboard'
+    | '/courses/$id'
     | '/admin/dashboard/'
     | '/admin/dashboard/courses/new'
     | '/admin/dashboard/courses/'
@@ -151,6 +161,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/courses'
     | '/dashboard'
+    | '/courses/$id'
     | '/admin/dashboard'
     | '/admin/dashboard/courses/new'
     | '/admin/dashboard/courses'
@@ -166,6 +177,7 @@ export interface FileRouteTypes {
     | '/_protected/courses'
     | '/_protected/dashboard'
     | '/_public/'
+    | '/_public/courses/$id'
     | '/_protected/admin/dashboard/'
     | '/_protected/admin/dashboard/courses/new'
     | '/_protected/admin/dashboard/courses/'
@@ -242,6 +254,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin'
       preLoaderRoute: typeof ProtectedAdminRouteRouteImport
       parentRoute: typeof ProtectedRoute
+    }
+    '/_public/courses/$id': {
+      id: '/_public/courses/$id'
+      path: '/courses/$id'
+      fullPath: '/courses/$id'
+      preLoaderRoute: typeof PublicCoursesIdRouteImport
+      parentRoute: typeof PublicRoute
     }
     '/_protected/admin/dashboard/': {
       id: '/_protected/admin/dashboard/'
@@ -324,10 +343,12 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
 
 interface PublicRouteChildren {
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicCoursesIdRoute: typeof PublicCoursesIdRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicIndexRoute: PublicIndexRoute,
+  PublicCoursesIdRoute: PublicCoursesIdRoute,
 }
 
 const PublicRouteWithChildren =

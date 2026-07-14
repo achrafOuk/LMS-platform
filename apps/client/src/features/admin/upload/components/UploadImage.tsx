@@ -4,6 +4,8 @@ import { orpc } from '#/utils/orpc'
 import { imageMimeTypes } from '@tanstack-start-hono/validators/upload'
 import type { ChangeEvent } from 'react'
 import { useRef } from 'react'
+import { useUploadThumbnail } from '../store/uploadThumbnail'
+import { getAcceptFormats } from '../hooks/AcceptForm'
 
 function ImagePreview({
   url,
@@ -82,9 +84,8 @@ function UploadPlaceholder({ acceptedFormats }: { acceptedFormats: string }) {
 
 export function UploadImage({ value, onChange, hasError }: UploadImageProps) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const acceptedFormats = imageMimeTypes
-    .map((mimeType) => mimeType.replace('image/', '').toUpperCase())
-    .join(', ')
+  const { setThumbnail, removeThumbnail } = useUploadThumbnail();
+  const acceptedFormats = getAcceptFormats();
 
   const openImageLoader = () => {
     inputRef.current?.click()

@@ -12,6 +12,8 @@ import {
 
   protectedProcedure,
 
+  optionalAuthProcedure,
+
 } from "../../orpc/middleware/auth.middleware";
 
 import { findUserByEmail, insertNewNormalUser } from "../users/user.repository";
@@ -110,11 +112,10 @@ export const logoutRoute = protectedProcedure.handler(async ({ context }) => {
 
 
 
-export const meRoute = protectedProcedure.handler(async ({ context }) => {
+export const meRoute = optionalAuthProcedure.handler(async ({ context }) => {
   return {
-    user: context.user,
+    user: context.user ?? null,
   };
-
 });
 
 
