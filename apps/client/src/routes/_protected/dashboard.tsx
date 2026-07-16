@@ -1,24 +1,31 @@
-import { useMe } from '#/features/auth/hooks/useMe';
+import { meQueryOptions, useMe } from '#/features/auth/hooks/useMe';
 import { featuredCourses } from '#/features/courses/constants/featuredCourses';
 import { CourseProgress } from '#/features/courses/dashboard/components/CoursePorgress';
 import { useSuspenseQuery } from '@tanstack/react-query';
-import { createFileRoute} from '@tanstack/react-router'
+import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/dashboard')({
   component: DashboardPage,
-  loader: async ({context}) => {
-    await context.queryClient.prefetchQuery(useMe());
+  loader: async ({ context }) => {
+    await context.queryClient.prefetchQuery(useMe())
+
+    const me = context.queryClient.getQueryData(meQueryOptions.queryKey)
+    if (!me?.user) {
+      throw redirect({ to: '/login' })
+    }
   },
 })
 
 function DashboardPage() {
-  const { data:user } = useSuspenseQuery(useMe());
+  const { data: me } = useSuspenseQuery(useMe())
+  const email = me.user?.email ?? 'there'
+
   return (
     <div className="mx-auto w-full p-4 w-[90%] mx-auto w-[90%] mx-auto space-y-4 ">
 
       <section className="flex flex-col  bg-foreground text-background p-4">
         <p className="text-2xl font-semibold">My Learning Dashboard</p>
-        <p>Welcome to your learning journey, {user.user.email}</p>
+        <p>Welcome to your learning journey, {email}</p>
       </section>
 
       <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

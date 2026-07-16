@@ -1,10 +1,10 @@
 import { queryOptions, type QueryClient } from '@tanstack/react-query'
 
-import { orpc } from '#/utils/orpc'
+import { fetchMe } from '#/features/auth/server/fetchMe'
 
 export const meQueryOptions = queryOptions({
   queryKey: ['auth', 'me'],
-  queryFn: () => orpc.auth.me(),
+  queryFn: () => fetchMe(),
   retry: false,
   staleTime: Infinity,
   refetchOnWindowFocus: false,

@@ -41,7 +41,14 @@ export default defineConfig(({ mode }) => {
     },
     plugins: [
       devtools(),
-      nitro({ rollupConfig: { external: [/^@sentry\//] } }),
+      nitro({
+        rollupConfig: { external: [/^@sentry\//] },
+        routeRules: {
+          '/rpc/**': {
+            proxy: `${rpcUrl}/**`,
+          },
+        },
+      }),
       tailwindcss(),
       tanstackStart(),
       viteReact(),

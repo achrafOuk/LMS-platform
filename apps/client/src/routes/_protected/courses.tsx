@@ -1,5 +1,6 @@
 import { CourseGrid } from '#/features/courses/components/CourseGrid'
 import { featuredCourses } from '#/features/courses/constants/featuredCourses'
+import { Input } from '#/features/shared/input/components/Input';
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/courses')({
@@ -17,7 +18,7 @@ function CoursesPage() {
         <aside className="w-1/4 flex flex-col gap-4">
           <p>Seach courses</p>
           <div className="flex flex-row gap-2">
-            <input type="text" placeholder="Search courses" className="border border-foreground rounded-md px-4 py-2"/>
+            <Input placeholder="Search courses" className="w-full" />
           </div>
           <div className="flex flex-col gap-2"> 
             {

@@ -41,16 +41,17 @@ async function resolveUserFromToken(token: string): Promise<AuthUser> {
 
 export const optionalAuthMiddleware = base.middleware(async ({ context, next }) => {
   const token = getCookie(context.reqHeaders, AUTH_COOKIE_NAME);
+  const unauthenticatedContext = { user: null as AuthUser | null };
 
   if (!token) {
-    return next({ context: { user: null } });
+    return next({ context: unauthenticatedContext });
   }
 
   try {
     const user = await resolveUserFromToken(token);
     return next({ context: { user } });
   } catch {
-    return next({ context: { user: null } });
+    return next({ context: unauthenticatedContext });
   }
 });
 
