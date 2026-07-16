@@ -7,7 +7,7 @@ import { createFileRoute } from '@tanstack/react-router'
 export const Route = createFileRoute('/_public/courses/$id')({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    context.queryClient.prefetchQuery(useGetCourseBySlug(params.id));
+    await context.queryClient.prefetchQuery(useGetCourseBySlug(params.id));
   }
 })
 
@@ -15,9 +15,6 @@ function RouteComponent() {
   const { id } = Route.useParams();
   const { data: course } = useSuspenseQuery(useGetCourseBySlug(id));
 
-  console.log(course);
-
-  // return <div>Hello "/_public/courses/$id" {id}!</div>
   return (
     <CoursePage course={course} />
   )
