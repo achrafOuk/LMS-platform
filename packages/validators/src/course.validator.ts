@@ -102,6 +102,11 @@ export const updateCourseValidator = courseBodySchema
   .superRefine(refineCourseFields);
 
 
+export const enrollInCourseValidator = z.object({
+  slug: z.string().min(1),
+});
+
+
 
 export type UpdateCourseValidatorType = z.infer<typeof updateCourseValidator>;
 export type CourseValidatorType = z.infer<typeof courseValidator>;

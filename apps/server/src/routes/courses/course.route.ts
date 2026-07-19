@@ -1,5 +1,5 @@
 import { db } from "../../db/drizzle.client";
-import { protectedProcedure } from "../../orpc/middleware/auth.middleware";
+import { optionalAuthProcedure, protectedProcedure } from "../../orpc/middleware/auth.middleware";
 import { courseSlugValidator, courseValidator, updateCourseValidator} from "@tanstack-start-hono/validators/course";
 import { paginationQueryValidator } from "@tanstack-start-hono/validators/pagination";
 import {   getCourse, getFeaturedCourses} from "./course.repository";
@@ -33,7 +33,7 @@ protectedProcedure
     return getFeaturedCourses(db, input.page);
 });
 
-export const getCourseRoute = protectedProcedure.route({
+export const getCourseRoute = optionalAuthProcedure.route({
     method: "GET",
     path: "/courses/:slug",
 })

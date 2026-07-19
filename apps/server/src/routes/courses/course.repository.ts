@@ -155,4 +155,3 @@ export async function updateCourseFields(input: UpdateCourseValidatorType, tx: D
         updatedAt: now.toISOString(),
     }).where(eq(courses.cid, input.cid!));
 }
-

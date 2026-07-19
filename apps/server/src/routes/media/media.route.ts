@@ -1,5 +1,5 @@
 import { ulid } from "ulid";
-import { protectedProcedure } from "../../orpc/middleware/auth.middleware";
+import { optionalAuthProcedure, protectedProcedure } from "../../orpc/middleware/auth.middleware";
 import { getMediaUrlValidator, notifyMediaUploadedValidator, removeMediaValidator, uploadMediaValidator } from "@tanstack-start-hono/validators/upload";
 import { db } from "../../db/drizzle.client";
 import { formatFilename, generatePresignedUrl, getMediaUrl, notifyMediaUploaded, removeMedia } from "./media.service";
@@ -16,7 +16,7 @@ export const getPresignedUrlRoute = protectedProcedure
     return { url, filename };
 });
 
-export const getMediaUrlRoute = protectedProcedure
+export const getMediaUrlRoute = optionalAuthProcedure
 .input(getMediaUrlValidator)
 .handler(async ({ input }) => {
     const bucket = process.env.RUSTFS_BUCKET_NAME!;

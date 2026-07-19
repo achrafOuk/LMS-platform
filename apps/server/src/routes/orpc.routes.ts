@@ -1,5 +1,6 @@
 import { loginRoute, logoutRoute, meRoute, registerRoute } from "./auth/auth.routes";
 import { createCourseRoute, getCourseRoute, getCoursesRoute, updateCourseRoute } from "./courses/course.route";
+import { enrollInCourseRoute, isUserEnrolledInCourseRoute } from "./enroll/enroll.route";
 import { getMediaUrlRoute, getPresignedUrlRoute, notifyMediaUploadedRoute, removeMediaRoute } from "./media/media.route";
 import { courseStaticRoute } from "./statistics/statistics.route";
 
@@ -34,6 +35,11 @@ export const router = {
   statistics: {
     getCourseStatic: courseStaticRoute,
   },
+
+  enroll: {
+    isUserEnrolledInCourse: isUserEnrolledInCourseRoute,
+    enrollInCourse: enrollInCourseRoute,
+  }
 
 };
 

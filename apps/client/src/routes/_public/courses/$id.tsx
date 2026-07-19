@@ -1,13 +1,19 @@
+import { fetchMe } from '#/features/auth/server/fetchMe';
 import { CoursePage } from '#/features/courses/components/CoursePage';
+import { useUserIsEnrolledInCourse } from '#/features/courses/course/quiries/useUserIsEnrolledInCourse';
 import { useGetCourseBySlug } from '#/features/courses/quries/useGetCourseBySlug';
-import { orpc } from '#/utils/orpc';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_public/courses/$id')({
   component: RouteComponent,
   loader: async ({ context, params }) => {
-    await context.queryClient.prefetchQuery(useGetCourseBySlug(params.id));
+    const slug = params.id;
+    const [user, _] = await Promise.all([
+      fetchMe(),
+      context.queryClient.prefetchQuery(useGetCourseBySlug(slug)),
+    ]);
+    context.queryClient.prefetchQuery(useUserIsEnrolledInCourse(slug, !!user));
   }
 })
 
