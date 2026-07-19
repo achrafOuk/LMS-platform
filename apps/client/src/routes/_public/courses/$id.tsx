@@ -1,7 +1,7 @@
 import { fetchMe } from '#/features/auth/server/fetchMe';
-import { CoursePage } from '#/features/courses/components/CoursePage';
-import { useUserIsEnrolledInCourse } from '#/features/courses/course/quiries/useUserIsEnrolledInCourse';
-import { useGetCourseBySlug } from '#/features/courses/quries/useGetCourseBySlug';
+import { CoursePage } from '#/features/courses/course/components/CoursePage';
+import { useGetCourseBySlug } from '#/features/courses/course/queries/useGetCourseBySlug';
+import { useUserIsEnrolledInCourse } from '#/features/courses/course/queries/useUserIsEnrolledInCourse';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute } from '@tanstack/react-router'
 

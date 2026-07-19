@@ -1,6 +1,6 @@
-import type { Course } from "./CoursePage";
+import type { CourseLesson } from "../types/course.types";
 
-export function LessonList({ lessons }: { lessons: NonNullable<Course>["modules"][number]["lessons"] }) {
+export function LessonList({ lessons }: { lessons: CourseLesson[] }) {
     return (
         <ol className="divide-y divide-border">
             {lessons.map((lesson, index) => (

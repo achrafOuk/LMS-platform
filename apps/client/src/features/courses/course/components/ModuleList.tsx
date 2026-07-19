@@ -1,4 +1,4 @@
-import type { Course } from "./CoursePage";
+import type { Course } from "../types/course.types";
 import { LessonList } from "./LessonList";
 
 export function ModuleList({ modules }: { modules: NonNullable<Course>["modules"] }) {
