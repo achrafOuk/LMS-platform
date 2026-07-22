@@ -1,14 +1,14 @@
 import type { UserSidebarLinks } from "../types/SideBarTypes";
 
-export const urls: UserSidebarLinks[] = [
+export const URLS: UserSidebarLinks[] = [
     {
         link: '/admin/dashboard/',
         label: 'Dashboard',
-        permissions: ['dashboard:view'],
+        permissions: ['statistics:view'],
     },
     {
         link: '/admin/dashboard/courses/',
         label: 'Courses',
-        permissions: ['courses:manage:view'],
+        permissions: ['course:create', 'course:update', 'course:delete', 'course:view'],
     },
 ];
