@@ -1,7 +1,7 @@
 import { orpc } from "#/utils/orpc";
 import { queryOptions } from "@tanstack/react-query";
 
-export function getFeaturedCoursesQueryOptions(page: number) {
+export function getFeaturedCoursesQueryOptions(page: number = 1) {
   return queryOptions({
     queryKey: ['featured-courses', page],
     queryFn: () => orpc.courses.getFeaturedCourses({ page }),

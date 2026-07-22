@@ -1,26 +1,35 @@
 import { formatCoursePrice } from '../constants/formatCoursePrice'
 import type { CourseType } from '../types/Course'
-import { CourseCard } from './CourseCard'
 import { courseEnrollLinkClassName } from '../constants/courseStyles'
 import { Link } from '@tanstack/react-router'
+import { CourseCardRoot } from '../course/components/CourseCard'
+import { CourseCover } from '../course/components/CourseCover'
+import { Button } from '#/features/shared/button/components/Button'
 
 export function CourseGrid({ courses }: { courses: CourseType[] }) {
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {courses.map((course) => (
-        <li key={course.slug} className="min-w-0">
-          <CourseCard course={course} >
-          <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-base font-semibold tabular-nums text-foreground">
-            {formatCoursePrice(course.price)}
-          </p>
-          <Link to="/register" className={courseEnrollLinkClassName}>
-            Enroll now
-          </Link>
-        </div>
-        </CourseCard>
-        </li>
+    <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
+        { 
+          courses.map((course:CourseType) => (
+            <CourseCardRoot key={course.slug} className="flex flex-col gap-4 bg-card h-fit "> <CourseCardRoot.header>
+                  <CourseCover filename={course.coverUrl ?? ""} title={course.courseName} className="h-[200px] w-full  transition-[transform] duration-300 motion-safe:group-hover:scale-[1.02]" />
+              </CourseCardRoot.header>
+              <CourseCardRoot.context>
+                <Link to={`/courses/$id`} params={{ id: course.slug }} className='text-2xl text-foreground'>
+                    {course.courseName}
+                </Link>
+                <p className='text-sm text-foreground'>{formatCoursePrice(course.price)}</p>
+              </CourseCardRoot.context>
+              <CourseCardRoot.action>
+                  <Button variant='primary'>
+                    <Link to='/register'>
+                    Enroll Now
+                    </Link>
+                    </Button>
+              </CourseCardRoot.action>
+            </CourseCardRoot>
+
       ))}
-    </ul>
+    </div>
   )
 }

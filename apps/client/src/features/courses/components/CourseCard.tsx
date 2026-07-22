@@ -10,10 +10,10 @@ export function CourseCard({ course, children }: { course: CourseType, children:
     <article className={courseCardClassName}>
       <div className="aspect-[16/10] overflow-hidden bg-muted">
         <img
-          src={course.image}
-          alt={`${course.title} — ${course.category}`}
-          width={course.imageWidth}
-          height={course.imageHeight}
+          src={course.courseName}
+          alt={`${course.courseName} — ${course.category}`}
+          width={300}
+          height={300}
           loading="lazy"
           className="h-full w-full object-cover transition-[transform] duration-300 motion-safe:group-hover:scale-[1.02]"
         />
@@ -24,7 +24,7 @@ export function CourseCard({ course, children }: { course: CourseType, children:
 
         <h3 className="min-w-0">
           <Link to="/courses" className={courseTitleLinkClassName}>
-            {course.title}
+            {course.courseName}
           </Link>
         </h3>
 

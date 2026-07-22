@@ -12,5 +12,4 @@ export async function enrollInCourseService (userId: string, slug: string, db: D
     if (!enroll)
         throw new ORPCError("INTERNAL_SERVER_ERROR", { message: "Failed to enroll user in the course" });
     return { success: true };
-
 }

@@ -1,17 +1,19 @@
 import { meQueryOptions, useMe } from '#/features/auth/hooks/useMe';
-import { featuredCourses } from '#/features/courses/constants/featuredCourses';
-import { CourseProgress } from '#/features/courses/dashboard/components/CoursePorgress';
+import { MyCourses } from '#/features/courses/dashboard/components/MyCourses';
+import { useGetFeaturedCourses } from '#/features/courses/hooks/useFeaturedCourses';
+import { useGetMyCourses } from '#/features/courses/hooks/useGetMyCourses';
 import { useSuspenseQuery } from '@tanstack/react-query';
 import { createFileRoute, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/dashboard')({
   component: DashboardPage,
   loader: async ({ context }) => {
-    await context.queryClient.prefetchQuery(useMe())
-
-    const me = context.queryClient.getQueryData(meQueryOptions.queryKey)
+    await context.queryClient.prefetchQuery(useMe());
+    const me = context.queryClient.getQueryData(meQueryOptions.queryKey);
+    // await context.queryClient.prefetchQuery(useGetFeaturedCourses(1));
+    await context.queryClient.prefetchQuery(useGetMyCourses(1));
     if (!me?.user) {
-      throw redirect({ to: '/login' })
+      throw redirect({ to: '/login' });
     }
   },
 })
@@ -19,6 +21,7 @@ export const Route = createFileRoute('/_protected/dashboard')({
 function DashboardPage() {
   const { data: me } = useSuspenseQuery(useMe())
   const email = me.user?.email ?? 'there'
+  const { data: featuredCourses } = useSuspenseQuery(useGetMyCourses(1))
 
   return (
     <div className="mx-auto w-full p-4 w-[90%] mx-auto w-[90%] mx-auto space-y-4 ">
@@ -29,11 +32,7 @@ function DashboardPage() {
       </section>
 
       <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {
-          featuredCourses.map((course) => (
-            <CourseProgress key={course.slug} course={course} />
-          ))
-        }
+        <MyCourses courses={featuredCourses.data} />
       </main>
     </div>
   )
