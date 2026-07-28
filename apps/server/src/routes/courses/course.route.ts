@@ -5,11 +5,8 @@ import { paginationQueryValidator } from "@tanstack-start-hono/validators/pagina
 import {   getCourse, getFeaturedCourses} from "./course.repository";
 import { ORPCError } from "@orpc/server";
 import { checkViolation, formatViolationErrorMessage } from "../../db/utils/db.errors.utils";
-import { createCourse, updateCourse } from "./course.service";
+import { createCourse, getLastSeenCoursesService, updateCourse } from "./course.service";
 import {  hasPermission } from "../../orpc/middleware/auth.middleware";
-import { courses, enrollments } from "../../db/schemas";
-import { count, eq } from "drizzle-orm";
-import { PaginateRequest } from "../../db/utils/db.pagination.utils";
 
 export const createCourseRoute = protectedProcedure
 .route({
@@ -82,46 +79,15 @@ export const updateCourseRoute = protectedProcedure
 });
 
 
-export const getMyCoursesRoute = 
+export const getLastSeenCoursesRoute = 
 protectedProcedure
 .route({
     method: "GET",
-    path: "/my-courses",
+    path: "/last-seen-courses",
 })
 .use(hasPermission("course:view"))
-.input(paginationQueryValidator)
-.handler(async ({ input, context }) =>{
-    const currentPage = input.page;
-    const me = context.user;
-
-    const [mycourses, countResult ] = await Promise.all([
-     await db
-    .select({
-        cid: courses.cid,
-        courseName: courses.courseName,
-        slug: courses.slug,
-        coverUrl: courses.coverUrl,
-        tagId: courses.tagId,
-        uid: enrollments.uid,
-        progress: enrollments.progressPercent,
-    })
-    .from(courses)
-    .innerJoin(enrollments, eq(courses.tagId, enrollments.cid))
-    .where(eq(enrollments.uid, me.uid))
-    ,
-
-     await db
-    .select({total: count()})
-    .from(courses)
-    .innerJoin(enrollments, eq(courses.tagId, enrollments.cid))
-    .where(eq(enrollments.uid, me.uid))
-    ]);
-
-    const pageSize = 10;
-
-    const total = countResult[0]?.total ?? 0;
-    const totalPages = Math.max(1, Math.ceil(total / pageSize));
-    return PaginateRequest(mycourses, pageSize, currentPage, totalPages);
+.handler(async ({ context }) =>{
+    return getLastSeenCoursesService(context.user.uid, db);
 });
 
 

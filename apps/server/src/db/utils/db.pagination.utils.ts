@@ -9,3 +9,8 @@ export function PaginateRequest<T>(data: T, page: number, currentPage:number, to
     }
     return result;
 }
+
+export function getPageOffest(page: number, pageSize: number, )
+{
+    return (page - 1) * pageSize;
+}

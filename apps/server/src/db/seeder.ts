@@ -3,12 +3,8 @@ import { users } from "./schemas";
 import { seedRoleForUser, seedRoles } from "./seeds/role.seed";
 import { eq } from "drizzle-orm";
 
-async function seed()
+async function seedAdminsPermissions()
 {
-    seedRoles().catch((error) => {
-        console.error("Seeding roles failed:", error);
-    });
-
     const admins = await db.select({
         uid: users.uid,
     }).from(users).where(eq(users.role, 'admin'));
@@ -16,9 +12,14 @@ async function seed()
     await Promise.all(admins.map(async (admin) => {
         await seedRoleForUser(admin.uid, 'admin');
     }));
+}
 
-
-
+async function seed()
+{
+    seedRoles().catch((error) => {
+        console.error("Seeding roles failed:", error);
+    });
+    await seedAdminsPermissions();
     process.exit(0);
 }
 

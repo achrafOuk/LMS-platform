@@ -3,6 +3,9 @@ import type { Db, DbTransaction } from "../../db/drizzle.client";
 import { createNewCourse, createNewModule, findOrCreateCategory, updateCourseFields } from "./course.repository";
 import { createNewLesson, deleteLesson, upsertLesson } from "../lessons/lessons.repository";
 import { deleteModule, upsertModule } from "../modules/module.repository";
+import { getLastSeenCourses } from "../enroll/enroll.repository";
+
+export const LAST_SEEN_COURSES_LIMIT = 3;
 
 
 export async function createCourse(input: CourseValidatorType, tx: DbTransaction)
@@ -39,5 +42,13 @@ export async function updateCourse(input: UpdateCourseValidatorType, tx: DbTrans
         await deleteLesson(upsertedModule!.mhid, inputLessonTitles, tx);
     }
     await deleteModule(input.cid, inputModuleTitles, tx);
+}
+
+export async function getLastSeenCoursesService(
+    userId: string,
+    db: Db,
+    limit = LAST_SEEN_COURSES_LIMIT,
+) {
+    return getLastSeenCourses(userId, limit, db);
 }
 
