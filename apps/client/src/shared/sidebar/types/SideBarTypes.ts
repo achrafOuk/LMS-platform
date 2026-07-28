@@ -1,7 +1,8 @@
+import type { FileRouteTypes } from "#/routeTree.gen";
 import type { PermissionTypes } from "@tanstack-start-hono/shared/rbac";
 
 export interface UserSidebarLinks {
-    link: string;
+    link: FileRouteTypes["to"];
     label: string;
     // roles to see the link
     permissions: PermissionTypes[]

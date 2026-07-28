@@ -3,13 +3,18 @@ import { GraduationCap } from "lucide-react";
 import { cn } from "#/utils/cn";
 import type {  UserSidebarLinkProps, UserSidebarLinks, UserSidebarProps } from "../types/SideBarTypes";
 import { URLS } from "../constants/sidebarLinks";
-import {  type PermissionTypes } from "@tanstack-start-hono/shared/rbac";
+import { type PermissionTypes } from "@tanstack-start-hono/shared/rbac";
 import { useMe } from "#/features/auth/hooks/useMe";
 import { useQuery } from "@tanstack/react-query";
+import { Button } from "#/features/shared/button/components/Button";
 
-export function UserSidebar({ onNavigate }: UserSidebarProps) {
+export function UserSidebar({ onNavigate }: UserSidebarProps) 
+{
+    // get the user permissions
+    const { data:user } = useQuery(useMe());
+    const userPermissions: PermissionTypes[] = user?.user?.userPermissions?.map((permission) => permission.permission as PermissionTypes) ?? [];
+    console.log('user:', user);
 
-    const userPermissions: PermissionTypes[] = ['statistics:view', 'course:view'];
     return (
         <UserSidebarComponent>
             <UserSidebarComponent.Body>
@@ -18,26 +23,23 @@ export function UserSidebar({ onNavigate }: UserSidebarProps) {
                 <UserSidebarComponent.Links>
                     {
                         URLS.map((url: UserSidebarLinks) =>(
-                            <UserSidebarComponent.Link key={url.label} permissions={url.permissions} userPermissions={userPermissions} >
+                            <UserSidebarComponent.Link key={url.link + url.label} permissions={url.permissions} userPermissions={userPermissions} >
                                 <Link to={url.link} onClick={onNavigate} className="text-white text-bold">
                                     {url.label}
                                 </Link>
                             </UserSidebarComponent.Link >
                         ))
                     }
-                        
                 </UserSidebarComponent.Links>   
             </UserSidebarComponent.Body>
-
             <UserSidebarComponent.Footer>
+                <Button variant="secondary" onClick={() => {}} className="w-full rounded-none">
                 Logout
+                </Button>
             </UserSidebarComponent.Footer>
         </UserSidebarComponent>
     )
 }
-
-
-
 
 const UserSidebarComponent =  ({children}: {children: React.ReactNode}) => 
 {
@@ -51,10 +53,11 @@ const UserSidebarComponent =  ({children}: {children: React.ReactNode}) =>
 UserSidebarComponent.Header = ({ onNavigate }: UserSidebarProps) => 
 {
     const { data:user } = useQuery(useMe());
-    const url = user?.user?.role === 'admin' ? '/admin/dashboard' : '/dashboard';
+    const canSeeStatistics = user?.user?.userPermissions?.filter((permission) => permission.permission === 'statistics:view');
+    const url = canSeeStatistics ? '/admin/dashboard' : '/dashboard';
     return (
             <Link
-                to={url as string}
+                to={url}
                 onClick={onNavigate}
                 className="flex flex-row items-center gap-2"
             >
@@ -62,7 +65,6 @@ UserSidebarComponent.Header = ({ onNavigate }: UserSidebarProps) =>
                 LMS platform
             </Link>
     )
-
 }
 
 UserSidebarComponent.Body = ({children}: {children: React.ReactNode}) => 

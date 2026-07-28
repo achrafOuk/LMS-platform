@@ -1,10 +1,14 @@
 const CoursePermissions = [
-    "course:view", "course:create", "course:update", "course:delete", "course:enroll"
+    "course:view", "course:enroll"
 ] as const;
 
 
-const userPermissions = [
-    "user:view", "user:update", "user:create", "user:delete"
+const courseManagementPermissions = [
+    "course:manage:view", "course:manage:create", "course:manage:update", "course:manage:delete"
+] as const;
+
+const usersManagementPermissions = [
+    "users:manage:view", "users:manage:create", "users:manage:update", "users:manage:delete"
 ] as const;
 
 
@@ -16,7 +20,13 @@ const statisticsPermissions = [
     "statistics:view"
 ] as const;
 
-export const permissions = [...CoursePermissions, ...userPermissions, ...statisticsPermissions, ...profilePermissions] as const;
+export const permissions = [
+    ...CoursePermissions,
+    ...courseManagementPermissions,
+    ...usersManagementPermissions,
+      ...statisticsPermissions,
+       ...profilePermissions
+] as const;
 
 
 // default permissions map
