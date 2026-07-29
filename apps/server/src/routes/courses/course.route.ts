@@ -13,7 +13,7 @@ export const createCourseRoute = protectedProcedure
     method: "POST",
     path: "/courses",
 })
-.use(hasPermission("course:create"))
+.use(hasPermission("course:manage:create"))
 .input(courseValidator)
 .handler(async ({ input }) => {
     try
@@ -61,7 +61,7 @@ export const updateCourseRoute = protectedProcedure
     method: "PUT",
     path: "/courses/:slug",
 })
-.use(hasPermission("course:update"))
+.use(hasPermission("course:manage:update"))
 .input(updateCourseValidator)
 .handler(async ({ input }) =>{
     try

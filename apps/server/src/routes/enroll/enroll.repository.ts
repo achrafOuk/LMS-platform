@@ -1,6 +1,6 @@
 import { and, count, desc, eq, max } from "drizzle-orm";
 import type { Db } from "../../db/drizzle.client";
-import { courses, enrollments, lessons, modules, watchedLessons } from "../../db/schemas";
+import { courses, enrollments, lessons,  watchedLessons } from "../../db/schemas";
 import { getPageOffest } from "../../db/utils/db.pagination.utils";
 
 
@@ -63,37 +63,20 @@ export function countMyEnrollments(userId: string, db: Db) {
         .where(eq(enrollments.uid, userId));
 }
 
-const lastWatchedAt = max(watchedLessons.watchedAt);
 
-export function getLastSeenCourses(userId: string, limit: number, db: Db) {
-    return db
-        .select({
-            cid: courses.cid,
-            courseName: courses.courseName,
-            slug: courses.slug,
-            coverUrl: courses.coverUrl,
-            progress: enrollments.progressPercent,
-            lastWatchedAt,
-        })
-        .from(enrollments)
-        .innerJoin(courses, eq(courses.cid, enrollments.cid))
-        .innerJoin(modules, eq(modules.cid, courses.cid))
-        .innerJoin(lessons, eq(lessons.chid, modules.mhid))
-        .innerJoin(
-            watchedLessons,
-            and(
-                eq(watchedLessons.leid, lessons.leid),
-                eq(watchedLessons.uid, userId),
-            ),
-        )
-        .where(eq(enrollments.uid, userId))
-        .groupBy(
-            courses.cid,
-            courses.courseName,
-            courses.slug,
-            courses.coverUrl,
-            enrollments.progressPercent,
-        )
-        .orderBy(desc(lastWatchedAt))
-        .limit(limit);
+export async function getLastSeenCourses(userId: string, limit: number, db: Db) {
+    return await db
+    .select({
+        cid: courses.cid,
+        courseName: courses.courseName,
+        slug: courses.slug,
+        coverUrl: courses.coverUrl,
+        progress: enrollments.progressPercent,
+    })
+    .from(courses)
+    .innerJoin(watchedLessons, and(eq(watchedLessons.leid, lessons.leid), eq(watchedLessons.uid, userId)))
+    .orderBy(desc(watchedLessons.watchedAt))
+    .limit(limit);
+    // .innerJoin(enrollments, and(eq(courses.cid, enrollments.cid), eq(enrollments.uid, userId)))
+
 }

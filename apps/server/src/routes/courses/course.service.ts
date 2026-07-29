@@ -5,7 +5,6 @@ import { createNewLesson, deleteLesson, upsertLesson } from "../lessons/lessons.
 import { deleteModule, upsertModule } from "../modules/module.repository";
 import { getLastSeenCourses } from "../enroll/enroll.repository";
 
-export const LAST_SEEN_COURSES_LIMIT = 3;
 
 
 export async function createCourse(input: CourseValidatorType, tx: DbTransaction)
@@ -44,11 +43,13 @@ export async function updateCourse(input: UpdateCourseValidatorType, tx: DbTrans
     await deleteModule(input.cid, inputModuleTitles, tx);
 }
 
+export const LAST_SEEN_COURSES_LIMIT = 3;
 export async function getLastSeenCoursesService(
     userId: string,
     db: Db,
     limit = LAST_SEEN_COURSES_LIMIT,
 ) {
+
     return getLastSeenCourses(userId, limit, db);
 }
 

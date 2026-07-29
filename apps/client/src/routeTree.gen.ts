@@ -13,12 +13,13 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
-import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedCoursesRouteImport } from './routes/_protected/courses'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as ProtectedAdminRouteRouteImport } from './routes/_protected/admin/route'
+import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as PublicCoursesIdRouteImport } from './routes/_public/courses/$id'
+import { Route as ProtectedDashboardCoursesRouteImport } from './routes/_protected/dashboard/courses'
 import { Route as ProtectedAdminDashboardIndexRouteImport } from './routes/_protected/admin/dashboard/index'
 import { Route as ProtectedAdminDashboardCoursesIndexRouteImport } from './routes/_protected/admin/dashboard/courses/index'
 import { Route as ProtectedAdminDashboardCoursesNewRouteImport } from './routes/_protected/admin/dashboard/courses/new'
@@ -41,11 +42,6 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   path: '/',
   getParentRoute: () => PublicRoute,
 } as any)
-const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => ProtectedRoute,
-} as any)
 const ProtectedCoursesRoute = ProtectedCoursesRouteImport.update({
   id: '/courses',
   path: '/courses',
@@ -66,11 +62,22 @@ const ProtectedAdminRouteRoute = ProtectedAdminRouteRouteImport.update({
   path: '/admin',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedDashboardIndexRoute = ProtectedDashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const PublicCoursesIdRoute = PublicCoursesIdRouteImport.update({
   id: '/courses/$id',
   path: '/courses/$id',
   getParentRoute: () => PublicRoute,
 } as any)
+const ProtectedDashboardCoursesRoute =
+  ProtectedDashboardCoursesRouteImport.update({
+    id: '/dashboard/courses',
+    path: '/dashboard/courses',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedAdminDashboardIndexRoute =
   ProtectedAdminDashboardIndexRouteImport.update({
     id: '/dashboard/',
@@ -102,8 +109,9 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/courses': typeof ProtectedCoursesRoute
-  '/dashboard': typeof ProtectedDashboardRoute
+  '/dashboard/courses': typeof ProtectedDashboardCoursesRoute
   '/courses/$id': typeof PublicCoursesIdRoute
+  '/dashboard/': typeof ProtectedDashboardIndexRoute
   '/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
   '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
   '/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
@@ -115,8 +123,9 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/courses': typeof ProtectedCoursesRoute
-  '/dashboard': typeof ProtectedDashboardRoute
+  '/dashboard/courses': typeof ProtectedDashboardCoursesRoute
   '/courses/$id': typeof PublicCoursesIdRoute
+  '/dashboard': typeof ProtectedDashboardIndexRoute
   '/admin/dashboard': typeof ProtectedAdminDashboardIndexRoute
   '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
   '/admin/dashboard/courses': typeof ProtectedAdminDashboardCoursesIndexRoute
@@ -131,9 +140,10 @@ export interface FileRoutesById {
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
   '/_protected/courses': typeof ProtectedCoursesRoute
-  '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_public/': typeof PublicIndexRoute
+  '/_protected/dashboard/courses': typeof ProtectedDashboardCoursesRoute
   '/_public/courses/$id': typeof PublicCoursesIdRoute
+  '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
   '/_protected/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
   '/_protected/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
   '/_protected/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
@@ -147,8 +157,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/courses'
-    | '/dashboard'
+    | '/dashboard/courses'
     | '/courses/$id'
+    | '/dashboard/'
     | '/admin/dashboard/'
     | '/admin/dashboard/courses/new'
     | '/admin/dashboard/courses/'
@@ -160,8 +171,9 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/courses'
-    | '/dashboard'
+    | '/dashboard/courses'
     | '/courses/$id'
+    | '/dashboard'
     | '/admin/dashboard'
     | '/admin/dashboard/courses/new'
     | '/admin/dashboard/courses'
@@ -175,9 +187,10 @@ export interface FileRouteTypes {
     | '/_auth/login'
     | '/_auth/register'
     | '/_protected/courses'
-    | '/_protected/dashboard'
     | '/_public/'
+    | '/_protected/dashboard/courses'
     | '/_public/courses/$id'
+    | '/_protected/dashboard/'
     | '/_protected/admin/dashboard/'
     | '/_protected/admin/dashboard/courses/new'
     | '/_protected/admin/dashboard/courses/'
@@ -220,13 +233,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_protected/dashboard': {
-      id: '/_protected/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof ProtectedDashboardRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/courses': {
       id: '/_protected/courses'
       path: '/courses'
@@ -255,12 +261,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminRouteRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/dashboard/': {
+      id: '/_protected/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof ProtectedDashboardIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_public/courses/$id': {
       id: '/_public/courses/$id'
       path: '/courses/$id'
       fullPath: '/courses/$id'
       preLoaderRoute: typeof PublicCoursesIdRouteImport
       parentRoute: typeof PublicRoute
+    }
+    '/_protected/dashboard/courses': {
+      id: '/_protected/dashboard/courses'
+      path: '/dashboard/courses'
+      fullPath: '/dashboard/courses'
+      preLoaderRoute: typeof ProtectedDashboardCoursesRouteImport
+      parentRoute: typeof ProtectedRoute
     }
     '/_protected/admin/dashboard/': {
       id: '/_protected/admin/dashboard/'
@@ -328,13 +348,15 @@ const ProtectedAdminRouteRouteWithChildren =
 interface ProtectedRouteChildren {
   ProtectedAdminRouteRoute: typeof ProtectedAdminRouteRouteWithChildren
   ProtectedCoursesRoute: typeof ProtectedCoursesRoute
-  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedDashboardCoursesRoute: typeof ProtectedDashboardCoursesRoute
+  ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminRouteRoute: ProtectedAdminRouteRouteWithChildren,
   ProtectedCoursesRoute: ProtectedCoursesRoute,
-  ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedDashboardCoursesRoute: ProtectedDashboardCoursesRoute,
+  ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(

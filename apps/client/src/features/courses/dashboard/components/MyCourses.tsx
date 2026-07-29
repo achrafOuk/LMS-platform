@@ -4,13 +4,26 @@ import type { CourseType } from "../../types/Course";
 import { Button } from "#/features/shared/button/components/Button";
 import type { InferRouterOutputs } from "@orpc/server";
 import type { AppRouter } from "@tanstack-start-hono/server/routes/orpc.route";
+import { Link } from "@tanstack/react-router";
 
-type GetMyCoursesOutput = InferRouterOutputs<AppRouter>['courses']['getMyCourses']
+type GetMyEnrollmentsOutput = InferRouterOutputs<AppRouter>['enroll']['getMyEnrollments']
 
-export function MyCourses({courses}: {courses: GetMyCoursesOutput['data']}) {
+export function MyCourses({courses}: {courses: GetMyEnrollmentsOutput['data']}) {
     console.log('courses:', courses);
+    if (courses.length === 0) {
+        return (
+            <div>
+                <p className="text-2xl font-semibold">Last seen courses</p>
+                <p>No courses found, discover courses and enroll in a course now <Link to="/courses" className="text-primary">from here</Link>
+
+                </p>
+
+            </div>
+
+    )}
     return (
         <>
+        <p>Last seen courses</p>
         {
             courses.map((course) => (
             <CourseCardRoot key={course.slug} className="flex flex-col gap-4 bg-card h-fit "> <CourseCardRoot.header>

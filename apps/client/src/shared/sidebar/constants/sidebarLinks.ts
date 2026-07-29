@@ -8,7 +8,7 @@ const COURSES_URLS: UserSidebarLinks[] =
         permissions: ['course:view'],
     },
     {
-        link: '/dashboard',
+        link: '/dashboard/courses',
         label: 'Courses',
         permissions: ['course:view'],
     },
