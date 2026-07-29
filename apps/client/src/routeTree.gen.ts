@@ -19,8 +19,9 @@ import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as ProtectedAdminRouteRouteImport } from './routes/_protected/admin/route'
 import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
 import { Route as PublicCoursesIdRouteImport } from './routes/_public/courses/$id'
-import { Route as ProtectedDashboardCoursesRouteImport } from './routes/_protected/dashboard/courses'
+import { Route as ProtectedDashboardCoursesIndexRouteImport } from './routes/_protected/dashboard/courses/index'
 import { Route as ProtectedAdminDashboardIndexRouteImport } from './routes/_protected/admin/dashboard/index'
+import { Route as ProtectedDashboardCoursesSlugRouteImport } from './routes/_protected/dashboard/courses/$slug'
 import { Route as ProtectedAdminDashboardCoursesIndexRouteImport } from './routes/_protected/admin/dashboard/courses/index'
 import { Route as ProtectedAdminDashboardCoursesNewRouteImport } from './routes/_protected/admin/dashboard/courses/new'
 import { Route as ProtectedAdminDashboardCoursesSlugEditRouteImport } from './routes/_protected/admin/dashboard/courses/$slug/edit'
@@ -72,10 +73,10 @@ const PublicCoursesIdRoute = PublicCoursesIdRouteImport.update({
   path: '/courses/$id',
   getParentRoute: () => PublicRoute,
 } as any)
-const ProtectedDashboardCoursesRoute =
-  ProtectedDashboardCoursesRouteImport.update({
-    id: '/dashboard/courses',
-    path: '/dashboard/courses',
+const ProtectedDashboardCoursesIndexRoute =
+  ProtectedDashboardCoursesIndexRouteImport.update({
+    id: '/dashboard/courses/',
+    path: '/dashboard/courses/',
     getParentRoute: () => ProtectedRoute,
   } as any)
 const ProtectedAdminDashboardIndexRoute =
@@ -83,6 +84,12 @@ const ProtectedAdminDashboardIndexRoute =
     id: '/dashboard/',
     path: '/dashboard/',
     getParentRoute: () => ProtectedAdminRouteRoute,
+  } as any)
+const ProtectedDashboardCoursesSlugRoute =
+  ProtectedDashboardCoursesSlugRouteImport.update({
+    id: '/dashboard/courses/$slug',
+    path: '/dashboard/courses/$slug',
+    getParentRoute: () => ProtectedRoute,
   } as any)
 const ProtectedAdminDashboardCoursesIndexRoute =
   ProtectedAdminDashboardCoursesIndexRouteImport.update({
@@ -109,10 +116,11 @@ export interface FileRoutesByFullPath {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/courses': typeof ProtectedCoursesRoute
-  '/dashboard/courses': typeof ProtectedDashboardCoursesRoute
   '/courses/$id': typeof PublicCoursesIdRoute
   '/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/dashboard/courses/$slug': typeof ProtectedDashboardCoursesSlugRoute
   '/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
+  '/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
   '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
   '/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
   '/admin/dashboard/courses/$slug/edit': typeof ProtectedAdminDashboardCoursesSlugEditRoute
@@ -123,10 +131,11 @@ export interface FileRoutesByTo {
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
   '/courses': typeof ProtectedCoursesRoute
-  '/dashboard/courses': typeof ProtectedDashboardCoursesRoute
   '/courses/$id': typeof PublicCoursesIdRoute
   '/dashboard': typeof ProtectedDashboardIndexRoute
+  '/dashboard/courses/$slug': typeof ProtectedDashboardCoursesSlugRoute
   '/admin/dashboard': typeof ProtectedAdminDashboardIndexRoute
+  '/dashboard/courses': typeof ProtectedDashboardCoursesIndexRoute
   '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
   '/admin/dashboard/courses': typeof ProtectedAdminDashboardCoursesIndexRoute
   '/admin/dashboard/courses/$slug/edit': typeof ProtectedAdminDashboardCoursesSlugEditRoute
@@ -141,10 +150,11 @@ export interface FileRoutesById {
   '/_auth/register': typeof AuthRegisterRoute
   '/_protected/courses': typeof ProtectedCoursesRoute
   '/_public/': typeof PublicIndexRoute
-  '/_protected/dashboard/courses': typeof ProtectedDashboardCoursesRoute
   '/_public/courses/$id': typeof PublicCoursesIdRoute
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/_protected/dashboard/courses/$slug': typeof ProtectedDashboardCoursesSlugRoute
   '/_protected/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
+  '/_protected/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
   '/_protected/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
   '/_protected/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
   '/_protected/admin/dashboard/courses/$slug/edit': typeof ProtectedAdminDashboardCoursesSlugEditRoute
@@ -157,10 +167,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/courses'
-    | '/dashboard/courses'
     | '/courses/$id'
     | '/dashboard/'
+    | '/dashboard/courses/$slug'
     | '/admin/dashboard/'
+    | '/dashboard/courses/'
     | '/admin/dashboard/courses/new'
     | '/admin/dashboard/courses/'
     | '/admin/dashboard/courses/$slug/edit'
@@ -171,10 +182,11 @@ export interface FileRouteTypes {
     | '/login'
     | '/register'
     | '/courses'
-    | '/dashboard/courses'
     | '/courses/$id'
     | '/dashboard'
+    | '/dashboard/courses/$slug'
     | '/admin/dashboard'
+    | '/dashboard/courses'
     | '/admin/dashboard/courses/new'
     | '/admin/dashboard/courses'
     | '/admin/dashboard/courses/$slug/edit'
@@ -188,10 +200,11 @@ export interface FileRouteTypes {
     | '/_auth/register'
     | '/_protected/courses'
     | '/_public/'
-    | '/_protected/dashboard/courses'
     | '/_public/courses/$id'
     | '/_protected/dashboard/'
+    | '/_protected/dashboard/courses/$slug'
     | '/_protected/admin/dashboard/'
+    | '/_protected/dashboard/courses/'
     | '/_protected/admin/dashboard/courses/new'
     | '/_protected/admin/dashboard/courses/'
     | '/_protected/admin/dashboard/courses/$slug/edit'
@@ -275,11 +288,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PublicCoursesIdRouteImport
       parentRoute: typeof PublicRoute
     }
-    '/_protected/dashboard/courses': {
-      id: '/_protected/dashboard/courses'
+    '/_protected/dashboard/courses/': {
+      id: '/_protected/dashboard/courses/'
       path: '/dashboard/courses'
-      fullPath: '/dashboard/courses'
-      preLoaderRoute: typeof ProtectedDashboardCoursesRouteImport
+      fullPath: '/dashboard/courses/'
+      preLoaderRoute: typeof ProtectedDashboardCoursesIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/admin/dashboard/': {
@@ -288,6 +301,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/dashboard/'
       preLoaderRoute: typeof ProtectedAdminDashboardIndexRouteImport
       parentRoute: typeof ProtectedAdminRouteRoute
+    }
+    '/_protected/dashboard/courses/$slug': {
+      id: '/_protected/dashboard/courses/$slug'
+      path: '/dashboard/courses/$slug'
+      fullPath: '/dashboard/courses/$slug'
+      preLoaderRoute: typeof ProtectedDashboardCoursesSlugRouteImport
+      parentRoute: typeof ProtectedRoute
     }
     '/_protected/admin/dashboard/courses/': {
       id: '/_protected/admin/dashboard/courses/'
@@ -348,15 +368,17 @@ const ProtectedAdminRouteRouteWithChildren =
 interface ProtectedRouteChildren {
   ProtectedAdminRouteRoute: typeof ProtectedAdminRouteRouteWithChildren
   ProtectedCoursesRoute: typeof ProtectedCoursesRoute
-  ProtectedDashboardCoursesRoute: typeof ProtectedDashboardCoursesRoute
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
+  ProtectedDashboardCoursesSlugRoute: typeof ProtectedDashboardCoursesSlugRoute
+  ProtectedDashboardCoursesIndexRoute: typeof ProtectedDashboardCoursesIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminRouteRoute: ProtectedAdminRouteRouteWithChildren,
   ProtectedCoursesRoute: ProtectedCoursesRoute,
-  ProtectedDashboardCoursesRoute: ProtectedDashboardCoursesRoute,
   ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
+  ProtectedDashboardCoursesSlugRoute: ProtectedDashboardCoursesSlugRoute,
+  ProtectedDashboardCoursesIndexRoute: ProtectedDashboardCoursesIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(

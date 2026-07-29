@@ -20,7 +20,7 @@ function CoursesPage() {
       </h1>
       <div className="flex flex-row gap-10">
         <Searchbar />
-        <CourseGrid courses={featuredCourses.data} />
+        <CourseGrid courses={featuredCourses.data}  linkTo={'/courses/$slug'}/>
       </div>
     </div>
   )

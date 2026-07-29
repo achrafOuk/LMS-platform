@@ -19,7 +19,7 @@ export function CoursesSection() {
     >
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-4 sm:gap-12 sm:px-6 lg:px-8">
         <CoursesSectionHeader />
-        <CourseGrid courses={featuredCourses.data} />
+        <CourseGrid courses={featuredCourses.data}  linkTo={'/courses/$slug'}/>
       
       </div>
     </section>
