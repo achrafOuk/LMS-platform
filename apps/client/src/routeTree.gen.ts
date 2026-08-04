@@ -13,7 +13,6 @@ import { Route as PublicRouteImport } from './routes/_public'
 import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as PublicIndexRouteImport } from './routes/_public/index'
-import { Route as ProtectedCoursesRouteImport } from './routes/_protected/courses'
 import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
 import { Route as ProtectedAdminRouteRouteImport } from './routes/_protected/admin/route'
@@ -42,11 +41,6 @@ const PublicIndexRoute = PublicIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => PublicRoute,
-} as any)
-const ProtectedCoursesRoute = ProtectedCoursesRouteImport.update({
-  id: '/courses',
-  path: '/courses',
-  getParentRoute: () => ProtectedRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/register',
@@ -115,7 +109,6 @@ export interface FileRoutesByFullPath {
   '/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
-  '/courses': typeof ProtectedCoursesRoute
   '/courses/$id': typeof PublicCoursesIdRoute
   '/dashboard/': typeof ProtectedDashboardIndexRoute
   '/dashboard/courses/$slug': typeof ProtectedDashboardCoursesSlugRoute
@@ -130,7 +123,6 @@ export interface FileRoutesByTo {
   '/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
-  '/courses': typeof ProtectedCoursesRoute
   '/courses/$id': typeof PublicCoursesIdRoute
   '/dashboard': typeof ProtectedDashboardIndexRoute
   '/dashboard/courses/$slug': typeof ProtectedDashboardCoursesSlugRoute
@@ -148,7 +140,6 @@ export interface FileRoutesById {
   '/_protected/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
-  '/_protected/courses': typeof ProtectedCoursesRoute
   '/_public/': typeof PublicIndexRoute
   '/_public/courses/$id': typeof PublicCoursesIdRoute
   '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
@@ -166,7 +157,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/register'
-    | '/courses'
     | '/courses/$id'
     | '/dashboard/'
     | '/dashboard/courses/$slug'
@@ -181,7 +171,6 @@ export interface FileRouteTypes {
     | '/admin'
     | '/login'
     | '/register'
-    | '/courses'
     | '/courses/$id'
     | '/dashboard'
     | '/dashboard/courses/$slug'
@@ -198,7 +187,6 @@ export interface FileRouteTypes {
     | '/_protected/admin'
     | '/_auth/login'
     | '/_auth/register'
-    | '/_protected/courses'
     | '/_public/'
     | '/_public/courses/$id'
     | '/_protected/dashboard/'
@@ -245,13 +233,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof PublicIndexRouteImport
       parentRoute: typeof PublicRoute
-    }
-    '/_protected/courses': {
-      id: '/_protected/courses'
-      path: '/courses'
-      fullPath: '/courses'
-      preLoaderRoute: typeof ProtectedCoursesRouteImport
-      parentRoute: typeof ProtectedRoute
     }
     '/_auth/register': {
       id: '/_auth/register'
@@ -367,7 +348,6 @@ const ProtectedAdminRouteRouteWithChildren =
 
 interface ProtectedRouteChildren {
   ProtectedAdminRouteRoute: typeof ProtectedAdminRouteRouteWithChildren
-  ProtectedCoursesRoute: typeof ProtectedCoursesRoute
   ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
   ProtectedDashboardCoursesSlugRoute: typeof ProtectedDashboardCoursesSlugRoute
   ProtectedDashboardCoursesIndexRoute: typeof ProtectedDashboardCoursesIndexRoute
@@ -375,7 +355,6 @@ interface ProtectedRouteChildren {
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminRouteRoute: ProtectedAdminRouteRouteWithChildren,
-  ProtectedCoursesRoute: ProtectedCoursesRoute,
   ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
   ProtectedDashboardCoursesSlugRoute: ProtectedDashboardCoursesSlugRoute,
   ProtectedDashboardCoursesIndexRoute: ProtectedDashboardCoursesIndexRoute,

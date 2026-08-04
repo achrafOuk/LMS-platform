@@ -12,10 +12,10 @@ export function Searchbar() {
         <div className="flex flex-col gap-2"> 
         {
             tags.map((tag) => (
-            <div key={tag} className="flex flex-row gap-2">
-            <input type="checkbox" name={tag} id={tag} />
-            <label key={tag} >{tag}</label>
-            </div>
+              <div key={tag} className="flex flex-row gap-2">
+              <input type="checkbox" name={tag} id={tag} />
+              <label key={tag} >{tag}</label>
+              </div>
             ))
         }
         </div>

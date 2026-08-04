@@ -24,6 +24,7 @@
     "@hono/node-server": "^2.0.4",
     "@orpc/contract": "^1.14.6",
     "@orpc/server": "^1.14.5",
+    "@stripe/stripe-js": "^9.12.1",
     "@tanstack-start-hono/shared": "workspace:*",
     "bcryptjs": "^3.0.3",
     "dotenv": "catalog:",
@@ -32,6 +33,7 @@
     "hono": "^4.12.25",
     "jose": "^6.2.3",
     "pg": "^8.21.0",
+    "stripe": "^22.4.0",
     "ulid": "^3.0.2"
   },
   "devDependencies": {
