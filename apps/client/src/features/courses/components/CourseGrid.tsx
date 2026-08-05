@@ -20,11 +20,28 @@ export function CourseGrid({ courses, linkTo = '/dashboard/courses/$slug' }: { c
                 <p className='text-sm text-foreground'>{formatCoursePrice(course.price)}</p>
               </CourseCardRoot.context>
               <CourseCardRoot.action>
-                  <Button variant='primary'>
-                    <Link to='/register'>
-                    Enroll Now
-                    </Link>
+                
+                {
+                  course.isEnrolled ? (
+                    <Button variant='primary'>
+                      <Link to={linkTo} params={{ slug: course.slug }}>
+                        View Course
+                      </Link>
                     </Button>
+                  ) : (
+                    <Button variant='primary'>
+                      <Link to='/register'>
+                        Enroll Now
+                      </Link>
+                    </Button>
+                  )
+                }
+                {/* <Button variant='primary'>
+                  <Link to='/register'>
+                    Enroll Now
+                  </Link>
+                </Button> */}
+
               </CourseCardRoot.action>
             </CourseCardRoot>
       ))}

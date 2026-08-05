@@ -1,6 +1,7 @@
   
 export interface CourseType {
   cid: string
+  isEnrolled: boolean
   courseName: string
   slug: string
   coverUrl: string | null

@@ -1,8 +1,8 @@
-import { count, eq } from "drizzle-orm";
+import { asc, count, eq, sql } from "drizzle-orm";
 import { PaginateRequest } from "../../db/utils/db.pagination.utils";
 import { ulid } from "ulid";
 import type { Db, DbTransaction } from "../../db/drizzle.client";
-import { courses, modules, tags } from "../../db/schemas";
+import { courses, enrollments, lessons, modules, tags } from "../../db/schemas";
 import type { CourseValidatorType, ModuleValidatorType, UpdateCourseValidatorType } from "@tanstack-start-hono/validators/course";
 import { desc } from "drizzle-orm";
 import { COURSES_PAGE_SIZE } from "@tanstack-start-hono/validators/pagination";
@@ -59,7 +59,7 @@ export async function createNewModule(input: ModuleValidatorType,db: DbTransacti
     return createdModule;
 }
 
-function getFeaturedCoursesQuery(db: Db, currentPage: number, pageSize = COURSES_PAGE_SIZE) 
+function getFeaturedCoursesQuery(db: Db, currentPage: number, pageSize = COURSES_PAGE_SIZE, userId: string) 
 {
     const offset = (currentPage - 1) * pageSize;
     const query = db
@@ -70,6 +70,14 @@ function getFeaturedCoursesQuery(db: Db, currentPage: number, pageSize = COURSES
                 coverUrl: courses.coverUrl,
                 price: courses.price,
                 category: tags.tagName,
+                isEnrolled: sql<boolean>`
+                    EXISTS (
+                        SELECT 1
+                        FROM ${enrollments}
+                        WHERE ${enrollments.uid} = ${userId}
+                        AND ${enrollments.cid} = ${courses.cid}
+                    )
+                `,
             })
             .from(courses)
             .orderBy(desc(courses.createdAt))
@@ -87,10 +95,10 @@ function getFeaturedCoursesCountQuery(db: Db) {
     return query;
 }
 
-export async function getFeaturedCourses(db: Db, currentPage: number, pageSize = COURSES_PAGE_SIZE) {
+export async function getFeaturedCourses(db: Db, currentPage: number, pageSize = COURSES_PAGE_SIZE, userId: string) {
 
     const [data, countResult] = await Promise.all([
-            getFeaturedCoursesQuery(db, currentPage, pageSize),
+            getFeaturedCoursesQuery(db, currentPage, pageSize, userId),
             getFeaturedCoursesCountQuery(db),
     ]);
 
@@ -100,49 +108,80 @@ export async function getFeaturedCourses(db: Db, currentPage: number, pageSize =
     return PaginateRequest(data, pageSize, currentPage, totalPages);
 }
 
-export async function getCourse(slug: string, db: Db)
+function getCourseQuery(slug: string, db: Db, userId: string) {
+    const query = db
+        .select({
+            cid: courses.cid,
+            courseName: courses.courseName,
+            slug: courses.slug,
+            coverUrl: courses.coverUrl,
+            price: courses.price,
+            description: courses.description,
+            tag: { tagName: tags.tagName },
+            isEnrolled: sql<boolean>`
+                EXISTS (
+                    SELECT 1
+                    FROM ${enrollments}
+                    WHERE ${enrollments.uid} = ${userId}
+                    AND ${enrollments.cid} = ${courses.cid}
+                )
+            `,
+        })
+        .from(courses)
+        .innerJoin(tags, eq(courses.tagId, tags.tid))
+        .where(eq(courses.slug, slug))
+        .limit(1);
+    return query;
+}
+
+function getCourseModulesWithLessonsQuery(cid: string, db: Db) {
+    const query = db
+        .select({
+            mhid: modules.mhid,
+            title: modules.title,
+            order: modules.order,
+            lesson: {
+                leid: lessons.leid,
+                title: lessons.title,
+                orderIndex: lessons.orderIndex,
+                videoUrl: lessons.videoUrl,
+            },
+        })
+        .from(modules)
+        .leftJoin(lessons, eq(lessons.chid, modules.mhid))
+        .where(eq(modules.cid, cid))
+        .orderBy(asc(modules.order), asc(lessons.orderIndex));
+    return query;
+}
+
+function groupModulesWithLessons(rows: Awaited<ReturnType<typeof getCourseModulesWithLessonsQuery>>) {
+    const modulesByMhid = new Map<string, { mhid: string; title: string; order: number; lessons: NonNullable<typeof rows[number]["lesson"]>[] }>();
+
+    for (const row of rows) {
+        let courseModule = modulesByMhid.get(row.mhid);
+        if (!courseModule) {
+            courseModule = { mhid: row.mhid, title: row.title, order: row.order, lessons: [] };
+            modulesByMhid.set(row.mhid, courseModule);
+        }
+        if (row.lesson) {
+            courseModule.lessons.push(row.lesson);
+        }
+    }
+
+    return Array.from(modulesByMhid.values());
+}
+
+export async function getCourse(slug: string, db: Db, userId: string)
 {
-    return await db.query.courses.findFirst({
-        where: eq(courses.slug, slug),
-        columns: {
-            cid: true,
-            courseName: true,
-            slug: true,
-            coverUrl: true,
-            price: true,
-            description: true,
-        },
-        with: {
-            tag: {
-                columns: {
-                    tagName: true,
-                },
-            },
-            modules: {
-                orderBy: (modules, { asc }: any) => [asc(modules.order)],
-                columns: {
-                    mhid: true,
-                    title: true,
-                    order: true,
-                },
-                with: {
-                    lessons: {
-                        columns: {
-                            leid: true,
-                            title: true,
-                            orderIndex: true,
-                            videoUrl: true,
-                        },
-                        orderBy: (lessons, { asc }: any) => [asc(lessons.orderIndex)],
+    const [course] = await getCourseQuery(slug, db, userId);
+    if (!course) return undefined;
 
-                    },
-                    
-                },
-            },
-        },
-    });
+    const moduleRows = await getCourseModulesWithLessonsQuery(course.cid, db);
 
-
+    return {
+        ...course,
+        modules: groupModulesWithLessons(moduleRows),
+    };
 }
 
 export async function updateCourseFields(input: UpdateCourseValidatorType, tx: DbTransaction, now: Date, tagId: string) {

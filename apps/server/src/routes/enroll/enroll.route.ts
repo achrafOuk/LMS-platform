@@ -12,22 +12,25 @@ export const enrollInCourseRoute = protectedProcedure
 .use(hasPermission("course:enroll"))
 .input(enrollInCourseValidator)
 .handler(async ({input, context}) => {
-    const course = await getCourse(input.slug, db);
+    const userId = context.user?.uid ?? "";
+    const course = await getCourse(input.slug, db, userId);
     if (!course)
         throw new ORPCError("NOT_FOUND", { message: "Course not found" });
     const user = context.user;
-    return enrollInCourseService(user.uid, course.cid, db);
+    return enrollInCourseService(user.uid, course.cid, course.price, db);
 });
 
 
 export const isUserEnrolledInCourseRoute = protectedProcedure
 .input(enrollInCourseValidator)
 .handler(async ({input, context}) => {
-    const course = await getCourse(input.slug, db);
+    const userId = context.user?.uid ?? "";
+    const course = await getCourse(input.slug, db, userId);
     if (!course)
         throw new ORPCError("NOT_FOUND", { message: "Course not found" });
     const user = context.user;
     const isEnrolled = await isUserEnrolledInCourse(user.uid, course.cid, db);
+    console.log('isEnrolled:', isEnrolled);
     return { isEnrolled };
 });
 

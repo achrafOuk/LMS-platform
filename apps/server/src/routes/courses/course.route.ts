@@ -1,7 +1,7 @@
 import { db } from "../../db/drizzle.client";
 import { optionalAuthProcedure, protectedProcedure } from "../../orpc/middleware/auth.middleware";
 import { courseSlugValidator, courseValidator, updateCourseValidator} from "@tanstack-start-hono/validators/course";
-import { paginationQueryValidator } from "@tanstack-start-hono/validators/pagination";
+import { COURSES_PAGE_SIZE, paginationQueryValidator } from "@tanstack-start-hono/validators/pagination";
 import {   getCourse, getFeaturedCourses} from "./course.repository";
 import { ORPCError } from "@orpc/server";
 import { checkViolation, formatViolationErrorMessage } from "../../db/utils/db.errors.utils";
@@ -37,8 +37,9 @@ optionalAuthProcedure
     path: "/courses",
 })
 .input(paginationQueryValidator)
-.handler(async ({ input }) => {
-    return getFeaturedCourses(db, input.page);
+.handler(async ({ input, context }) => {
+    const userId = context.user?.uid ?? "";
+    return getFeaturedCourses(db, input.page, COURSES_PAGE_SIZE, userId);
 });
 
 export const getCourseRoute = optionalAuthProcedure.route({
@@ -46,9 +47,10 @@ export const getCourseRoute = optionalAuthProcedure.route({
     path: "/courses/:slug",
 })
 .input(courseSlugValidator)
-.handler(async ({ input }) =>{
+.handler(async ({ input, context }) =>{
     
-    const course = await getCourse(input.slug, db);
+    const userId = context.user?.uid ?? "";
+    const course = await getCourse(input.slug, db, userId);
     if (!course) {
         throw new ORPCError("NOT_FOUND", { message: "Course not found" });
     }

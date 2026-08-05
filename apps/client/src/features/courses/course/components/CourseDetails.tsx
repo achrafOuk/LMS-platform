@@ -11,7 +11,6 @@ export function CourseDetails({ course }: { course: NonNullable<Course> }) {
         <div className="grid gap-10 lg:grid-cols-2 lg:items-start h-fit">
             <section className="min-w-0">
                 <CoursePageHeader course={course} lessonCount={lessonCount} />
-
                 <section className="mt-14">
                     <div className="mb-7 flex flex-wrap items-end justify-between gap-3">
                         <div>
@@ -26,7 +25,6 @@ export function CourseDetails({ course }: { course: NonNullable<Course> }) {
                     <ModuleList modules={course.modules} />
                 </section>
             </section>
-
             <CoursePageEnroll course={course} />
         </div>
     );

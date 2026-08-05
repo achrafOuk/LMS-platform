@@ -3,6 +3,7 @@ import type { Course } from "../types/course.types";
 import { CoursePageEnrollButton } from "./CoursePageEnrollButton";
 
 export function CoursePageEnroll({ course }: { course: NonNullable<Course> }) {
+    console.log('course:', course);
     return (
         <aside className="border border-border bg-card p-6 lg:sticky lg:top-8">
             <p className="text-sm font-medium text-muted-foreground">Full course access</p>

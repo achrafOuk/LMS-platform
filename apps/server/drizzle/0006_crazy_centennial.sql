@@ -1,0 +1,1 @@
+ALTER TABLE "payment" ALTER COLUMN "response_data" SET DEFAULT '{}';

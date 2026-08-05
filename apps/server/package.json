@@ -24,7 +24,6 @@
     "@hono/node-server": "^2.0.4",
     "@orpc/contract": "^1.14.6",
     "@orpc/server": "^1.14.5",
-    "@stripe/stripe-js": "^9.12.1",
     "@tanstack-start-hono/shared": "workspace:*",
     "bcryptjs": "^3.0.3",
     "dotenv": "catalog:",

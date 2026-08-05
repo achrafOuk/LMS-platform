@@ -1,6 +1,5 @@
 import { CourseCardRoot } from "../../course/components/CourseCard";
 import { CourseCover } from "../../course/components/CourseCover";
-import type { CourseType } from "../../types/Course";
 import { Button } from "#/features/shared/button/components/Button";
 import type { InferRouterOutputs } from "@orpc/server";
 import type { AppRouter } from "@tanstack-start-hono/server/routes/orpc.route";
@@ -33,9 +32,10 @@ export function MyCourses({courses}: {courses: GetMyEnrollmentsOutput['data']}) 
                     {course.courseName}
               </CourseCardRoot.context>
               <CourseCardRoot.action>
-                  <Button variant='secondary'>
-                    Continue Learning
-                    </Button>
+                <Button variant='secondary'>
+                    Enroll Now
+                </Button>
+
               </CourseCardRoot.action>
             </CourseCardRoot>
             ))

@@ -12,9 +12,6 @@ catalogs:
     typescript:
       specifier: 6.0.3
       version: 6.0.3
-    zod:
-      specifier: ^4.4.3
-      version: 4.4.3
 
 importers:
 
@@ -190,9 +187,6 @@ importers:
       '@orpc/server':
         specifier: ^1.14.5
         version: 1.14.5(crossws@0.4.10(srvx@0.12.5))(ws@8.21.0)
-      '@stripe/stripe-js':
-        specifier: ^9.12.1
-        version: 9.12.1
       '@tanstack-start-hono/shared':
         specifier: workspace:*
         version: link:../../packages/shared
@@ -1669,10 +1663,6 @@ packages:
 
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
-
-  '@stripe/stripe-js@9.12.1':
-    resolution: {integrity: sha512-KLXPvjA0BfS4dQnW+ddHjwtIXMnIfKYxqmeNMmQCfKjvYog0cSG+Z7ZvK4RH1+bV90GC07nUztWDRWmJLi5HZQ==}
-    engines: {node: '>=12.16'}
 
   '@tailwindcss/node@4.3.0':
     resolution: {integrity: sha512-aFb4gUhFOgdh9AXo4IzBEOzBkkAxm9VigwDJnMIYv3lcfXCJVesNfbEaBl4BNgVRyid92AmdviqwBUBRKSeY3g==}
@@ -4930,8 +4920,6 @@ snapshots:
       solid-js: 1.9.13
 
   '@standard-schema/spec@1.1.0': {}
-
-  '@stripe/stripe-js@9.12.1': {}
 
   '@tailwindcss/node@4.3.0':
     dependencies:
