@@ -26,14 +26,8 @@ export function useLoginForm() {
     },
     onSubmit: async ({ value }) => {
       loginMutation.reset()
-      const loggedInUser = await loginMutation.mutateAsync(value)
-      queryClient.setQueryData(meQueryOptions.queryKey, {
-        user: {
-          uid: loggedInUser.uid,
-          email: loggedInUser.email,
-          role: loggedInUser.role,
-        },
-      })
+      await loginMutation.mutateAsync(value)
+      await queryClient.fetchQuery(meQueryOptions)
       await navigate({ to: '/dashboard' })
     },
   })

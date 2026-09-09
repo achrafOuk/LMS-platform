@@ -13,7 +13,7 @@ export function UserSidebar({ onNavigate }: UserSidebarProps)
     // get the user permissions
     const { data:user } = useQuery(useMe());
     const userPermissions: PermissionTypes[] = user?.user?.userPermissions?.map((permission) => permission.permission as PermissionTypes) ?? [];
-    console.log('user:', user);
+    console.log('permission:', userPermissions);
 
     return (
         <UserSidebarComponent>

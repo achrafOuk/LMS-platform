@@ -23,23 +23,25 @@ export function MyCourses({courses}: {courses: GetMyEnrollmentsOutput['data']}) 
     return (
         <>
         <p>Last seen courses</p>
-        {
-            courses.map((course) => (
-            <CourseCardRoot key={course.slug} className="flex flex-col gap-4 bg-card h-fit "> <CourseCardRoot.header>
-                  <CourseCover filename={course.coverUrl ?? ""} title={course.courseName} className="h-[200px] w-full  transition-[transform] duration-300 motion-safe:group-hover:scale-[1.02]" />
-              </CourseCardRoot.header>
-              <CourseCardRoot.context>
-                    {course.courseName}
-              </CourseCardRoot.context>
-              <CourseCardRoot.action>
-                <Button variant='secondary'>
-                    Enroll Now
-                </Button>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {
+                courses.map((course) => (
+                <CourseCardRoot key={course.slug} className="flex flex-col gap-4 bg-card h-fit "> <CourseCardRoot.header>
+                    <CourseCover filename={course.coverUrl ?? ""} title={course.courseName} className="h-[200px] w-full  transition-[transform] duration-300 motion-safe:group-hover:scale-[1.02]" />
+                </CourseCardRoot.header>
+                <CourseCardRoot.context>
+                        {course.courseName}
+                </CourseCardRoot.context>
+                <CourseCardRoot.action>
+                    <Button variant='primary'>
+                        Continue Learning
+                    </Button>
 
-              </CourseCardRoot.action>
-            </CourseCardRoot>
-            ))
-        }
+                </CourseCardRoot.action>
+                </CourseCardRoot>
+                ))
+            }
+        </div>
         </>
     )
 }
