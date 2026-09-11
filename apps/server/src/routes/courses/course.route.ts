@@ -7,6 +7,7 @@ import { ORPCError } from "@orpc/server";
 import { checkViolation, formatViolationErrorMessage } from "../../db/utils/db.errors.utils";
 import { createCourse, getLastSeenCoursesService, updateCourse } from "./course.service";
 import {  hasPermission } from "../../orpc/middleware/auth.middleware";
+import { isUserEnrolledInCourse } from "../enroll/enroll.repository";
 
 export const createCourseRoute = protectedProcedure
 .route({
@@ -93,4 +94,26 @@ protectedProcedure
 });
 
 
-
+export const getCourseLessonsRoute = protectedProcedure
+.input(courseSlugValidator)
+.use(hasPermission("course:view"))
+.handler(async ({ context , input}) =>{
+    const courseSlug = input.slug;
+    const userId = context.user.uid;
+    console.log("userId:", userId, "|");
+    // check if course exists
+    const course = await getCourse(courseSlug, db, userId);
+    if (!course) {
+        throw new ORPCError("NOT_FOUND", { message: "Course not found" });
+    }
+    // check  if user is enrollled in this course
+    // (userId: string, courseId: string, db: Db)
+    const isEnrolled = await isUserEnrolledInCourse( userId, course.cid, db);
+    console.log(`enrolled: ${isEnrolled}, in course slug ${courseSlug}` )
+    if (!isEnrolled)
+    {
+        throw new ORPCError("FORBIDDEN", { message: "you are not registerd to see this content" });
+    }
+    return course;
+    // return course info
+});

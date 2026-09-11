@@ -8,6 +8,7 @@ import { getPageOffest } from "../../db/utils/db.pagination.utils";
 // where userid = userId and courseid = courseId
 export const isUserEnrolledInCourse = async (userId: string, courseId: string, db: Db) =>
 {
+    console.log(`course ${userId}: course: ${courseId}`);
     const result = await db
     .select({
     })
@@ -77,6 +78,7 @@ export async function getLastSeenCourses(userId: string, limit: number, db: Db) 
     .innerJoin(watchedLessons, and(eq(watchedLessons.leid, lessons.leid), eq(watchedLessons.uid, userId)))
     .orderBy(desc(watchedLessons.watchedAt))
     .limit(limit);
-    // .innerJoin(enrollments, and(eq(courses.cid, enrollments.cid), eq(enrollments.uid, userId)))
 
 }
+
+

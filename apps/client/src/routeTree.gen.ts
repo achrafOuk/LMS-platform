@@ -25,6 +25,7 @@ import { Route as ProtectedDashboardCoursesIndexRouteImport } from './routes/_pr
 import { Route as ProtectedDashboardCoursesSlugRouteImport } from './routes/_protected/dashboard/courses/$slug'
 import { Route as ProtectedAdminDashboardCoursesIndexRouteImport } from './routes/_protected/admin/dashboard/courses/index'
 import { Route as ProtectedAdminDashboardCoursesNewRouteImport } from './routes/_protected/admin/dashboard/courses/new'
+import { Route as ProtectedDashboardCoursesWatchSlugRouteImport } from './routes/_protected/dashboard/courses/watch/$slug'
 import { Route as ProtectedAdminDashboardCoursesSlugEditRouteImport } from './routes/_protected/admin/dashboard/courses/$slug/edit'
 
 const AuthRoute = AuthRouteImport.update({
@@ -111,6 +112,12 @@ const ProtectedAdminDashboardCoursesNewRoute =
     path: '/dashboard/courses/new',
     getParentRoute: () => ProtectedAdminRouteRoute,
   } as any)
+const ProtectedDashboardCoursesWatchSlugRoute =
+  ProtectedDashboardCoursesWatchSlugRouteImport.update({
+    id: '/dashboard/courses/watch/$slug',
+    path: '/dashboard/courses/watch/$slug',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedAdminDashboardCoursesSlugEditRoute =
   ProtectedAdminDashboardCoursesSlugEditRouteImport.update({
     id: '/dashboard/courses/$slug/edit',
@@ -131,6 +138,7 @@ export interface FileRoutesByFullPath {
   '/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
   '/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
   '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
+  '/dashboard/courses/watch/$slug': typeof ProtectedDashboardCoursesWatchSlugRoute
   '/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
   '/admin/dashboard/courses/$slug/edit': typeof ProtectedAdminDashboardCoursesSlugEditRoute
 }
@@ -147,6 +155,7 @@ export interface FileRoutesByTo {
   '/admin/dashboard': typeof ProtectedAdminDashboardIndexRoute
   '/dashboard/courses': typeof ProtectedDashboardCoursesIndexRoute
   '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
+  '/dashboard/courses/watch/$slug': typeof ProtectedDashboardCoursesWatchSlugRoute
   '/admin/dashboard/courses': typeof ProtectedAdminDashboardCoursesIndexRoute
   '/admin/dashboard/courses/$slug/edit': typeof ProtectedAdminDashboardCoursesSlugEditRoute
 }
@@ -167,6 +176,7 @@ export interface FileRoutesById {
   '/_protected/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
   '/_protected/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
   '/_protected/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
+  '/_protected/dashboard/courses/watch/$slug': typeof ProtectedDashboardCoursesWatchSlugRoute
   '/_protected/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
   '/_protected/admin/dashboard/courses/$slug/edit': typeof ProtectedAdminDashboardCoursesSlugEditRoute
 }
@@ -185,6 +195,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard/'
     | '/dashboard/courses/'
     | '/admin/dashboard/courses/new'
+    | '/dashboard/courses/watch/$slug'
     | '/admin/dashboard/courses/'
     | '/admin/dashboard/courses/$slug/edit'
   fileRoutesByTo: FileRoutesByTo
@@ -201,6 +212,7 @@ export interface FileRouteTypes {
     | '/admin/dashboard'
     | '/dashboard/courses'
     | '/admin/dashboard/courses/new'
+    | '/dashboard/courses/watch/$slug'
     | '/admin/dashboard/courses'
     | '/admin/dashboard/courses/$slug/edit'
   id:
@@ -220,6 +232,7 @@ export interface FileRouteTypes {
     | '/_protected/admin/dashboard/'
     | '/_protected/dashboard/courses/'
     | '/_protected/admin/dashboard/courses/new'
+    | '/_protected/dashboard/courses/watch/$slug'
     | '/_protected/admin/dashboard/courses/'
     | '/_protected/admin/dashboard/courses/$slug/edit'
   fileRoutesById: FileRoutesById
@@ -344,6 +357,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminDashboardCoursesNewRouteImport
       parentRoute: typeof ProtectedAdminRouteRoute
     }
+    '/_protected/dashboard/courses/watch/$slug': {
+      id: '/_protected/dashboard/courses/watch/$slug'
+      path: '/dashboard/courses/watch/$slug'
+      fullPath: '/dashboard/courses/watch/$slug'
+      preLoaderRoute: typeof ProtectedDashboardCoursesWatchSlugRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/admin/dashboard/courses/$slug/edit': {
       id: '/_protected/admin/dashboard/courses/$slug/edit'
       path: '/dashboard/courses/$slug/edit'
@@ -393,6 +413,7 @@ interface ProtectedRouteChildren {
   ProtectedDashboardCheckoutSuccessRoute: typeof ProtectedDashboardCheckoutSuccessRoute
   ProtectedDashboardCoursesSlugRoute: typeof ProtectedDashboardCoursesSlugRoute
   ProtectedDashboardCoursesIndexRoute: typeof ProtectedDashboardCoursesIndexRoute
+  ProtectedDashboardCoursesWatchSlugRoute: typeof ProtectedDashboardCoursesWatchSlugRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
@@ -403,6 +424,8 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
     ProtectedDashboardCheckoutSuccessRoute,
   ProtectedDashboardCoursesSlugRoute: ProtectedDashboardCoursesSlugRoute,
   ProtectedDashboardCoursesIndexRoute: ProtectedDashboardCoursesIndexRoute,
+  ProtectedDashboardCoursesWatchSlugRoute:
+    ProtectedDashboardCoursesWatchSlugRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(

@@ -2,13 +2,6 @@ import { createContext, useContext, useState } from "react";
 import { Button } from "../../button/components/Button";
 import { cn } from "#/utils/cn";
 
-interface AccordionItem
-{
-    id: number;
-    title: string;
-    content: string;
-}
-
 interface AccordionContextValue 
 {
     openedId: null | number;
@@ -28,10 +21,10 @@ function useAccordionContext()
 }
 
 
-export function AccordionProvider({ children }: { children: React.ReactNode }) 
+export function AccordionProvider({ children, defaultOpenId = null }: { children: React.ReactNode; defaultOpenId?: number | null }) 
 {
 
-    const [openedId, setOpenedId] = useState<number | null>(null);
+    const [openedId, setOpenedId] = useState<number | null>(defaultOpenId);
 
     const toggle = (id: number) => {
         setOpenedId(prev => prev === id ? null : id);
@@ -42,22 +35,22 @@ export function AccordionProvider({ children }: { children: React.ReactNode })
     </AccordionContext.Provider>;
 }
 
-export function Accordion({ children }: { children: React.ReactNode })
+export function Accordion({ children, defaultOpenId }: { children: React.ReactNode; defaultOpenId?: number | null })
 {
     return ( 
-        <AccordionProvider>
-            <section className="flex flex-col ">
+        <AccordionProvider defaultOpenId={defaultOpenId}>
+            <div className="flex flex-col">
                 {children}
-            </section>
+            </div>
         </AccordionProvider>
     )
 }
 
 export function AccordionItem({  children }: { children: React.ReactNode}) {
     return (
-        <span className="flex flex-col ">
+        <div className="flex flex-col">
             {children}
-        </span>
+        </div>
     )
 }
 
@@ -65,14 +58,17 @@ export function AccordionItem({  children }: { children: React.ReactNode}) {
 export function AccordionHeader({ index, children }: {index: number, children: React.ReactNode})
 {
     const { openedId, toggle } = useAccordionContext();
-    const isOpend = openedId === index;
+    const isOpen = openedId === index;
     return (
-        <Button variant="primary" onClick={() => toggle(index)} className="w-full ">
-            <span className="flex justify-between items-center bg-card! border border-foreground px-4 text-xl">
-                <span className="text-lg font-bold">{children}</span>
-                <span className="text-2xl">
-                    {isOpend ? "-" : "+"}
-                </span>
+        <Button
+            variant="outline"
+            onClick={() => toggle(index)}
+            aria-expanded={isOpen}
+            className="w-full justify-between rounded-none border-x-0 border-b-0 px-4 py-4 text-left last:border-b"
+        >
+            <span className="min-w-0 text-base font-semibold">{children}</span>
+            <span aria-hidden="true" className="text-xl leading-none text-primary">
+                {isOpen ? "-" : "+"}
             </span>
         </Button>
     )
@@ -82,8 +78,8 @@ export function AccordionContent({ index, children }: {index: number, children: 
 {
     const { openedId } = useAccordionContext();
     return (
-        <span className={cn("flex justify-between items-center bg-card border border-foreground  text-xl  text-foreground px-4 py-2", openedId === index ? "block" : "hidden")}>
+        <div className={cn("border-x-0 border-b border-border bg-muted/40 px-3 py-2", openedId === index ? "block" : "hidden")}>
             {children}
-        </span>
+        </div>
     )
 }

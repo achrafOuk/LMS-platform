@@ -59,7 +59,7 @@ export async function createNewModule(input: ModuleValidatorType,db: DbTransacti
     return createdModule;
 }
 
-function getFeaturedCoursesQuery(db: Db, currentPage: number, pageSize = COURSES_PAGE_SIZE, userId: string) 
+function getFeaturedCoursesQuery(db: Db, currentPage: number, pageSize:number, userId: string) 
 {
     const offset = (currentPage - 1) * pageSize;
     const query = db
@@ -95,7 +95,7 @@ function getFeaturedCoursesCountQuery(db: Db) {
     return query;
 }
 
-export async function getFeaturedCourses(db: Db, currentPage: number, pageSize = COURSES_PAGE_SIZE, userId: string) {
+export async function getFeaturedCourses(db: Db, currentPage: number, pageSize :number, userId: string) {
 
     const [data, countResult] = await Promise.all([
             getFeaturedCoursesQuery(db, currentPage, pageSize, userId),
@@ -193,4 +193,24 @@ export async function updateCourseFields(input: UpdateCourseValidatorType, tx: D
         tagId: tagId,
         updatedAt: now.toISOString(),
     }).where(eq(courses.cid, input.cid!));
+}
+
+
+export async function getCourseWithModules(courseId : string, db: Db)
+{
+    const result = await db.select({ 
+        mhid: modules.mhid,
+        title: modules.title,
+        order: modules.order,
+        lesson: {
+            leid: lessons.leid,
+            title: lessons.title,
+            orderIndex: lessons.orderIndex,
+            videoUrl: lessons.videoUrl,
+        },
+    })
+    .from(modules)
+    .innerJoin(lessons, eq(lessons.chid,modules.mhid))
+    .where(eq(modules.mhid, courseId));
+    return result;
 }

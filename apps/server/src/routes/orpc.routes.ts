@@ -1,5 +1,5 @@
 import { loginRoute, logoutRoute, meRoute, registerRoute } from "./auth/auth.routes";
-import { createCourseRoute, getCourseRoute, getCoursesRoute, getLastSeenCoursesRoute, updateCourseRoute } from "./courses/course.route";
+import { createCourseRoute,  getCourseLessonsRoute, getCourseRoute, getCoursesRoute, getLastSeenCoursesRoute, updateCourseRoute } from "./courses/course.route";
 import { createCheckoutSessionRoute, confirmCheckoutSessionRoute } from "./checkout/checkout.route";
 import { enrollInCourseRoute, getMyEnrollmentsRoute, isUserEnrolledInCourseRoute } from "./enroll/enroll.route";
 import { getMediaUrlRoute, getPresignedUrlRoute, notifyMediaUploadedRoute, removeMediaRoute } from "./media/media.route";
@@ -11,11 +11,8 @@ export const router = {
   auth: {
 
     login: loginRoute,
-
     register: registerRoute,
-
     logout: logoutRoute,
-
     me: meRoute,
   },
 
@@ -25,6 +22,7 @@ export const router = {
     getLastSeenCourses: getLastSeenCoursesRoute,
     getCourse: getCourseRoute,
     updateCourse: updateCourseRoute,
+    getCourseLessons: getCourseLessonsRoute,
   },
 
   media: {
@@ -48,7 +46,6 @@ export const router = {
     createCheckoutSession: createCheckoutSessionRoute,
     confirmCheckoutSession: confirmCheckoutSessionRoute,
   },
-
 };
 
 
