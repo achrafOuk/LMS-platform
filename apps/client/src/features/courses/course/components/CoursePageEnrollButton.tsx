@@ -30,7 +30,7 @@ export function CoursePageEnrollButton({
   if (isEnrolled) {
     return (
       <Link
-        to="/dashboard/courses/$slug"
+        to="/dashboard/courses/watch/$slug"
         params={{ slug: course.slug }}
         className={enrollButtonClassName}
       >

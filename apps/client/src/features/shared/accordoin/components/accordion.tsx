@@ -66,8 +66,8 @@ export function AccordionHeader({ index, children }: {index: number, children: R
             aria-expanded={isOpen}
             className="w-full justify-between rounded-none border-x-0 border-b-0 px-4 py-4 text-left last:border-b"
         >
-            <span className="min-w-0 text-base font-semibold">{children}</span>
-            <span aria-hidden="true" className="text-xl leading-none text-primary">
+            <span className="min-w-0 font-semibold text-base">{children}</span>
+            <span aria-hidden="true" className="text-primary text-xl leading-none">
                 {isOpen ? "-" : "+"}
             </span>
         </Button>
@@ -78,7 +78,7 @@ export function AccordionContent({ index, children }: {index: number, children: 
 {
     const { openedId } = useAccordionContext();
     return (
-        <div className={cn("border-x-0 border-b border-border bg-muted/40 px-3 py-2", openedId === index ? "block" : "hidden")}>
+        <div className={cn("border-border border-x-0 border-b bg-muted/40 px-3 py-2", openedId === index ? "block" : "hidden")}>
             {children}
         </div>
     )

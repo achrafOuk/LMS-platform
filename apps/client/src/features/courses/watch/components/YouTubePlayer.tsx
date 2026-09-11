@@ -50,7 +50,7 @@ export function YouTubePlayer({ lessonTitle, videoUrl }: YouTubePlayerProps) {
 	}
 
 	return (
-		<div className="aspect-video w-full bg-foreground">
+		<div className="aspect-video h-full w-full bg-foreground">
 			<iframe
 				className="size-full"
 				src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0&modestbranding=1`}

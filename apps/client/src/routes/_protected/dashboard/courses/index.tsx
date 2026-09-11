@@ -25,14 +25,14 @@ function RouteComponent() {
   const { data: featuredCourses } = useSuspenseQuery(useGetFeaturedCourses(page));
 
     return (
-    <div className="mx-auto  px-4 py-16  flex flex-col gap-10">
-      <h1 className="font-serif text-3xl font-medium text-foreground text-center">
+    <div className="mx-auto flex flex-col gap-10 px-4 py-16">
+      <h1 className="text-center font-medium font-serif text-3xl text-foreground">
         Browse courses
       </h1>
       <div className="flex flex-row gap-10">
         <Searchbar />
         <div className="flex flex-1 flex-col gap-10">
-          <CourseGrid courses={featuredCourses.data}  linkTo={'/dashboard/courses/$slug'}/>
+          <CourseGrid courses={featuredCourses.data}  linkTo={'/dashboard/courses/watch/$slug'}/>
           <Pagination
             currentPage={featuredCourses.currentPage}
             totalPages={featuredCourses.totalPages}
