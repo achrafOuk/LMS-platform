@@ -23,7 +23,7 @@ export function UserSidebar({ onNavigate }: UserSidebarProps)
                     {
                         URLS.map((url: UserSidebarLinks) =>(
                             <UserSidebarComponent.Link key={url.link + url.label} permissions={url.permissions} userPermissions={userPermissions} >
-                                <Link to={url.link} onClick={onNavigate} className="text-white text-bold">
+                                <Link to={url.link} onClick={onNavigate} className="text-bold text-white">
                                     {url.label}
                                 </Link>
                             </UserSidebarComponent.Link >
@@ -43,7 +43,7 @@ export function UserSidebar({ onNavigate }: UserSidebarProps)
 const UserSidebarComponent =  ({children}: {children: React.ReactNode}) => 
 {
     return (
-        <aside className={cn("bg-primary text-white h-full flex flex-col  justify-between gap-4 p-4 overflow-y-auto ")}>
+        <aside className={cn("flex h-full flex-col justify-between gap-4 overflow-y-auto bg-primary p-4 text-white")}>
             {children}
         </aside>
     )

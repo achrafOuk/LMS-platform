@@ -7,7 +7,6 @@ import { ORPCError } from "@orpc/server";
 import { checkViolation, formatViolationErrorMessage } from "../../db/utils/db.errors.utils";
 import { createCourse, getCourseLessons, getLastSeenCoursesService, updateCourse } from "./course.service";
 import {  hasPermission } from "../../orpc/middleware/auth.middleware";
-import { isUserEnrolledInCourse } from "../enroll/enroll.repository";
 
 export const createCourseRoute = protectedProcedure
 .route({
@@ -92,7 +91,6 @@ protectedProcedure
 .handler(async ({ context }) =>{
     return getLastSeenCoursesService(context.user.uid, db);
 });
-
 
 export const getCourseLessonsRoute = protectedProcedure
 .input(courseSlugValidator)
