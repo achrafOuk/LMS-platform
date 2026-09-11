@@ -32,7 +32,7 @@ function RouteComponent() {
       <div className="flex flex-row gap-10">
         <Searchbar />
         <div className="flex flex-1 flex-col gap-10">
-          <CourseGrid courses={featuredCourses.data}  linkTo={'/dashboard/courses/watch/$slug'}/>
+          <CourseGrid courses={featuredCourses.data}  linkTo={'/dashboard/courses/$slug'}/>
           <Pagination
             currentPage={featuredCourses.currentPage}
             totalPages={featuredCourses.totalPages}

@@ -6,6 +6,7 @@ import { courses, enrollments, lessons, modules, tags } from "../../db/schemas";
 import type { CourseValidatorType, ModuleValidatorType, UpdateCourseValidatorType } from "@tanstack-start-hono/validators/course";
 import { desc } from "drizzle-orm";
 import { COURSES_PAGE_SIZE } from "@tanstack-start-hono/validators/pagination";
+import { isUserEnrolledInCourse } from "../enroll/enroll.repository";
 
 export async function findOrCreateCategory(categoryName: string, db: DbTransaction) {
     const [existingTag] = await db
@@ -214,3 +215,5 @@ export async function getCourseWithModules(courseId : string, db: Db)
     .where(eq(modules.mhid, courseId));
     return result;
 }
+
+

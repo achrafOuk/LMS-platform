@@ -1,9 +1,10 @@
 import type { CourseValidatorType, UpdateCourseValidatorType } from "@tanstack-start-hono/validators/course";
 import type { Db, DbTransaction } from "../../db/drizzle.client";
-import { createNewCourse, createNewModule, findOrCreateCategory, updateCourseFields } from "./course.repository";
+import { createNewCourse, createNewModule, findOrCreateCategory, getCourse, updateCourseFields } from "./course.repository";
 import { createNewLesson, deleteLesson, upsertLesson } from "../lessons/lessons.repository";
 import { deleteModule, upsertModule } from "../modules/module.repository";
-import { getLastSeenCourses } from "../enroll/enroll.repository";
+import { getLastSeenCourses, isUserEnrolledInCourse } from "../enroll/enroll.repository";
+import { ORPCError } from "@orpc/server";
 
 
 
@@ -51,5 +52,20 @@ export async function getLastSeenCoursesService(
 ) {
 
     return getLastSeenCourses(userId, limit, db);
+}
+
+
+export async function getCourseLessons(courseSlug : string, userId: string, db: Db)
+{
+    const course = await getCourse(courseSlug, db, userId);
+    if (!course) {
+        throw new ORPCError("NOT_FOUND", { message: "Course not found" });
+    }
+    const isEnrolled = await isUserEnrolledInCourse( userId, course.cid, db);
+    if (!isEnrolled)
+    {
+        throw new ORPCError("FORBIDDEN", { message: "you are not registerd to see this content" });
+    }
+    return course;
 }
 
