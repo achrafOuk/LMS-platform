@@ -1,10 +1,11 @@
 import type { CourseValidatorType, UpdateCourseValidatorType } from "@tanstack-start-hono/validators/course";
-import type { Db, DbTransaction } from "../../db/drizzle.client";
+import { db, type Db, type DbTransaction } from "../../db/drizzle.client";
 import { createNewCourse, createNewModule, findOrCreateCategory, getCourse, updateCourseFields } from "./course.repository";
 import { createNewLesson, deleteLesson, upsertLesson } from "../lessons/lessons.repository";
 import { deleteModule, upsertModule } from "../modules/module.repository";
 import { getLastSeenCourses, isUserEnrolledInCourse } from "../enroll/enroll.repository";
 import { ORPCError } from "@orpc/server";
+import { tags } from "../../db/schemas";
 
 
 
@@ -69,3 +70,14 @@ export async function getCourseLessons(courseSlug : string, userId: string, db: 
     return course;
 }
 
+export async function getCourseTags()
+{
+    const result = await db
+    .select({
+        tid: tags.tid,
+        tagName: tags.tagName,
+    })
+    .from(tags);
+    return result;
+
+}

@@ -11,9 +11,11 @@ export function parseValidationError(error: unknown)
   console.log('error', error);
   if (error instanceof Error) 
   {
-    const message = error.message.substring(1, error.message.length - 1)
-    const parsedMessage = JSON.parse(message);
-    return parsedMessage;
+    try {
+      return JSON.parse(error.message)
+    } catch {
+      return null
+    }
   }
   return null;
 }
@@ -25,12 +27,15 @@ export function getValidationErrorMessage(error: unknown): string {
   }
 
   if (error instanceof Error) {
-    const parsedMessage = JSON.parse(error.message.substring(1, error.message.length - 1));
-    if (parsedMessage.code === 'invalid_type') 
-    {
-      return parsedMessage.message 
+    try {
+      const parsedMessage = JSON.parse(error.message);
+      if (parsedMessage.code === 'invalid_type') {
+        return parsedMessage.message
+      }
+    } catch {
+      return error.message
     }
-    // console.log('error message:',  JSON.parse(error.message.substring(1, error.message.length - 1)));
+
     return error.message
   }
 

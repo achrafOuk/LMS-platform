@@ -109,8 +109,8 @@ export const enrollInCourseValidator = z.object({
 
 export const searchCourseValidator = 
 paginationQueryValidator.extend({
-  types: z.array(z.string()),
-  course: z.string(),
+  types: z.array(z.string()).default([]),
+  course: z.string().default(''),
 })
 
 

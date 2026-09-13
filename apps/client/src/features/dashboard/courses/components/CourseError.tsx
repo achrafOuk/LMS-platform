@@ -11,7 +11,7 @@ export function CourseError({ error, reset }: ErrorComponentProps) {
           <>
             <h1 className="text-2xl font-bold">Error Occurred</h1>
             <p className="text-gray-500">{parsedError.message}</p>
-            <Link to="/dashboard/courses" search={{page: 1}} className="bg-primary text-white px-4 py-2 rounded-md">
+            <Link to="/dashboard/courses" search={{ page: 1, types: [], course: '' }} className="bg-primary text-white px-4 py-2 rounded-md">
             Go back
             </Link>
           </>

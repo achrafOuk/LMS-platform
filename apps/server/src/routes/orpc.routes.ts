@@ -1,5 +1,5 @@
 import { loginRoute, logoutRoute, meRoute, registerRoute } from "./auth/auth.routes";
-import { createCourseRoute,  getCourseLessonsRoute, getCourseRoute, getCoursesRoute, getLastSeenCoursesRoute, searchCoursesRoute, updateCourseRoute } from "./courses/course.route";
+import { createCourseRoute,  getCourseLessonsRoute, getCourseRoute, getCoursesRoute, getCourseTagsRoute, getLastSeenCoursesRoute, searchCoursesRoute, updateCourseRoute } from "./courses/course.route";
 import { createCheckoutSessionRoute, confirmCheckoutSessionRoute } from "./checkout/checkout.route";
 import { enrollInCourseRoute, getMyEnrollmentsRoute, isUserEnrolledInCourseRoute } from "./enroll/enroll.route";
 import { getMediaUrlRoute, getPresignedUrlRoute, notifyMediaUploadedRoute, removeMediaRoute } from "./media/media.route";
@@ -23,6 +23,7 @@ export const router = {
     updateCourse: updateCourseRoute,
     getCourseLessons: getCourseLessonsRoute,
     searchCourses: searchCoursesRoute,
+    getCourseTag: getCourseTagsRoute,
   },
 
   media: {
@@ -47,7 +48,6 @@ export const router = {
     confirmCheckoutSession: confirmCheckoutSessionRoute,
   },
 };
-
 
 
 export type AppRouter = typeof router;

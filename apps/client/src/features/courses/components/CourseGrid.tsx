@@ -39,7 +39,7 @@ export function CourseGrid({ courses, linkTo = '/dashboard/courses/$slug' }: { c
                     course.price !== undefined ? (
                       course.price === 0
                         ? <>Free</>
-                        : <>{formatCoursePrice(course.price)}</>
+                        : formatCoursePrice(course.price)
                     ) : null
                   }
                 </p>

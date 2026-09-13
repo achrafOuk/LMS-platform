@@ -5,7 +5,7 @@ import { COURSES_PAGE_SIZE, paginationQueryValidator } from "@tanstack-start-hon
 import {   getCourse,  getFeaturedCourses, getSearchedCourse} from "./course.repository";
 import { ORPCError } from "@orpc/server";
 import { checkViolation, formatViolationErrorMessage } from "../../db/utils/db.errors.utils";
-import { createCourse, getCourseLessons, getLastSeenCoursesService, updateCourse } from "./course.service";
+import { createCourse, getCourseLessons, getCourseTags, getLastSeenCoursesService, updateCourse } from "./course.service";
 import {  hasPermission } from "../../orpc/middleware/auth.middleware";
 import { courses, enrollments, tags, } from "../../db/schemas";
 import { desc, inArray, like } from "drizzle-orm";
@@ -122,3 +122,9 @@ export const searchCoursesRoute = protectedProcedure
     
     return searchedCourses;
 })
+
+export const getCourseTagsRoute = protectedProcedure
+.handler(async () => {
+    const result = await getCourseTags();
+    return result;
+});
