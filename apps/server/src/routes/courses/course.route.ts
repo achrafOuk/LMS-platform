@@ -1,12 +1,15 @@
 import { db } from "../../db/drizzle.client";
 import { optionalAuthProcedure, protectedProcedure } from "../../orpc/middleware/auth.middleware";
-import { courseSlugValidator, courseValidator, updateCourseValidator} from "@tanstack-start-hono/validators/course";
+import { courseSlugValidator, courseValidator, searchCourseValidator, updateCourseValidator} from "@tanstack-start-hono/validators/course";
 import { COURSES_PAGE_SIZE, paginationQueryValidator } from "@tanstack-start-hono/validators/pagination";
-import {   getCourse,  getFeaturedCourses} from "./course.repository";
+import {   getCourse,  getFeaturedCourses, getSearchedCourse} from "./course.repository";
 import { ORPCError } from "@orpc/server";
 import { checkViolation, formatViolationErrorMessage } from "../../db/utils/db.errors.utils";
 import { createCourse, getCourseLessons, getLastSeenCoursesService, updateCourse } from "./course.service";
 import {  hasPermission } from "../../orpc/middleware/auth.middleware";
+import { courses, enrollments, tags, } from "../../db/schemas";
+import { desc, inArray, like } from "drizzle-orm";
+import {  eq, sql, and} from "drizzle-orm";
 
 export const createCourseRoute = protectedProcedure
 .route({
@@ -101,3 +104,21 @@ export const getCourseLessonsRoute = protectedProcedure
     // check if course exists
     return  await getCourseLessons(courseSlug , userId, db);
 });
+
+
+export const searchCoursesRoute = protectedProcedure
+.input(searchCourseValidator)
+.use(hasPermission("course:view"))
+.handler(async ({context, input}) => {
+    const userId = context.user.uid;
+    // const searchedCourses = await db
+    const courseName = input.course;
+    const page = input.page;
+    const types = input.types;
+
+    const searchedCourses = await getSearchedCourse(db, userId, courseName, types, page, COURSES_PAGE_SIZE);
+    console.log('search:', searchedCourses);
+    
+    
+    return searchedCourses;
+})

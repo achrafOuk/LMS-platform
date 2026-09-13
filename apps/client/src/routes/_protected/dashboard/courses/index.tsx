@@ -15,8 +15,6 @@ export const Route = createFileRoute('/_protected/dashboard/courses/')({
     await context.queryClient.prefetchQuery(useGetFeaturedCourses(deps.page));
   },
   errorComponent: CourseError,
-  
-
 })
 
 function RouteComponent() {

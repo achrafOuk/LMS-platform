@@ -1,4 +1,5 @@
 import z from "zod";
+import { paginationQueryValidator } from "./pagination.validator";
 
 const lessonValidator = z.object({
   title: z.string().min(1, "Lesson title is required"),
@@ -95,7 +96,6 @@ export const courseSlugValidator = z.object({
 });
 
 export const updateCourseValidator = courseBodySchema
-  // .merge(courseSlugValidator)
   .extend({
     cid: z.string().length(26, "Course ID must be 26 characters long"),
   })
@@ -106,6 +106,12 @@ export const enrollInCourseValidator = z.object({
   slug: z.string().min(1),
 });
 
+
+export const searchCourseValidator = 
+paginationQueryValidator.extend({
+  types: z.array(z.string()),
+  course: z.string(),
+})
 
 
 export type UpdateCourseValidatorType = z.infer<typeof updateCourseValidator>;

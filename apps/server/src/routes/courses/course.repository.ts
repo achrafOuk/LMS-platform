@@ -1,12 +1,14 @@
-import { asc, count, eq, sql } from "drizzle-orm";
+// import { asc, count, eq, sql } from "drizzle-orm";
 import { PaginateRequest } from "../../db/utils/db.pagination.utils";
 import { ulid } from "ulid";
 import type { Db, DbTransaction } from "../../db/drizzle.client";
 import { courses, enrollments, lessons, modules, tags } from "../../db/schemas";
 import type { CourseValidatorType, ModuleValidatorType, UpdateCourseValidatorType } from "@tanstack-start-hono/validators/course";
-import { desc } from "drizzle-orm";
 import { COURSES_PAGE_SIZE } from "@tanstack-start-hono/validators/pagination";
 import { isUserEnrolledInCourse } from "../enroll/enroll.repository";
+
+import { desc, inArray, like } from "drizzle-orm";
+import { asc, count, eq, sql, and} from "drizzle-orm";
 
 export async function findOrCreateCategory(categoryName: string, db: DbTransaction) {
     const [existingTag] = await db
@@ -216,4 +218,80 @@ export async function getCourseWithModules(courseId : string, db: Db)
     return result;
 }
 
+export async function getSearchedCourseCount(db: Db,  searchedCourse: string, tages: string[])
+{
+    const searchedCourses = await db
+    .select({ 
+        total: count()
+     })
+    .from(courses)
+    .innerJoin(tags, eq(courses.tagId, tags.tid))
+    .where(
+        and(
+            inArray(tags.tagName, tages),
+            like(courses.courseName, `%${searchedCourse}%`)
+        )
+    )
 
+    return searchedCourses;
+
+}
+
+export async function getSearchedCourseQuery(db: Db, userId: string, searchedCourse: string, tages: string[],currentPage:number, pageSize:number,)
+{
+
+    const offset = (currentPage - 1) * pageSize;
+
+    const conditions = [
+        like(courses.courseName, `%${searchedCourse}%`)
+    ];
+
+    // Only add tag condition if tags were provided
+    if (tages.length > 0) {
+        conditions.push(
+            inArray(tags.tagName, tages)
+        );
+    }
+
+    const searchedCourses = await db
+        .select({
+            cid: courses.cid,
+            courseName: courses.courseName,
+            slug: courses.slug,
+            coverUrl: courses.coverUrl,
+            price: courses.price,
+
+            isEnrolled: sql<boolean>`
+                EXISTS (
+                    SELECT 1
+                    FROM ${enrollments}
+                    WHERE ${enrollments.uid} = ${userId}
+                    AND ${enrollments.cid} = ${courses.cid}
+                )
+            `,
+
+            createdAt: courses.createdAt
+        })
+        .from(courses)
+        .innerJoin(tags, eq(courses.tagId, tags.tid))
+        .where(and(...conditions))
+        .orderBy(desc(courses.createdAt))
+        .limit(pageSize)
+        .offset(offset);
+
+    return searchedCourses;
+}
+
+
+
+export async function getSearchedCourse(db: Db, userId: string, searchedCourse: string, tages: string[],currentPage:number, pageSize:number,) {
+    const [data, countResult] = await Promise.all([
+            getSearchedCourseQuery(db, userId, searchedCourse, tages,currentPage, pageSize),
+            getSearchedCourseCount(db,  searchedCourse, tages)
+    ]);
+
+    const total = countResult[0]?.total ?? 0;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+    return PaginateRequest(data, pageSize, currentPage, totalPages);
+}

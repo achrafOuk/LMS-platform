@@ -21,6 +21,7 @@ type PartialByKeys<T, K extends keyof T = keyof T> = Pretty<{
 type PartialCourseType = PartialByKeys<CourseType, "isEnrolled" | "price">
 
 export function CourseGrid({ courses, linkTo = '/dashboard/courses/$slug' }: { courses: PartialCourseType[], linkTo?: string  }) {
+  
   return (
     <div className='grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3'>
         { 
@@ -32,9 +33,17 @@ export function CourseGrid({ courses, linkTo = '/dashboard/courses/$slug' }: { c
                 <Link to={linkTo} params={{ slug: course.slug }} className='text-2xl text-foreground' >
                     {course.courseName}
                 </Link>
-                {
-                course.price && <p className='text-foreground text-sm'>{formatCoursePrice(course.price)}</p>
-                }
+
+                <p className='text-foreground text-sm'>
+                  {
+                    course.price !== undefined ? (
+                      course.price === 0
+                        ? <>Free</>
+                        : <>{formatCoursePrice(course.price)}</>
+                    ) : null
+                  }
+                </p>
+                
               </CourseCardRoot.context>
               <CourseCardRoot.action>
                 
