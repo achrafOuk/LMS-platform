@@ -5,6 +5,8 @@ import type { AppRouter } from '@tanstack-start-hono/server/routes/orpc.route'
 import { createIsomorphicFn } from '@tanstack/react-start'
 import { getRequestHeaders } from '@tanstack/react-start/server'
 
+const RPC_URL = import.meta.env.VITE_RPC_URL ?? 'http://localhost:3002/rpc'
+
 const getForwardHeaders = createIsomorphicFn()
   .server(() => {
     const headers = getRequestHeaders()
@@ -14,8 +16,8 @@ const getForwardHeaders = createIsomorphicFn()
   .client(() => ({}))
 
 const link = new RPCLink({
-  url: import.meta.env.VITE_RPC_URL ?? 'http://localhost:3002/rpc',
-  headers: getForwardHeaders(),
+  url: RPC_URL,
+  headers: () => getForwardHeaders(),
   fetch: (request, init) =>
     globalThis.fetch(request, {
       ...init,

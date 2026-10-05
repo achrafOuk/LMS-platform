@@ -1,10 +1,12 @@
+  
 export interface CourseType {
-  title: string
+  cid: string
+  isEnrolled: boolean
+  courseName: string
   slug: string
-  image: string
-  imageWidth: number
-  imageHeight: number
+  coverUrl: string | null
   price: number
-  description: string
-  category: string
+  description?: string
+  category?: string 
+  courseType?: string
 }

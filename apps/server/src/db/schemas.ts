@@ -1,23 +1,36 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
-  date,
   integer,
+  jsonb,
   pgTable,
   primaryKey,
   real,
   text,
+  timestamp,
   unique,
   varchar,
 } from "drizzle-orm/pg-core";
+
+const gmtTimestamp = (name: string) =>
+  timestamp(name, { withTimezone: true, mode: "string" });
+
+export const Media = pgTable("media", {
+  uid: varchar("uid", { length: 26 }).primaryKey(),
+  path: text("path").notNull(),
+  mimeType: text("mime_type").notNull(),
+  status: varchar("status", { length: 14 }).notNull().default("PENDING"), // PENDING, SAVED
+  createdAt: gmtTimestamp("create_at").notNull().default(sql`now()`),
+  updatedAt: gmtTimestamp("updated_at").notNull().default(sql`now()`),
+});
 
 export const users = pgTable("user", {
   uid: varchar("uid", { length: 26 }).primaryKey(),
   username: varchar("username", { length: 255 }).notNull().unique(),
   passwordHash: varchar("password_hash", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  role: varchar("role", { length: 50 }).notNull(),
-  createdAt: date("create_at").notNull(),
-  updatedAt: date("updated_at").notNull(),
+  role: varchar("role", { length: 50 }).notNull().default("USER"), // USER, ADMIN
+  createdAt: gmtTimestamp("create_at").notNull().default(sql`now()`),
+  updatedAt: gmtTimestamp("updated_at").notNull(),
 });
 
 export const permissions = pgTable("permissions", {
@@ -34,8 +47,8 @@ export const usersPermissions = pgTable(
     pid: varchar("pid", { length: 26 })
       .notNull()
       .references(() => permissions.pid, { onDelete: "cascade" }),
-    createdAt: date("create_at").notNull(),
-    updatedAt: date("updated_at").notNull(),
+    createdAt: gmtTimestamp("create_at").notNull().default(sql`now()`),
+    updatedAt: gmtTimestamp("updated_at").notNull(),
   },
   (table) => [primaryKey({ columns: [table.pid, table.userId] })],
 );
@@ -45,32 +58,38 @@ export const tags = pgTable("tag", {
   tagName: text("tag_name").notNull().unique(),
 });
 
-export const courses = pgTable("course", {
-  cid: varchar("cid", { length: 26 }).primaryKey(),
-  slug: varchar("slug", { length: 255 }).notNull(),
-  courseName: varchar("course_name", { length: 255 }).notNull().unique(),
-  coverUrl: text("cover_url"),
-  description: text("description"),
-  price: real("price").notNull(),
-  tagId: varchar("tag_id", { length: 26 })
-    .notNull()
-    .references(() => tags.tid, { onDelete: "restrict" }),
-  enrolled: integer("enrolled").notNull().default(0),
-  createdAt: date("create_at").notNull(),
-  updatedAt: date("updated_at").notNull(),
-});
+export const courses = pgTable(
+  "course",
+  {
+    cid: varchar("cid", { length: 26 }).primaryKey(),
+    slug: varchar("slug", { length: 255 }).notNull(),
+    courseName: varchar("course_name", { length: 255 }).notNull(),
+    coverUrl: text("cover_url"),
+    description: text("description"),
+    price: real("price").notNull(),
+    tagId: varchar("tag_id", { length: 26 })
+      .notNull()
+      .references(() => tags.tid, { onDelete: "restrict" }),
+    enrolled: integer("enrolled").notNull().default(0),
+    createdAt: gmtTimestamp("create_at").notNull().default(sql`now()`),
+    updatedAt: gmtTimestamp("updated_at").notNull(),
+  },
+  (table) => [
+    unique("course_course_name_unique").on(table.courseName, table.slug),
+  ],
+);
 
 export const modules = pgTable(
   "module",
   {
     mhid: varchar("mhid", { length: 26 }).primaryKey(),
-    order: varchar("order", { length: 26 }).notNull(),
+    order: integer("order").notNull(),
     cid: varchar("cid", { length: 26 })
       .notNull()
       .references(() => courses.cid, { onDelete: "cascade" }),
     title: text("title").notNull(),
-    createdAt: date("create_at").notNull(),
-    updatedAt: date("updated_at").notNull(),
+    createdAt: gmtTimestamp("create_at").notNull().default(sql`now()`),
+    updatedAt: gmtTimestamp("updated_at").notNull(),
   },
   (table) => [
     unique("module_cid_title_order_unique").on(table.cid, table.title, table.order),
@@ -88,8 +107,8 @@ export const lessons = pgTable(
     title: text("title").notNull(),
     videoUrl: text("video_url"),
     orderIndex: integer("order_index").notNull(),
-    createdAt: date("create_at").notNull(),
-    updatedAt: date("updated_at").notNull(),
+    createdAt: gmtTimestamp("create_at").notNull().default(sql`now()`),
+    updatedAt: gmtTimestamp("updated_at").notNull(),
   },
   (table) => [
     unique("lesson_chid_title_order_unique").on(table.chid, table.title, table.order),
@@ -106,9 +125,30 @@ export const enrollments = pgTable(
       .notNull()
       .references(() => users.uid, { onDelete: "cascade" }),
     progressPercent: integer("progress_percent").notNull(),
-    enrolledAt: date("enrolled_at").notNull(),
+    enrolledAt: gmtTimestamp("enrolled_at").notNull().default(sql`now()`),
   },
   (table) => [primaryKey({ columns: [table.cid, table.uid] })],
+);
+
+export const payments = pgTable(
+  "payment",
+  {
+    uid: varchar("uid", { length: 26 })
+      .notNull()
+      .references(() => users.uid, { onDelete: "cascade" }),
+    cid: varchar("cid", { length: 26 })
+      .notNull()
+      .references(() => courses.cid, { onDelete: "cascade" }),
+    idempotencyKey: varchar("idempotency_key", { length: 255 }).notNull().unique(),
+    stripe_payment_intent_id: text("stripe_payment_intent_id").unique(),
+    stripe_checkout_session_id: text("stripe_checkout_session_id").unique(),
+    response_data: jsonb("response_data").notNull().default("{}"),
+    createdAt: gmtTimestamp("created_at").notNull().default(sql`now()`),
+    amount: integer("amount").notNull(),
+    currency: varchar("currency", { length: 3 }).notNull().default("usd"),
+    status: varchar("status", { length: 14 }).notNull().default("PENDING"), // PENDING, SUCCESS, FAILED
+  },
+  (table) => [primaryKey({ columns: [table.uid, table.cid] })],
 );
 
 export const watchedLessons = pgTable("watched_lessons", {
@@ -119,7 +159,7 @@ export const watchedLessons = pgTable("watched_lessons", {
   leid: varchar("leid", { length: 26 })
     .notNull()
     .references(() => lessons.leid, { onDelete: "cascade" }),
-  watchedAt: date("watched_at").notNull(),
+  watchedAt: gmtTimestamp("watched_at").notNull().default(sql`now()`),
 });
 
 export const usersRelations = relations(users, ({ many }) => ({

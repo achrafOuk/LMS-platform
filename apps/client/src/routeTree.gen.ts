@@ -9,116 +9,260 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as CoursesRouteImport } from './routes/courses'
-import { Route as PublicRouteImport } from './routes/_public'
-import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as AuthRouteImport } from './routes/_auth'
-import { Route as PublicIndexRouteImport } from './routes/_public/index'
-import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
-import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
+import { Route as ProtectedRouteImport } from './routes/_protected'
+import { Route as PublicRouteImport } from './routes/_public'
 import { Route as AuthLoginRouteImport } from './routes/_auth/login'
+import { Route as AuthRegisterRouteImport } from './routes/_auth/register'
+import { Route as ProtectedAdminRouteRouteImport } from './routes/_protected/admin/route'
+import { Route as PublicIndexRouteImport } from './routes/_public/index'
+import { Route as ProtectedDashboardIndexRouteImport } from './routes/_protected/dashboard/index'
+import { Route as PublicCoursesIdRouteImport } from './routes/_public/courses/$id'
+import { Route as ProtectedAdminDashboardIndexRouteImport } from './routes/_protected/admin/dashboard/index'
+import { Route as ProtectedDashboardCheckoutCancelRouteImport } from './routes/_protected/dashboard/checkout/cancel'
+import { Route as ProtectedDashboardCheckoutSuccessRouteImport } from './routes/_protected/dashboard/checkout/success'
+import { Route as ProtectedDashboardCoursesIndexRouteImport } from './routes/_protected/dashboard/courses/index'
+import { Route as ProtectedDashboardCoursesSlugRouteImport } from './routes/_protected/dashboard/courses/$slug'
+import { Route as ProtectedAdminDashboardCoursesIndexRouteImport } from './routes/_protected/admin/dashboard/courses/index'
+import { Route as ProtectedAdminDashboardCoursesNewRouteImport } from './routes/_protected/admin/dashboard/courses/new'
+import { Route as ProtectedDashboardCoursesMycoursesIndexRouteImport } from './routes/_protected/dashboard/courses/mycourses/index'
+import { Route as ProtectedDashboardCoursesWatchSlugRouteImport } from './routes/_protected/dashboard/courses/watch/$slug'
+import { Route as ProtectedAdminDashboardCoursesSlugEditRouteImport } from './routes/_protected/admin/dashboard/courses/$slug/edit'
 
-const CoursesRoute = CoursesRouteImport.update({
-  id: '/courses',
-  path: '/courses',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PublicRoute = PublicRouteImport.update({
-  id: '/_public',
+const AuthRoute = AuthRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthRoute = AuthRouteImport.update({
-  id: '/_auth',
+const PublicRoute = PublicRouteImport.update({
+  id: '/_public',
   getParentRoute: () => rootRouteImport,
-} as any)
-const PublicIndexRoute = PublicIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => PublicRoute,
-} as any)
-const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const AuthRegisterRoute = AuthRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => AuthRoute,
 } as any)
 const AuthLoginRoute = AuthLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRoute,
+} as any)
+const ProtectedAdminRouteRoute = ProtectedAdminRouteRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const PublicIndexRoute = PublicIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => PublicRoute,
+} as any)
+const ProtectedDashboardIndexRoute = ProtectedDashboardIndexRouteImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const PublicCoursesIdRoute = PublicCoursesIdRouteImport.update({
+  id: '/courses/$id',
+  path: '/courses/$id',
+  getParentRoute: () => PublicRoute,
+} as any)
+const ProtectedAdminDashboardIndexRoute =
+  ProtectedAdminDashboardIndexRouteImport.update({
+    id: '/dashboard/',
+    path: '/dashboard/',
+    getParentRoute: () => ProtectedAdminRouteRoute,
+  } as any)
+const ProtectedDashboardCheckoutCancelRoute =
+  ProtectedDashboardCheckoutCancelRouteImport.update({
+    id: '/dashboard/checkout/cancel',
+    path: '/dashboard/checkout/cancel',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDashboardCheckoutSuccessRoute =
+  ProtectedDashboardCheckoutSuccessRouteImport.update({
+    id: '/dashboard/checkout/success',
+    path: '/dashboard/checkout/success',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDashboardCoursesIndexRoute =
+  ProtectedDashboardCoursesIndexRouteImport.update({
+    id: '/dashboard/courses/',
+    path: '/dashboard/courses/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDashboardCoursesSlugRoute =
+  ProtectedDashboardCoursesSlugRouteImport.update({
+    id: '/dashboard/courses/$slug',
+    path: '/dashboard/courses/$slug',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAdminDashboardCoursesIndexRoute =
+  ProtectedAdminDashboardCoursesIndexRouteImport.update({
+    id: '/dashboard/courses/',
+    path: '/dashboard/courses/',
+    getParentRoute: () => ProtectedAdminRouteRoute,
+  } as any)
+const ProtectedAdminDashboardCoursesNewRoute =
+  ProtectedAdminDashboardCoursesNewRouteImport.update({
+    id: '/dashboard/courses/new',
+    path: '/dashboard/courses/new',
+    getParentRoute: () => ProtectedAdminRouteRoute,
+  } as any)
+const ProtectedDashboardCoursesMycoursesIndexRoute =
+  ProtectedDashboardCoursesMycoursesIndexRouteImport.update({
+    id: '/dashboard/courses/mycourses/',
+    path: '/dashboard/courses/mycourses/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDashboardCoursesWatchSlugRoute =
+  ProtectedDashboardCoursesWatchSlugRouteImport.update({
+    id: '/dashboard/courses/watch/$slug',
+    path: '/dashboard/courses/watch/$slug',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAdminDashboardCoursesSlugEditRoute =
+  ProtectedAdminDashboardCoursesSlugEditRouteImport.update({
+    id: '/dashboard/courses/$slug/edit',
+    path: '/dashboard/courses/$slug/edit',
+    getParentRoute: () => ProtectedAdminRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof PublicIndexRoute
-  '/courses': typeof CoursesRoute
+  '/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
-  '/dashboard': typeof ProtectedDashboardRoute
+  '/courses/$id': typeof PublicCoursesIdRoute
+  '/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/dashboard/checkout/cancel': typeof ProtectedDashboardCheckoutCancelRoute
+  '/dashboard/checkout/success': typeof ProtectedDashboardCheckoutSuccessRoute
+  '/dashboard/courses/$slug': typeof ProtectedDashboardCoursesSlugRoute
+  '/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
+  '/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
+  '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
+  '/dashboard/courses/watch/$slug': typeof ProtectedDashboardCoursesWatchSlugRoute
+  '/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
+  '/dashboard/courses/mycourses/': typeof ProtectedDashboardCoursesMycoursesIndexRoute
+  '/admin/dashboard/courses/$slug/edit': typeof ProtectedAdminDashboardCoursesSlugEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof PublicIndexRoute
-  '/courses': typeof CoursesRoute
+  '/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/login': typeof AuthLoginRoute
   '/register': typeof AuthRegisterRoute
-  '/dashboard': typeof ProtectedDashboardRoute
+  '/courses/$id': typeof PublicCoursesIdRoute
+  '/dashboard': typeof ProtectedDashboardIndexRoute
+  '/dashboard/checkout/cancel': typeof ProtectedDashboardCheckoutCancelRoute
+  '/dashboard/checkout/success': typeof ProtectedDashboardCheckoutSuccessRoute
+  '/dashboard/courses/$slug': typeof ProtectedDashboardCoursesSlugRoute
+  '/admin/dashboard': typeof ProtectedAdminDashboardIndexRoute
+  '/dashboard/courses': typeof ProtectedDashboardCoursesIndexRoute
+  '/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
+  '/dashboard/courses/watch/$slug': typeof ProtectedDashboardCoursesWatchSlugRoute
+  '/admin/dashboard/courses': typeof ProtectedAdminDashboardCoursesIndexRoute
+  '/dashboard/courses/mycourses': typeof ProtectedDashboardCoursesMycoursesIndexRoute
+  '/admin/dashboard/courses/$slug/edit': typeof ProtectedAdminDashboardCoursesSlugEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/_protected': typeof ProtectedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
-  '/courses': typeof CoursesRoute
+  '/_protected/admin': typeof ProtectedAdminRouteRouteWithChildren
   '/_auth/login': typeof AuthLoginRoute
   '/_auth/register': typeof AuthRegisterRoute
-  '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_public/': typeof PublicIndexRoute
+  '/_public/courses/$id': typeof PublicCoursesIdRoute
+  '/_protected/dashboard/': typeof ProtectedDashboardIndexRoute
+  '/_protected/dashboard/checkout/cancel': typeof ProtectedDashboardCheckoutCancelRoute
+  '/_protected/dashboard/checkout/success': typeof ProtectedDashboardCheckoutSuccessRoute
+  '/_protected/dashboard/courses/$slug': typeof ProtectedDashboardCoursesSlugRoute
+  '/_protected/admin/dashboard/': typeof ProtectedAdminDashboardIndexRoute
+  '/_protected/dashboard/courses/': typeof ProtectedDashboardCoursesIndexRoute
+  '/_protected/admin/dashboard/courses/new': typeof ProtectedAdminDashboardCoursesNewRoute
+  '/_protected/dashboard/courses/watch/$slug': typeof ProtectedDashboardCoursesWatchSlugRoute
+  '/_protected/admin/dashboard/courses/': typeof ProtectedAdminDashboardCoursesIndexRoute
+  '/_protected/dashboard/courses/mycourses/': typeof ProtectedDashboardCoursesMycoursesIndexRoute
+  '/_protected/admin/dashboard/courses/$slug/edit': typeof ProtectedAdminDashboardCoursesSlugEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/courses' | '/login' | '/register' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/register'
+    | '/courses/$id'
+    | '/dashboard/'
+    | '/dashboard/checkout/cancel'
+    | '/dashboard/checkout/success'
+    | '/dashboard/courses/$slug'
+    | '/admin/dashboard/'
+    | '/dashboard/courses/'
+    | '/admin/dashboard/courses/new'
+    | '/dashboard/courses/watch/$slug'
+    | '/admin/dashboard/courses/'
+    | '/dashboard/courses/mycourses/'
+    | '/admin/dashboard/courses/$slug/edit'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/courses' | '/login' | '/register' | '/dashboard'
+  to:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/register'
+    | '/courses/$id'
+    | '/dashboard'
+    | '/dashboard/checkout/cancel'
+    | '/dashboard/checkout/success'
+    | '/dashboard/courses/$slug'
+    | '/admin/dashboard'
+    | '/dashboard/courses'
+    | '/admin/dashboard/courses/new'
+    | '/dashboard/courses/watch/$slug'
+    | '/admin/dashboard/courses'
+    | '/dashboard/courses/mycourses'
+    | '/admin/dashboard/courses/$slug/edit'
   id:
     | '__root__'
     | '/_auth'
     | '/_protected'
     | '/_public'
-    | '/courses'
+    | '/_protected/admin'
     | '/_auth/login'
     | '/_auth/register'
-    | '/_protected/dashboard'
     | '/_public/'
+    | '/_public/courses/$id'
+    | '/_protected/dashboard/'
+    | '/_protected/dashboard/checkout/cancel'
+    | '/_protected/dashboard/checkout/success'
+    | '/_protected/dashboard/courses/$slug'
+    | '/_protected/admin/dashboard/'
+    | '/_protected/dashboard/courses/'
+    | '/_protected/admin/dashboard/courses/new'
+    | '/_protected/dashboard/courses/watch/$slug'
+    | '/_protected/admin/dashboard/courses/'
+    | '/_protected/dashboard/courses/mycourses/'
+    | '/_protected/admin/dashboard/courses/$slug/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRouteWithChildren
   ProtectedRoute: typeof ProtectedRouteWithChildren
   PublicRoute: typeof PublicRouteWithChildren
-  CoursesRoute: typeof CoursesRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/courses': {
-      id: '/courses'
-      path: '/courses'
-      fullPath: '/courses'
-      preLoaderRoute: typeof CoursesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_public': {
-      id: '/_public'
+    '/_auth': {
+      id: '/_auth'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof PublicRouteImport
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_protected': {
@@ -128,26 +272,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_auth': {
-      id: '/_auth'
+    '/_public': {
+      id: '/_public'
       path: ''
       fullPath: '/'
-      preLoaderRoute: typeof AuthRouteImport
+      preLoaderRoute: typeof PublicRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_public/': {
-      id: '/_public/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof PublicIndexRouteImport
-      parentRoute: typeof PublicRoute
-    }
-    '/_protected/dashboard': {
-      id: '/_protected/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof ProtectedDashboardRouteImport
-      parentRoute: typeof ProtectedRoute
+    '/_auth/login': {
+      id: '/_auth/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
     }
     '/_auth/register': {
       id: '/_auth/register'
@@ -156,12 +293,103 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/login': {
-      id: '/_auth/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof AuthLoginRouteImport
-      parentRoute: typeof AuthRoute
+    '/_protected/admin': {
+      id: '/_protected/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof ProtectedAdminRouteRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_public/': {
+      id: '/_public/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof PublicIndexRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_protected/dashboard/': {
+      id: '/_protected/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof ProtectedDashboardIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_public/courses/$id': {
+      id: '/_public/courses/$id'
+      path: '/courses/$id'
+      fullPath: '/courses/$id'
+      preLoaderRoute: typeof PublicCoursesIdRouteImport
+      parentRoute: typeof PublicRoute
+    }
+    '/_protected/admin/dashboard/': {
+      id: '/_protected/admin/dashboard/'
+      path: '/dashboard'
+      fullPath: '/admin/dashboard/'
+      preLoaderRoute: typeof ProtectedAdminDashboardIndexRouteImport
+      parentRoute: typeof ProtectedAdminRouteRoute
+    }
+    '/_protected/dashboard/checkout/cancel': {
+      id: '/_protected/dashboard/checkout/cancel'
+      path: '/dashboard/checkout/cancel'
+      fullPath: '/dashboard/checkout/cancel'
+      preLoaderRoute: typeof ProtectedDashboardCheckoutCancelRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/dashboard/checkout/success': {
+      id: '/_protected/dashboard/checkout/success'
+      path: '/dashboard/checkout/success'
+      fullPath: '/dashboard/checkout/success'
+      preLoaderRoute: typeof ProtectedDashboardCheckoutSuccessRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/dashboard/courses/': {
+      id: '/_protected/dashboard/courses/'
+      path: '/dashboard/courses'
+      fullPath: '/dashboard/courses/'
+      preLoaderRoute: typeof ProtectedDashboardCoursesIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/dashboard/courses/$slug': {
+      id: '/_protected/dashboard/courses/$slug'
+      path: '/dashboard/courses/$slug'
+      fullPath: '/dashboard/courses/$slug'
+      preLoaderRoute: typeof ProtectedDashboardCoursesSlugRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/dashboard/courses/': {
+      id: '/_protected/admin/dashboard/courses/'
+      path: '/dashboard/courses'
+      fullPath: '/admin/dashboard/courses/'
+      preLoaderRoute: typeof ProtectedAdminDashboardCoursesIndexRouteImport
+      parentRoute: typeof ProtectedAdminRouteRoute
+    }
+    '/_protected/admin/dashboard/courses/new': {
+      id: '/_protected/admin/dashboard/courses/new'
+      path: '/dashboard/courses/new'
+      fullPath: '/admin/dashboard/courses/new'
+      preLoaderRoute: typeof ProtectedAdminDashboardCoursesNewRouteImport
+      parentRoute: typeof ProtectedAdminRouteRoute
+    }
+    '/_protected/dashboard/courses/mycourses/': {
+      id: '/_protected/dashboard/courses/mycourses/'
+      path: '/dashboard/courses/mycourses'
+      fullPath: '/dashboard/courses/mycourses/'
+      preLoaderRoute: typeof ProtectedDashboardCoursesMycoursesIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/dashboard/courses/watch/$slug': {
+      id: '/_protected/dashboard/courses/watch/$slug'
+      path: '/dashboard/courses/watch/$slug'
+      fullPath: '/dashboard/courses/watch/$slug'
+      preLoaderRoute: typeof ProtectedDashboardCoursesWatchSlugRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/dashboard/courses/$slug/edit': {
+      id: '/_protected/admin/dashboard/courses/$slug/edit'
+      path: '/dashboard/courses/$slug/edit'
+      fullPath: '/admin/dashboard/courses/$slug/edit'
+      preLoaderRoute: typeof ProtectedAdminDashboardCoursesSlugEditRouteImport
+      parentRoute: typeof ProtectedAdminRouteRoute
     }
   }
 }
@@ -178,12 +406,49 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
+interface ProtectedAdminRouteRouteChildren {
+  ProtectedAdminDashboardIndexRoute: typeof ProtectedAdminDashboardIndexRoute
+  ProtectedAdminDashboardCoursesNewRoute: typeof ProtectedAdminDashboardCoursesNewRoute
+  ProtectedAdminDashboardCoursesIndexRoute: typeof ProtectedAdminDashboardCoursesIndexRoute
+  ProtectedAdminDashboardCoursesSlugEditRoute: typeof ProtectedAdminDashboardCoursesSlugEditRoute
+}
+
+const ProtectedAdminRouteRouteChildren: ProtectedAdminRouteRouteChildren = {
+  ProtectedAdminDashboardIndexRoute: ProtectedAdminDashboardIndexRoute,
+  ProtectedAdminDashboardCoursesNewRoute:
+    ProtectedAdminDashboardCoursesNewRoute,
+  ProtectedAdminDashboardCoursesIndexRoute:
+    ProtectedAdminDashboardCoursesIndexRoute,
+  ProtectedAdminDashboardCoursesSlugEditRoute:
+    ProtectedAdminDashboardCoursesSlugEditRoute,
+}
+
+const ProtectedAdminRouteRouteWithChildren =
+  ProtectedAdminRouteRoute._addFileChildren(ProtectedAdminRouteRouteChildren)
+
 interface ProtectedRouteChildren {
-  ProtectedDashboardRoute: typeof ProtectedDashboardRoute
+  ProtectedAdminRouteRoute: typeof ProtectedAdminRouteRouteWithChildren
+  ProtectedDashboardIndexRoute: typeof ProtectedDashboardIndexRoute
+  ProtectedDashboardCheckoutCancelRoute: typeof ProtectedDashboardCheckoutCancelRoute
+  ProtectedDashboardCheckoutSuccessRoute: typeof ProtectedDashboardCheckoutSuccessRoute
+  ProtectedDashboardCoursesSlugRoute: typeof ProtectedDashboardCoursesSlugRoute
+  ProtectedDashboardCoursesIndexRoute: typeof ProtectedDashboardCoursesIndexRoute
+  ProtectedDashboardCoursesWatchSlugRoute: typeof ProtectedDashboardCoursesWatchSlugRoute
+  ProtectedDashboardCoursesMycoursesIndexRoute: typeof ProtectedDashboardCoursesMycoursesIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
-  ProtectedDashboardRoute: ProtectedDashboardRoute,
+  ProtectedAdminRouteRoute: ProtectedAdminRouteRouteWithChildren,
+  ProtectedDashboardIndexRoute: ProtectedDashboardIndexRoute,
+  ProtectedDashboardCheckoutCancelRoute: ProtectedDashboardCheckoutCancelRoute,
+  ProtectedDashboardCheckoutSuccessRoute:
+    ProtectedDashboardCheckoutSuccessRoute,
+  ProtectedDashboardCoursesSlugRoute: ProtectedDashboardCoursesSlugRoute,
+  ProtectedDashboardCoursesIndexRoute: ProtectedDashboardCoursesIndexRoute,
+  ProtectedDashboardCoursesWatchSlugRoute:
+    ProtectedDashboardCoursesWatchSlugRoute,
+  ProtectedDashboardCoursesMycoursesIndexRoute:
+    ProtectedDashboardCoursesMycoursesIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -192,10 +457,12 @@ const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
 
 interface PublicRouteChildren {
   PublicIndexRoute: typeof PublicIndexRoute
+  PublicCoursesIdRoute: typeof PublicCoursesIdRoute
 }
 
 const PublicRouteChildren: PublicRouteChildren = {
   PublicIndexRoute: PublicIndexRoute,
+  PublicCoursesIdRoute: PublicCoursesIdRoute,
 }
 
 const PublicRouteWithChildren =
@@ -205,7 +472,6 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRouteWithChildren,
   ProtectedRoute: ProtectedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
-  CoursesRoute: CoursesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

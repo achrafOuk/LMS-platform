@@ -12,6 +12,8 @@ import {
 
   protectedProcedure,
 
+  optionalAuthProcedure,
+
 } from "../../orpc/middleware/auth.middleware";
 
 import { findUserByEmail, insertNewNormalUser } from "../users/user.repository";
@@ -31,6 +33,7 @@ import {
   signAccessToken,
 
 } from "./auth.service";
+import { seedRoleForUser } from "../../db/seeds/role.seed";
 
 
 
@@ -84,9 +87,9 @@ export const registerRoute = publicProcedure
       passwordHash: input.password,
     });
 
-
     try {
-      await insertNewNormalUser(new_user);
+      await insertNewNormalUser({...new_user, role: 'user'});
+      await seedRoleForUser(new_user.uid, 'user');
     } catch (error: unknown) {
       const messages = await checkUniqueViolation(error as Error);
       if (messages.length > 0) {
@@ -110,11 +113,10 @@ export const logoutRoute = protectedProcedure.handler(async ({ context }) => {
 
 
 
-export const meRoute = protectedProcedure.handler(async ({ context }) => {
+export const meRoute = optionalAuthProcedure.handler(async ({ context }) => {
   return {
-    user: context.user,
+    user: context.user ?? null,
   };
-
 });
 
 

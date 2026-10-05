@@ -9,6 +9,8 @@ import {
   ResponseHeadersPlugin,
 } from "@orpc/server/plugins";
 import { router } from "./routes/orpc.routes";
+import { createBucket } from "./media/s3.js";
+import { stripeWebhookHandler } from "./routes/checkout/checkout.webhook";
 
 const app = new Hono();
 
@@ -26,6 +28,8 @@ app.get("/", (c) => {
     message: "Hello from Hono",
   });
 });
+
+app.post("/webhooks/stripe", stripeWebhookHandler);
 
 const handler = new RPCHandler(router, {
   plugins: [new RequestHeadersPlugin(), new ResponseHeadersPlugin()],
@@ -63,4 +67,8 @@ serve(
   },
 );
 
+await createBucket();
+
 export default app;
+
+

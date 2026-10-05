@@ -14,26 +14,30 @@
     "db:generate": "drizzle-kit generate --config=src/db/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config=src/db/drizzle.config.ts",
     "db:push": "drizzle-kit push --config=src/db/drizzle.config.ts",
-    "db:studio": "drizzle-kit studio --config=src/db/drizzle.config.ts"
+    "db:studio": "drizzle-kit studio --config=src/db/drizzle.config.ts",
+    "db:seed": "tsx src/db/seeder.ts"
   },
   "packageManager": "pnpm@10.20.0",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1073.0",
+    "@aws-sdk/s3-request-presigner": "^3.1073.0",
     "@hono/node-server": "^2.0.4",
     "@orpc/contract": "^1.14.6",
     "@orpc/server": "^1.14.5",
-    "bcrypt": "^6.0.0",
+    "@tanstack-start-hono/shared": "workspace:*",
+    "bcryptjs": "^3.0.3",
     "dotenv": "catalog:",
     "dotenv-expand": "^12.0.2",
     "drizzle-orm": "^0.45.2",
     "hono": "^4.12.25",
     "jose": "^6.2.3",
     "pg": "^8.21.0",
+    "stripe": "^22.4.0",
     "ulid": "^3.0.2"
   },
   "devDependencies": {
     "@tanstack-start-hono/tsconfig": "workspace:*",
     "@tanstack-start-hono/validators": "workspace:*",
-    "@types/bcrypt": "^6.0.0",
     "@types/pg": "^8.20.0",
     "drizzle-kit": "^0.31.10",
     "tsx": "^4.22.4",

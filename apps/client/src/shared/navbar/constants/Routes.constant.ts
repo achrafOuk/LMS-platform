@@ -18,7 +18,7 @@ export const routes: NavBarRoute[] = [
 export const authRoutes: NavBarRoute[] = [
         {
             link: '/dashboard',
-            label: 'dashboard',
+            label: 'Dashboard',
         },
         {
             link: '/',
@@ -27,5 +27,9 @@ export const authRoutes: NavBarRoute[] = [
         {
             link: '/courses',
             label: 'Courses',
+        },
+        {
+            link: '/admin/dashboard',
+            label: 'Admin',
         }
 ];

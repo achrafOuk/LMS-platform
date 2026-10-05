@@ -8,12 +8,13 @@ export interface AuthUser {
   uid: string;
   email: string;
   role: string;
+  userPermissions?: { permission: string }[];
 }
 
 export interface ORPCContext
   extends RequestHeadersPluginContext,
     ResponseHeadersPluginContext {
-  user?: AuthUser;
+  user?: AuthUser | null;
 }
 
 export const base = os.$context<ORPCContext>();

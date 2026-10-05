@@ -4,5 +4,5 @@ const priceFormatter = new Intl.NumberFormat('en-US', {
 })
 
 export function formatCoursePrice(price: number) {
-  return priceFormatter.format(price)
+  return priceFormatter.format(price);
 }

@@ -1,11 +1,12 @@
 import { isRedirect, redirect } from '@tanstack/react-router'
 
-import { orpc } from '#/utils/orpc'
+import { getSession } from '#/features/auth/server/getSession'
 
 export async function requireGuest() {
   try {
-    const me = await orpc.auth.me()
-    if (me.user) {
+    const me = await getSession()
+
+    if (me?.user) {
       throw redirect({ to: '/dashboard' })
     }
   } catch (error) {

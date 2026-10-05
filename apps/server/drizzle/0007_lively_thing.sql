@@ -1,0 +1,2 @@
+ALTER TABLE "payment" ALTER COLUMN "stripe_payment_intent_id" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "payment" ADD CONSTRAINT "payment_stripe_payment_intent_id_unique" UNIQUE("stripe_payment_intent_id");

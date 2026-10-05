@@ -16,6 +16,8 @@
     "@orpc/client": "^1.14.5",
     "@orpc/server": "^1.14.5",
     "@tailwindcss/vite": "^4.1.18",
+    "@tanstack-start-hono/shared": "workspace:*",
+    "@tanstack-start-hono/validators": "workspace:*",
     "@tanstack/react-devtools": "latest",
     "@tanstack/react-form": "^1.33.0",
     "@tanstack/react-query": "latest",
@@ -25,7 +27,6 @@
     "@tanstack/react-router-ssr-query": "latest",
     "@tanstack/react-start": "latest",
     "@tanstack/router-plugin": "^1.132.0",
-    "@tanstack-start-hono/validators": "workspace:*",
     "@tanstack/zod-form-adapter": "^0.42.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.545.0",
@@ -33,7 +34,8 @@
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "tailwind-merge": "^3.6.0",
-    "tailwindcss": "^4.1.18"
+    "tailwindcss": "^4.1.18",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@rolldown/plugin-babel": "^0.2.3",
@@ -50,7 +52,7 @@
     "babel-plugin-react-compiler": "^1.0.0",
     "jsdom": "^28.1.0",
     "typescript": "^6.0.2",
-    "vite": "^8.0.0",
+    "vite": "^8.1.3",
     "vitest": "^4.1.5"
   },
   "pnpm": {

@@ -4,10 +4,20 @@
   "private": true,
   "type": "module",
   "exports": {
+    "./upload": {
+      "types": "./src/upload.validator.ts",
+      "import": "./src/upload.validator.ts",
+      "default": "./src/upload.validator.ts"
+    },
     "./auth": {
       "types": "./src/auth.validator.ts",
       "import": "./src/auth.validator.ts",
       "default": "./src/auth.validator.ts"
+    },
+    "./checkout": {
+      "types": "./src/checkout.validator.ts",
+      "import": "./src/checkout.validator.ts",
+      "default": "./src/checkout.validator.ts"
     },
     "./*": {
       "types": "./src/*.validator.ts",
